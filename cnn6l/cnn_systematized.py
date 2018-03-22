@@ -254,7 +254,7 @@ for train_index, test_index in skf.split(X, Y):
     #cm = pd.DataFrame(confusion_matrix(y_test_no_one_hot, y_pred))
     #confusion_matrix_list.append(cm)
 
-    #clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
+    clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
 
     # Persistimos los modelos con pickle
     # save the model to disk
@@ -356,6 +356,12 @@ logging.info("indice del modelo medio: "+str(model_indx))
 
 os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
 #modelname = filename_clf_list[model_indx]
+best_model =clf_list[model_indx]
+
+test_accuracy = best_model.evaluate(X_test, y_test, verbose=1)
+print("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+logging.info("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+
 #loaded_model = pickle.load(open(modelname, 'rb'))
 #result = loaded_model.score(X_test, y_test)
 #print("Resultado final del modelo medio: "+str(result))
