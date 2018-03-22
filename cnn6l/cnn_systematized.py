@@ -177,7 +177,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 30
+epochs = 5 #ponemos 5 para que sea mas rapido
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -207,7 +207,7 @@ for train_index, test_index in skf.split(X, Y):
     print(x_train.shape)
     print(y_train.shape)
 
-    filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold-"+str(fold)+".h5"
+    filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold-"+str(fold)+"epochs-"+str(epochs)+ ".h5"
     hist = cnn_classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
