@@ -39,7 +39,20 @@ K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
-from keras.utils import np_utils
+import os, logging
+
+
+method= "cnn_6l"
+fichero_log = os.path.join(os.getenv('HOME'), 'test.log')
+
+print('Archivo Log en ', fichero_log)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s : %(levelname)s : %(message)s',
+                    filename = fichero_log,
+                    filemode = 'w',)
+#logging.debug('Comienza el programa')
+logging.info('Clasificación de señales con: '+str(method))
+#logging.warning('Advertencia')
 
 
 def cnn_model():
@@ -139,6 +152,8 @@ Y = np.asarray(labels)
 print(X.shape)
 print(Y.shape)
 
+logging.info(X.shape)
+logging.info(Y.shape)
 # In[4]:
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
@@ -158,7 +173,7 @@ fold = 1
 
 skf = StratifiedKFold(n_splits=3)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
-
+logging.info(skf)
 #cnn_classifier = cnn_model()
 
 #
@@ -241,11 +256,13 @@ for train_index, test_index in skf.split(X, Y):
     fold = fold + 1
 
 print('lista de accuracys de los modelos: '+str(test_accuracy_list))
+logging.info('lista de accuracys de los modelos: '+str(test_accuracy_list))
 
 precision_media = (np.mean(test_accuracy_list))
 desviacion_standar = (np.std(test_accuracy_list))
 
 print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
+logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
 
 ruta_actual = os.getcwd()
 print(ruta_actual)
@@ -317,19 +334,20 @@ def modelo_medio_indx(final, numeros):
 
 
 print("precision media: "+str(precision_media))
+logging.info("precision media: "+str(precision_media))
 
 model_indx = modelo_medio_indx(precision_media, test_accuracy_list)
 
 print("precisión del modelo medio: "+str(model_indx))
-
+logging.info("precisión del modelo medio: "+str(model_indx))
 # cargamos el modelo medio de disco
 
 os.chdir('/home/drobert/tfg/cnn6l')
 modelname = filename_clf_list[model_indx]
 loaded_model = pickle.load(open(modelname, 'rb'))
 result = loaded_model.score(X_test, y_test)
-print("Resultado final del modelo medio: ")
-print(result)
+print("Resultado final del modelo medio: "+str(result))
+logging.info("Resultado final del modelo medio: "+str(result))
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
@@ -338,4 +356,6 @@ cm = confusion_matrix_list[2]
 
 print(cm)
 print("Fin de la prueba con CNN6l")
-
+logging.info("matriz de confusión: ")
+logging.info(cm)
+logging.info("Fin de la prueba con CNN6l")
