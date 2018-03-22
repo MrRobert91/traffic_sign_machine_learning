@@ -42,8 +42,8 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
 
 
-method= "cnn_6l"
-fichero_log = os.path.join(os.getenv('HOME'), 'test.log')
+
+fichero_log = os.path.join(os.getenv('HOME'), 'cnn6l.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -51,7 +51,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filename = fichero_log,
                     filemode = 'w',)
 #logging.debug('Comienza el programa')
-logging.info('Clasificación de señales con: '+str(method))
+logging.info('Clasificación de señales con cnn de 6 capas')
 #logging.warning('Advertencia')
 
 
@@ -144,8 +144,6 @@ for img_path in all_img_paths:
     labels.append(label)
 
 X = np.array(imgs, dtype='float32')
-
-#En cnn no hay que hacer one hot targets
 Y = np.asarray(labels)
 
 
@@ -192,7 +190,6 @@ lr = 0.01
 for train_index, test_index in skf.split(X, Y):
     # conjuntos de train y test(validacion) para cada fold
     x_train, x_test = X[train_index], X[test_index]
-
     y_train_no_one_hot, y_test_no_one_hot = Y[train_index], Y[test_index]
 
     # Make one hot targets
@@ -223,7 +220,7 @@ for train_index, test_index in skf.split(X, Y):
               validation_split=0.2,
               verbose=1,
               callbacks=[LearningRateScheduler(lr_schedule),
-                         ModelCheckpoint('cnn6l_model.h5'+str(fold), save_best_only=True)]
+                         ModelCheckpoint('cnn6l_fold_'+str(fold)+'.h5', save_best_only=True)]
               )
 
 
@@ -235,11 +232,15 @@ for train_index, test_index in skf.split(X, Y):
     y_pred = cnn_classifier.predict_classes(x_test)
     test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
 
+    print("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
+    logging.info("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
+
 
     test_accuracy_list.append(test_accuracy)
 
-
-    cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
+    #Para generar la matriz de confusión necesitamos los targets en formato lista
+    #No en one hot encoding.
+    cm = pd.DataFrame(confusion_matrix(y_test_no_one_hot, y_pred))
     confusion_matrix_list.append(cm)
 
     clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
