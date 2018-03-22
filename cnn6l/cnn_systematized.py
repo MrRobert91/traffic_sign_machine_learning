@@ -364,9 +364,9 @@ os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
 # In[82]:
-cm = confusion_matrix_list[2]
+#cm = confusion_matrix_list[2]
 
 print("Fin de la prueba con CNN6l")
-logging.info("matriz de confusión: ")
-logging.info(cm)
+#logging.info("matriz de confusión: ")
+#logging.info(cm)
 logging.info("Fin de la prueba con CNN de 6 capas convolucionales")
