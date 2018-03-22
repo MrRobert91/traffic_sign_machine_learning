@@ -221,10 +221,19 @@ for train_index, test_index in skf.split(X, Y):
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
+    logging.info(hist.history)
+    print(hist.history)
 
     #
     y_pred = cnn_classifier.predict_classes(x_test)
     test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
+
+    logging.info(x_test.shape)
+    logging.info(y_pred.shape)
+    logging.info(y_test.shape)
+    print(x_test.shape)
+    print(y_pred.shape)
+    print(y_test.shape)
 
     print("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
     logging.info("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
