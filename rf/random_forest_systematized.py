@@ -158,7 +158,7 @@ for train_index, test_index in skf.split(X, Y):
     filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
     filename_clf_list.append(filename)
 
-    pickle.dump(rf_classifier, open(('/home/drobert/tfg/rf/' + str(filename)), 'wb'))
+    pickle.dump(rf_classifier, open(('/home/drobert/tfg/traffic_sign_machine_learning/rf/' + str(filename)), 'wb'))
 
     fold = fold + 1
 
@@ -259,7 +259,7 @@ print(model_indx)
 
 # cargamos el modelo medio de disco
 
-os.chdir('/home/drobert/tfg/rf/')
+os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/rf/')
 modelname = filename_clf_list[model_indx]
 loaded_model = pickle.load(open(modelname, 'rb'))
 result = loaded_model.score(X_test, y_test)
