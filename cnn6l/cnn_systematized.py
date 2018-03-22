@@ -316,6 +316,9 @@ print(X_test.shape)
 print(y_test.shape)
 
 
+#Los targets tienen que estar en formato one target
+y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
+
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
 #X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
@@ -358,7 +361,7 @@ os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
 #modelname = filename_clf_list[model_indx]
 best_model =clf_list[model_indx]
 
-test_accuracy = best_model.evaluate(X_test, y_test, verbose=1)
+test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 print("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
