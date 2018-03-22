@@ -153,7 +153,7 @@ logging.info(Y.shape)
 # de muestras de cada clase que el conjunto de entrenamiento.
 
 training_history_list = []
-test_accuracy_list = []
+val_accuracy_list = []
 
 confusion_matrix_list = []
 clf_list = []
@@ -221,32 +221,40 @@ for train_index, test_index in skf.split(X, Y):
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
-    logging.info(hist.history)
+    print("history:")
     print(hist.history)
-
-    #
-    y_pred = cnn_classifier.predict_classes(x_test)
-    test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
-
-    logging.info(x_test.shape)
-    logging.info(y_pred.shape)
-    logging.info(y_test.shape)
-    print(x_test.shape)
-    print(y_pred.shape)
-    print(y_test.shape)
-
-    print("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
-    logging.info("test accuracy del fold "+str(fold)+" :"+str(test_accuracy))
+    logging.info("history:")
+    logging.info(hist.history)
 
 
-    test_accuracy_list.append(test_accuracy)
+    val_accuracy = cnn_classifier.evaluate(x_test, y_test, verbose=1)
+
+    print("%s: %.2f%%" % (cnn_classifier.metrics_names[1], val_accuracy[1] * 100))
+    logging.info("%s: %.2f%%" % (cnn_classifier.metrics_names[1], val_accuracy[1] * 100))
+
+    val_accuracy_list.append(val_accuracy[1] * 100)
+
+
+    #y_pred = cnn_classifier.predict_classes(x_test)
+    #test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
+
+    #print("score, accuracy:")
+
+
+
+
+    print("val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
+    logging.info("val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
+
+
+
 
     #Para generar la matriz de confusión necesitamos los targets en formato lista
     #No en one hot encoding.
-    cm = pd.DataFrame(confusion_matrix(y_test_no_one_hot, y_pred))
-    confusion_matrix_list.append(cm)
+    #cm = pd.DataFrame(confusion_matrix(y_test_no_one_hot, y_pred))
+    #confusion_matrix_list.append(cm)
 
-    clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
+    #clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
 
     # Persistimos los modelos con pickle
     # save the model to disk
@@ -261,14 +269,18 @@ for train_index, test_index in skf.split(X, Y):
 
     fold = fold + 1
 
-print('lista de accuracys de los modelos: '+str(test_accuracy_list))
-logging.info('lista de accuracys de los modelos: '+str(test_accuracy_list))
+print('lista de accuracys de los modelos: '+str(val_accuracy_list))
+logging.info('lista de accuracys de los modelos: '+str(val_accuracy_list))
 
-precision_media = (np.mean(test_accuracy_list))
-desviacion_standar = (np.std(test_accuracy_list))
+precision_media = (np.mean(val_accuracy_list))
+desviacion_standar = (np.std(val_accuracy_list))
 
-print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
-logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
+
+print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+
+#print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
+#logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
 
 ruta_actual = os.getcwd()
 print(ruta_actual)
@@ -336,7 +348,7 @@ def modelo_medio_indx(final, numeros):
 print("precision media: "+str(precision_media))
 logging.info("precision media: "+str(precision_media))
 
-model_indx = modelo_medio_indx(precision_media, test_accuracy_list)
+model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
 
 print("indice del modelo medio: "+str(model_indx))
 logging.info("indice del modelo medio: "+str(model_indx))
