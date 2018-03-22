@@ -49,7 +49,7 @@ print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
-                    filemode = 'w',)
+                    filemode = 'a',)# w for new log each time
 #logging.debug('Comienza el programa')
 #logging.warning('Advertencia')
 logging.info('Clasificación de señales con cnn de 6 capas')
