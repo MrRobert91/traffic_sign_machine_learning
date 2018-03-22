@@ -243,8 +243,8 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    print("val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
-    logging.info("val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
+    print("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
+    logging.info("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
 
 
 
