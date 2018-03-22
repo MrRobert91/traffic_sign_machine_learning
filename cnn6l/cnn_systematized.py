@@ -362,8 +362,9 @@ os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
 best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
-print("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
-logging.info("%s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+
+print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
 #loaded_model = pickle.load(open(modelname, 'rb'))
 #result = loaded_model.score(X_test, y_test)
