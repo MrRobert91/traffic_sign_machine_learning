@@ -207,7 +207,7 @@ for train_index, test_index in skf.split(X, Y):
     print(x_train.shape)
     print(y_train.shape)
 
-    filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold-"+str(fold)+"epochs-"+str(epochs)+ ".h5"
+    filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold-"+str(fold)+"epochs-"+str(epochs)+".h5"
     hist = cnn_classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
