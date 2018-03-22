@@ -43,7 +43,7 @@ import os, logging
 
 
 
-fichero_log = ('/home/drobert/tfg/cnn6l/cnn6l.log')
+fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
