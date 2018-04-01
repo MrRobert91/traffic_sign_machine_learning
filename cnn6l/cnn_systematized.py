@@ -39,7 +39,9 @@ K.set_image_data_format('channels_last')
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
 
-fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+#fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+fichero_log = ('/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -107,11 +109,9 @@ def preprocess_img(img):
 def get_class(img_path):
     return int(img_path.split('/')[-2])
 
-#os.chdir('/home/david/Escritorio/TFG/Pruebas') #Jupyter Notebooks
-#root_dir = 'GTSRB/Final_Training/Images/'
 
-#os.chdir('/home/david/Escritorio/TFG/Pruebas') #Pycharm
-#root_dir = 'GTSRB/Final_Training/Images/'
+os.chdir('/home/david/Escritorio/TFG/Pruebas') #direccion local Jupyter Notebooks/pycharm
+root_dir = 'GTSRB/Final_Training/Images/'
 
 #os.chdir('/home/drobert/tfg/')#direccion en corleone
 #root_dir = 'GTSRB/Final_Training/Images/'
@@ -206,7 +206,10 @@ for train_index, test_index in skf.split(X, Y):
     print(x_train.shape)
     print(y_train.shape)
 
-    filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    #ruta para local
+    filepath = "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    #ruta para corleone
+    #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     hist = cnn_classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
@@ -215,7 +218,6 @@ for train_index, test_index in skf.split(X, Y):
               callbacks=[LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
               )
-
 
 
     #Guardar training / validation loss/accuracy en cada epoch
@@ -273,8 +275,8 @@ logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list),
 ruta_actual = os.getcwd()
 print(ruta_actual)
 print(os.listdir(ruta_actual))
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
-os.chdir('/home/drobert/tfg/GTSRB')#En corleone
+os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')#En local
+#os.chdir('/home/drobert/tfg/GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
 test = pd.read_csv('GT-final_test.csv', sep=';')
@@ -283,8 +285,8 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 # In[61]:
 
 # Cargamos el dataset de test
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
-os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')#en local
+#os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
 y_test = []
@@ -345,9 +347,13 @@ print("indice del modelo medio: "+str(model_indx))
 logging.info("indice del modelo medio: "+str(model_indx))
 # cargamos el modelo medio de disco
 
-os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
+
+os.chdir('/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l')
+#os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
 #modelname = filename_clf_list[model_indx]
 best_model =clf_list[model_indx]
+
+#TO-DO guardar best_model en un pickle
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
