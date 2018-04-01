@@ -25,7 +25,6 @@ import glob
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
 import pickle
 from sklearn.model_selection import StratifiedKFold
 
@@ -38,10 +37,7 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
-
 import os, logging
-
-
 
 fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 
@@ -50,12 +46,12 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
                     filemode = 'a',)# w for new log each time
-#logging.debug('Comienza el programa')
-#logging.warning('Advertencia')
-logging.info('Clasificación de señales con cnn de 6 capas')
 
 
+logging.info('Clasificación de señales de tráfico con cnn de 6 capas')
 
+
+#Modelo: red neuronal con 6 capas convolucionales
 def cnn_model():
     model = Sequential()
 
@@ -111,11 +107,14 @@ def preprocess_img(img):
 def get_class(img_path):
     return int(img_path.split('/')[-2])
 
-#os.chdir('/home/david/Escritorio/TFG/Pruebas')
+#os.chdir('/home/david/Escritorio/TFG/Pruebas') #Jupyter Notebooks
 #root_dir = 'GTSRB/Final_Training/Images/'
 
-os.chdir('/home/drobert/tfg/')#direccion en corleone
-root_dir = 'GTSRB/Final_Training/Images/'
+#os.chdir('/home/david/Escritorio/TFG/Pruebas') #Pycharm
+#root_dir = 'GTSRB/Final_Training/Images/'
+
+#os.chdir('/home/drobert/tfg/')#direccion en corleone
+#root_dir = 'GTSRB/Final_Training/Images/'
 
 
 imgs = []
@@ -162,7 +161,7 @@ filename_clf_list = []
 
 fold = 1
 
-skf = StratifiedKFold(n_splits=10)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
+skf = StratifiedKFold(n_splits=3)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
 logging.info(skf)
 #cnn_classifier = cnn_model()
@@ -177,7 +176,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 30 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 2 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -197,7 +196,7 @@ for train_index, test_index in skf.split(X, Y):
 
     cnn_classifier = cnn_model()
 
-    # let's train the model using SGD + momentum
+    # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
@@ -238,16 +237,9 @@ for train_index, test_index in skf.split(X, Y):
     #y_pred = cnn_classifier.predict_classes(x_test)
     #test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
 
-    #print("score, accuracy:")
-
-
-
 
     print("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
     logging.info("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
-
-
-
 
     #Para generar la matriz de confusión necesitamos los targets en formato lista
     #No en one hot encoding.
@@ -255,10 +247,6 @@ for train_index, test_index in skf.split(X, Y):
     #confusion_matrix_list.append(cm)
 
     clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
-
-    # Persistimos los modelos con pickle
-    # save the model to disk
-
 
     #NO hacemos un pickle porque ya lo guardaos en formato h5
 
