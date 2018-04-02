@@ -39,8 +39,13 @@ K.set_image_data_format('channels_last')
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
 
+code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
+#code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
+dataset_path="/home/david/Escritorio/TFG/Pruebas"
+#dataset_path='/home/drobert/tfg/'
+
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
-fichero_log = ('/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+fichero_log = (code_path +'/cnn6l.log')
 
 
 print('Archivo Log en ', fichero_log)
@@ -110,7 +115,7 @@ def get_class(img_path):
     return int(img_path.split('/')[-2])
 
 
-os.chdir('/home/david/Escritorio/TFG/Pruebas') #direccion local Jupyter Notebooks/pycharm
+os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
 root_dir = 'GTSRB/Final_Training/Images/'
 
 #os.chdir('/home/drobert/tfg/')#direccion en corleone
@@ -207,7 +212,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    filepath = "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     hist = cnn_classifier.fit(x_train, y_train,
@@ -217,6 +222,7 @@ for train_index, test_index in skf.split(X, Y):
               verbose=1,
               callbacks=[LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
+
               )
 
 
@@ -243,19 +249,11 @@ for train_index, test_index in skf.split(X, Y):
     print("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
     logging.info("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
 
-    #Para generar la matriz de confusión necesitamos los targets en formato lista
-    #No en one hot encoding.
-    #cm = pd.DataFrame(confusion_matrix(y_test_no_one_hot, y_pred))
-    #confusion_matrix_list.append(cm)
+
 
     clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
 
     #NO hacemos un pickle porque ya lo guardaos en formato h5
-
-    #filename = 'cnn6l_' + str(fold) + 'fold_'+"{0:.3f}".format(test_accuracy)+'val_acc'
-    #filename_clf_list.append(filename)
-
-    #pickle.dump(cnn_classifier, open(('/home/drobert/tfg/cnn6l' + str(filename)), 'wb'))
 
     fold = fold + 1
 
@@ -275,7 +273,7 @@ logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list),
 ruta_actual = os.getcwd()
 print(ruta_actual)
 print(os.listdir(ruta_actual))
-os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')#En local
+os.chdir(dataset_path+'/GTSRB')#En local
 #os.chdir('/home/drobert/tfg/GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
@@ -285,7 +283,7 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 # In[61]:
 
 # Cargamos el dataset de test
-os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')#en local
+os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
 #os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
@@ -302,25 +300,10 @@ X_test = np.array(X_test)
 y_test = np.array(y_test)
 
 
-print(X_test.shape)
-print(y_test.shape)
-
-
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
-# Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-#X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
-
-#print(X_test.shape)
-#print(y_test.shape)
-
-# Es una medida que es la media de las clasificaciones correctas.
-# https://stackoverflow.com/questions/31438476/parameter-oob-score-in-scikit-learn-equals-accuracy-or-error
-
 # Función para encontrar el modelo que está mas proximo a la media
-
-
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
         menor = numeros[0]
@@ -334,8 +317,9 @@ def modelo_medio_indx(final, numeros):
     diferencia = []
     for x in range(len(numeros)):
         diferencia.append(abs(final - numeros[x]))
-    return numeros.index(numeros[el_menor(diferencia)])  # devuelve el indice del más próximo
-    # return numeros[index(el_menor(diferencia))]
+    # devuelve el indice del modelo más próximo a la media
+    return numeros.index(numeros[el_menor(diferencia)])
+
 
 
 print("precision media: "+str(precision_media))
@@ -345,32 +329,40 @@ model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
 
 print("indice del modelo medio: "+str(model_indx))
 logging.info("indice del modelo medio: "+str(model_indx))
+
 # cargamos el modelo medio de disco
-
-
-os.chdir('/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l')
-#os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l')
-#modelname = filename_clf_list[model_indx]
+os.chdir(code_path)
 best_model =clf_list[model_indx]
 
-#TO-DO guardar best_model en un pickle
-
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+#Guardar best_model en un pickle
+best_model_filename= "cnn6l-epochs"+str(epochs)+"-test_acc_"+str(test_accuracy)
+pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
+
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
-#loaded_model = pickle.load(open(modelname, 'rb'))
-#result = loaded_model.score(X_test, y_test)
-#print("Resultado final del modelo medio: "+str(result))
-#logging.info("Resultado final del modelo medio: "+str(result))
+
+#Comprobamos que el modelo cargado tiene la misma precision
+loaded_model = pickle.load(open(best_model_filename, 'rb'))
+loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
 # In[82]:
 #cm = confusion_matrix_list[2]
+#Para generar la matriz de confusión necesitamos los targets en formato lista
+#No en one hot encoding.
+y_pred = loaded_model.predict(X_test)
+cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
 
-print("Fin de la prueba con CNN6l")
-#logging.info("matriz de confusión: ")
-#logging.info(cm)
+logging.info("matriz de confusión: ")
+logging.info(cm)
+
+print("Fin de la prueba con CNN de 6 capas convolucionales")
 logging.info("Fin de la prueba con CNN de 6 capas convolucionales")
