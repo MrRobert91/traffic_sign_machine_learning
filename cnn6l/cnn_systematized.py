@@ -40,6 +40,7 @@ K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
+from keras import metrics
 from keras.models import load_model
 
 code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
@@ -208,7 +209,8 @@ for train_index, test_index in skf.split(X, Y):
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=[get_categorical_accuracy_keras])
+                  metrics=[metrics.categorical_accuracy])
+                  #metrics=[get_categorical_accuracy_keras])
 
     print("tamaños de x_train e y_train")
     print(x_train.shape)
@@ -342,10 +344,10 @@ test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 #Guardar best_model en un pickle
 best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%" % (epochs,test_accuracy[1] * 100))
 
-pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
+#pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
 #guardar con h5 no funciona por tener un metodo custom de accuracy
-#best_model.save(best_model_filename)
+best_model.save(best_model_filename)
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
@@ -355,8 +357,8 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 #Comprobamos que el modelo cargado tiene la misma precision
 
 
-loaded_model = pickle.load(open(best_model_filename, 'rb'))
-#loaded_model = load_model(best_model_filename)# No funciona con custom metrics
+#loaded_model = pickle.load(open(best_model_filename, 'rb'))
+loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
