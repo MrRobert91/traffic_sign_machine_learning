@@ -10,7 +10,9 @@
 
 # #Random forest para clasificar señales de tráfico
 #
-# Vamos a utilizar un random forest para clasificar imagenes de señales de tráfico del dataset [GTSRB](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset)
+# Vamos a utilizar una red neuronal convolucional para clasificar
+# imagenes de señales de tráfico del
+# dataset [GTSRB](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset)
 
 # In[1]:
 
@@ -38,6 +40,7 @@ K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
+from keras.models import load_model
 
 code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
 #code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
@@ -181,7 +184,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 2 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 1 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -337,17 +340,28 @@ best_model =clf_list[model_indx]
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 #Guardar best_model en un pickle
-best_model_filename= "cnn6l-epochs"+str(epochs)+"-test_acc_"+str(test_accuracy)
+best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%" % (epochs,test_accuracy[1] * 100))
+
 pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
+#guardar con h5 no funciona por tener un metodo custom de accuracy
+#best_model.save(best_model_filename)
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+
 logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
 
 #Comprobamos que el modelo cargado tiene la misma precision
+
+
 loaded_model = pickle.load(open(best_model_filename, 'rb'))
-loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+#loaded_model = load_model(best_model_filename)# No funciona con custom metrics
+
+#https://github.com/keras-team/keras/issues/3911
+#La solucion propuesta arriba tampoco funciona
+#loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
+#loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
@@ -365,4 +379,4 @@ logging.info("matriz de confusión: ")
 logging.info(cm)
 
 print("Fin de la prueba con CNN de 6 capas convolucionales")
-logging.info("Fin de la prueba con CNN de 6 capas convolucionales")
+logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
