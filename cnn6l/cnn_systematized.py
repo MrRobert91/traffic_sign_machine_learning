@@ -42,6 +42,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
 from keras import metrics
 from keras.models import load_model
+import datetime
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
@@ -346,7 +347,7 @@ best_model =clf_list[model_indx]
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 #Guardar best_model en un pickle
-import datetime
+
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
@@ -368,6 +369,8 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
+loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+print("loaded model test accuracy: %s" % (loaded_model_test_accuracy))
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
 #loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
