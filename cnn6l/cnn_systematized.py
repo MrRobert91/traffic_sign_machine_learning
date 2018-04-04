@@ -365,7 +365,6 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 
 #Comprobamos que el modelo cargado tiene la misma precision
 
-
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
@@ -377,23 +376,20 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 #loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
 #loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 
-#print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
-#logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
-
-#print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
-#logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
-#print("loaded_model.metrics_names[1]: s%" % (loaded_model.metrics_names[1]))
-#print("loaded_model[1] * 100: s%" % (loaded_model[1]))
-
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
 # la matriz de confusión. y la mostramos de varia formas. Solo mostramos
 # la matriz de confusion del modelo medio.
 
-# In[82]:
-#cm = confusion_matrix_list[2]
 #Para generar la matriz de confusión necesitamos los targets en formato lista
 #No en one hot encoding.
+
+
 y_pred = loaded_model.predict(X_test)
+
+print("shape de y_test e y_pred:")
+print(y_test.shape)
+print(y_pred.shape)
+
 cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
 
 logging.info("matriz de confusión: ")
