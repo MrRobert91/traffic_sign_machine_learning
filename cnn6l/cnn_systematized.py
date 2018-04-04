@@ -350,7 +350,7 @@ import datetime
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%_%s" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
