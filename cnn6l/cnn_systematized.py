@@ -43,9 +43,12 @@ import os, logging
 from keras import metrics
 from keras.models import load_model
 
+#local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
+
+#Corleone
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
@@ -277,8 +280,8 @@ logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list),
 #logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
 
 ruta_actual = os.getcwd()
-print(ruta_actual)
-print(os.listdir(ruta_actual))
+#print(ruta_actual)
+#print(os.listdir(ruta_actual))
 os.chdir(dataset_path+'/GTSRB')#En local
 #os.chdir('/home/drobert/tfg/GTSRB')#En corleone
 
@@ -343,7 +346,11 @@ best_model =clf_list[model_indx]
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 #Guardar best_model en un pickle
-best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%" % (epochs,test_accuracy[1] * 100))
+import datetime
+
+today_date = datetime.date.today().strftime("%d-%m-%Y")
+
+best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%%s" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
@@ -369,8 +376,8 @@ loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 #print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 
-#print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
-logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+#logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
 print("loaded_model.metrics_names[1]: s%" % (loaded_model.metrics_names[1]))
 print("loaded_model[1] * 100: s%" % (loaded_model[1]))
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
