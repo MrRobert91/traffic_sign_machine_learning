@@ -387,17 +387,21 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 
 
 y_pred = loaded_model.predict(X_test)
-
-
-
-y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
+#pasamos a one hot encoding para que tenga la misma estructura que y_pred
+#y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
+print(y_pred.shape)
+#pasamos y_pred que esta en one hot encoding a un vector plano
+np.argmax(y_pred, axis=None, out=None)
 
 print("shape de y_test , y_pred e y_test_one_hot:")
 print(y_test.shape)
 print(y_pred.shape)
-print(y_test_one_hot.shape)
+#print(y_test_one_hot.shape)
 
-cm = pd.DataFrame(confusion_matrix(y_test_one_hot, y_pred))
+
+
+
+cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
 
 logging.info("matriz de confusión: ")
 logging.info(cm)
