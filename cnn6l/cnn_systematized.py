@@ -43,10 +43,10 @@ import os, logging
 from keras import metrics
 from keras.models import load_model
 
-code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
-#code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
-dataset_path="/home/david/Escritorio/TFG/Pruebas"
-#dataset_path='/home/drobert/tfg/'
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas"
+dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'/cnn6l.log')
