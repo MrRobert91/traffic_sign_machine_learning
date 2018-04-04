@@ -369,10 +369,10 @@ loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 #print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 
-print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+#print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
 logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
-
-
+print("loaded_model.metrics_names[1]: s%" % (loaded_model.metrics_names[1]))
+print("loaded_model[1] * 100: s%" % (loaded_model[1]))
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
 # In[82]:
