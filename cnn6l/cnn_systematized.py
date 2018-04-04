@@ -209,8 +209,9 @@ for train_index, test_index in skf.split(X, Y):
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
+                  #metrics=['accuracy'])
                   metrics=[metrics.categorical_accuracy])
-                  #metrics=[get_categorical_accuracy_keras])
+                  #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
     print("tamaños de x_train e y_train")
     print(x_train.shape)
@@ -365,8 +366,12 @@ loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 #loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
 #loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 
-print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
-logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+#print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+#logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+
+print("Accuracy en test del modelo guardado : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
@@ -379,6 +384,7 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
 
 logging.info("matriz de confusión: ")
 logging.info(cm)
+
 
 print("Fin de la prueba con CNN de 6 capas convolucionales")
 logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
