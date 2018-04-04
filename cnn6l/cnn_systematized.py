@@ -370,9 +370,10 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
 loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
-print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
+print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
+
 #loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
 #loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 
@@ -383,7 +384,10 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 #logging.info("Accuracy en test del modelo guardado: %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model[1] * 100))
 #print("loaded_model.metrics_names[1]: s%" % (loaded_model.metrics_names[1]))
 #print("loaded_model[1] * 100: s%" % (loaded_model[1]))
-# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
+
+# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
+# la matriz de confusión. y la mostramos de varia formas. Solo mostramos
+# la matriz de confusion del modelo medio.
 
 # In[82]:
 #cm = confusion_matrix_list[2]
