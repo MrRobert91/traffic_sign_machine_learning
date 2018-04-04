@@ -43,6 +43,8 @@ import os, logging
 from keras import metrics
 from keras.models import load_model
 import datetime
+from keras.utils.np_utils import to_categorical
+
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
@@ -386,11 +388,16 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 
 y_pred = loaded_model.predict(X_test)
 
-print("shape de y_test e y_pred:")
+
+
+y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
+
+print("shape de y_test , y_pred e y_test_one_hot:")
 print(y_test.shape)
 print(y_pred.shape)
+print(y_test_one_hot.shape)
 
-cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
+cm = pd.DataFrame(confusion_matrix(y_test_one_hot, y_pred))
 
 logging.info("matriz de confusión: ")
 logging.info(cm)
