@@ -203,7 +203,7 @@ for train_index, test_index in skf.split(X, Y):
     y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
     y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
 
-    #one hot encodin con to_categorical
+    #one hot encodig con to_categorical
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
@@ -389,19 +389,17 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 y_pred = loaded_model.predict(X_test)
 #pasamos a one hot encoding para que tenga la misma estructura que y_pred
 #y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
-print(y_pred.shape)
 #pasamos y_pred que esta en one hot encoding a un vector plano
-np.argmax(y_pred, axis=None, out=None)
+y_pred_no_one_hot= np.argmax(y_pred, axis=1, out=None)
 
-print("shape de y_test , y_pred e y_test_one_hot:")
+print("shape de y_test , y_pred_no_one_hot :")
+
 print(y_test.shape)
-print(y_pred.shape)
+print(y_pred_no_one_hot.shape)
 #print(y_test_one_hot.shape)
 
 
-
-
-cm = pd.DataFrame(confusion_matrix(y_test, y_pred))
+cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
 logging.info("matriz de confusión: ")
 logging.info(cm)
