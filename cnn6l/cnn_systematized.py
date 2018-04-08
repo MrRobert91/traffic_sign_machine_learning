@@ -388,7 +388,9 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 
 y_pred = loaded_model.predict(X_test)
 #pasamos a one hot encoding para que tenga la misma estructura que y_pred
+#No funciona así, tendran que ser los 2 vectores unidimensionales
 #y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
+
 #pasamos y_pred que esta en one hot encoding a un vector plano
 y_pred_no_one_hot= np.argmax(y_pred, axis=1, out=None)
 
@@ -396,7 +398,7 @@ print("shape de y_test , y_pred_no_one_hot :")
 
 print(y_test.shape)
 print(y_pred_no_one_hot.shape)
-#print(y_test_one_hot.shape)
+
 
 
 cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
