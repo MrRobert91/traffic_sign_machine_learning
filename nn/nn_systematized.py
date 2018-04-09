@@ -58,6 +58,8 @@ dataset_path='/home/drobert/tfg/'
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/nn/nn.log')
 fichero_log = (code_path +'/nn.log')
 
+NUM_CLASSES = 43
+IMG_SIZE = 48
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -68,50 +70,16 @@ logging.basicConfig(level=logging.DEBUG,
 
 logging.info('Clasificación de señales de tráfico con nn')
 
+dim_data = (IMG_SIZE*IMG_SIZE*3)
+
 def baseline_nn_model():
-	# create model
-	model = Sequential()
-	model.add(Dense(8, input_dim=4, activation='relu'))
-	model.add(Dense(3, activation='softmax'))
-	# Compile model
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
-
-
-
-
-#Modelo: red neuronal con 6 capas convolucionales
-def cnn_model():
+    # create model
     model = Sequential()
-
-    model.add(Conv2D(32, (3, 3), padding='same',
-                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
-                     activation='relu'))
-    model.add(Conv2D(32, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(64, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(128, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))
-
-    model.add(Flatten())
+    model.add(Dense(512, activation='relu', input_shape=(dim_data,)))
     model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
-
-NUM_CLASSES = 43
-IMG_SIZE = 48
 
 
 # Funcion para preprocesar las imagenes
