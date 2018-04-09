@@ -80,8 +80,15 @@ def baseline_nn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
-
-
+#Modelo utilizando reguralizacion (dropout)
+def reg_nn_model():
+    model_reg = Sequential()
+    model_reg.add(Dense(512, activation='relu', input_shape=(dimData,)))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(512, activation='relu'))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model_reg
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
     # normalizacion del histograma en el canal 'v'
@@ -159,7 +166,7 @@ filename_clf_list = []
 
 fold = 1
 
-skf = StratifiedKFold(n_splits=10)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
+skf = StratifiedKFold(n_splits=3)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
 logging.info(skf)
 
@@ -173,7 +180,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 30 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
