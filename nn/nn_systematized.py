@@ -83,12 +83,13 @@ def baseline_nn_model():
 #Modelo utilizando reguralizacion (dropout)
 def reg_nn_model():
     model_reg = Sequential()
-    model_reg.add(Dense(512, activation='relu', input_shape=(dimData,)))
+    model_reg.add(Dense(512, activation='relu', input_shape=(dim_data,)))
     model_reg.add(Dropout(0.5))
     model_reg.add(Dense(512, activation='relu'))
     model_reg.add(Dropout(0.5))
     model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
     return model_reg
+
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
     # normalizacion del histograma en el canal 'v'
@@ -213,10 +214,10 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    filepath = code_path+"/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    #filepath = code_path+"/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
-    hist = nn_classifier.fit(x_train, y_train,
+    '''hist = nn_classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
               validation_split=0.2,
@@ -224,7 +225,15 @@ for train_index, test_index in skf.split(X, Y):
               callbacks=[LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
 
-              )
+              )'''
+
+    hist = nn_classifier.fit(x_train, y_train,
+                             batch_size=batch_size,
+                             epochs=epochs,
+                             validation_split=0.2,
+                             verbose=1,
+                             callbacks=[LearningRateScheduler(lr_schedule)]
+                             )
 
 
     #Guardar training / validation loss/accuracy en cada epoch
