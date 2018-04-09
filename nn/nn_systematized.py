@@ -199,7 +199,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    nn_classifier = baseline_nn_model()
+    nn_classifier = reg_nn_model()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
