@@ -166,6 +166,9 @@ for img_path in all_img_paths:
 X = np.array(imgs, dtype='float32')
 Y = np.asarray(labels)
 
+# Tenemos que cambiar los formatos de entrada para la capa densamente conexa
+X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+
 print(X.shape)
 print(Y.shape)
 
