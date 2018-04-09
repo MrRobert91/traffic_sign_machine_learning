@@ -301,6 +301,8 @@ X_test = np.array(X_test)
 y_test = np.array(y_test)
 
 
+# Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
+X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
