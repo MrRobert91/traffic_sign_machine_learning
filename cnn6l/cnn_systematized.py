@@ -403,7 +403,7 @@ print(y_pred_no_one_hot.shape)
 
 cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
-logging.info("matriz de confusión: ")
+logging.info("matriz de confusión del modelo medio: ")
 logging.info(cm)
 
 
