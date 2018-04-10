@@ -408,5 +408,5 @@ logging.info("matriz de confusión del modelo medio: ")
 logging.info(cm)
 
 
-print("Fin de la prueba con NN ")
+print("---------- Fin de la prueba con NN ----------")
 logging.info("-----------Fin de la prueba con NN -----------")
