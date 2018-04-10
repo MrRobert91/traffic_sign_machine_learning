@@ -45,7 +45,7 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
-
+logging.info("program started on - " + str(datetime.datetime.now))
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -409,3 +409,4 @@ logging.info(cm)
 
 print("Fin de la prueba con CNN de 6 capas convolucionales")
 logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
+logging.info("program ended on - " + str(datetime.datetime.now))
