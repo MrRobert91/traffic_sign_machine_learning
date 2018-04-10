@@ -204,7 +204,7 @@ ruta_actual = os.getcwd()
 print(ruta_actual)
 print(os.listdir(ruta_actual))
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
-os.chdir('/home/drobert/tfg/GTSRB')#En corleone
+os.chdir(dataset_path+'GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
 test = pd.read_csv('GT-final_test.csv', sep=';')
@@ -215,7 +215,7 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 
 # Cargamos el dataset de test
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
-os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
 y_test = []
@@ -277,7 +277,7 @@ print(model_indx)
 
 # cargamos el modelo medio de disco
 
-os.chdir('/home/drobert/tfg/traffic_sign_machine_learning/rf/')
+os.chdir(code_path)
 modelname = filename_clf_list[model_indx]
 loaded_model = pickle.load(open(modelname, 'rb'))
 result = loaded_model.score(X_test, y_test)
