@@ -50,15 +50,15 @@ from keras.utils.np_utils import to_categorical
 logging.info("program started on - " + str(datetime.datetime.now))
 
 #local
-#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn"
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn"
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn/"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/nn/nn.log')
-fichero_log = (code_path +'/nn.log')
+fichero_log = (code_path +'nn.log')
 
 NUM_CLASSES = 43
 IMG_SIZE = 48
@@ -117,9 +117,6 @@ def get_class(img_path):
 
 os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
 root_dir = 'GTSRB/Final_Training/Images/'
-
-#os.chdir('/home/drobert/tfg/')#direccion en corleone
-#root_dir = 'GTSRB/Final_Training/Images/'
 
 
 imgs = []
@@ -217,7 +214,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    #filepath = code_path+"/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    #filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     '''hist = nn_classifier.fit(x_train, y_train,

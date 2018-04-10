@@ -47,15 +47,15 @@ from keras.utils.np_utils import to_categorical
 
 logging.info("program started on - " + str(datetime.datetime.now))
 #local
-#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l"
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l"
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
-fichero_log = (code_path +'/cnn6l.log')
+fichero_log = (code_path +'cnn6l.log')
 
 
 print('Archivo Log en ', fichero_log)
@@ -224,7 +224,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    filepath = code_path+"/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     hist = cnn_classifier.fit(x_train, y_train,

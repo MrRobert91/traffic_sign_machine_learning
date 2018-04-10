@@ -28,6 +28,32 @@ from sklearn.metrics import confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 from sklearn.model_selection import StratifiedKFold
+import datetime
+import logging
+
+
+
+
+#local
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas"
+
+#Corleone
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
+dataset_path='/home/drobert/tfg/'
+
+# Fichero de log
+fichero_log = (code_path +'rf.log')
+
+print('Archivo Log en ', fichero_log)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s : %(levelname)s : %(message)s',
+                    filename = fichero_log,
+                    filemode = 'a',)
+
+logging.info("program started on - " + str(datetime.datetime.now))
+
+
 
 
 NUM_CLASSES = 43
@@ -63,12 +89,8 @@ def get_class(img_path):
     return int(img_path.split('/')[-2])
 
 
-#os.chdir('/home/david/Escritorio/TFG/Pruebas')
-#root_dir = 'GTSRB/Final_Training/Images/'
-
-os.chdir('/home/drobert/tfg/')#direccion en corleone
+os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
 root_dir = 'GTSRB/Final_Training/Images/'
-
 
 imgs = []
 labels = []
@@ -92,10 +114,6 @@ for img_path in all_img_paths:
 X = np.array(imgs, dtype='float32')
 # Make one hot targets
 # Y = np.eye(NUM_CLASSES, dtype='uint8')[labels]
-
-
-# In[3]:
-
 
 # Para el random forest no necesitamos one hot encoding
 Y = np.asarray(labels)
@@ -158,7 +176,7 @@ for train_index, test_index in skf.split(X, Y):
     filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
     filename_clf_list.append(filename)
 
-    pickle.dump(rf_classifier, open(('/home/drobert/tfg/traffic_sign_machine_learning/rf/' + str(filename)), 'wb'))
+    pickle.dump(rf_classifier, open((code_path + str(filename)), 'wb'))
 
     fold = fold + 1
 
@@ -273,3 +291,5 @@ cm = confusion_matrix_list[2]
 
 print(cm)
 
+logging.info("-----------Fin de la prueba con RF -----------")
+logging.info("program started on - " + str(datetime.datetime.now))
