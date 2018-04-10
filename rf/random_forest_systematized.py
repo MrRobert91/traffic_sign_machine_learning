@@ -303,5 +303,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
 
 print(cm)
 
+print("-----------Fin de la prueba con RF -----------")
 logging.info("-----------Fin de la prueba con RF -----------")
 logging.info("program started on - " + str(datetime.datetime.now))
