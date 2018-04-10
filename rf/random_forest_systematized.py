@@ -164,8 +164,9 @@ for train_index, test_index in skf.split(X, Y):
 
     test_accuracy_list.append(test_accuracy)  # lista de las precisiones obtenidas por los random forest
 
-    cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
-    confusion_matrix_list.append(cm)
+    #Son relevantes estas cm? no es mejor guardar solo la de test?
+    #cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
+    #confusion_matrix_list.append(cm)
 
     clf_list.append(rf_classifier)  # lista de cada uno de los los clasificadores
 
@@ -291,10 +292,14 @@ print(result)
 logging.info("Resultado final del modelo medio: ")
 logging.info(result)
 
-# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
+# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
+# la matriz de confusión.
+# Solo mostramos la matriz de confusion del modelo medio.
 
-# In[82]:
-cm = confusion_matrix_list[2]
+y_pred = loaded_model.predict(X_test)
+cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
+
+#cm = confusion_matrix_list[model_indx]
 
 print(cm)
 
