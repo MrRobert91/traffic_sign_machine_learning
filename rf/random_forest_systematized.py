@@ -194,6 +194,7 @@ desviacion_standar = (np.std(test_scores_list))
 
 
 print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
+logging.info(("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar)))
 
 # El accuracy medio con 500 arboles y 10 fold es de 0.975184290242 con un desviacion standar de 0.00221154307211
 #
@@ -270,10 +271,12 @@ def modelo_medio_indx(final, numeros):
 
 
 print("precision media: "+str(precision_media))
+logging.info("precision media: "+str(precision_media))
 
 model_indx = modelo_medio_indx(precision_media, test_scores_list)
-print(model_indx)
 
+print(model_indx)
+logging.info("indice del modelo medio: "+str(model_indx))
 
 # cargamos el modelo medio de disco
 
@@ -281,8 +284,12 @@ os.chdir(code_path)
 modelname = filename_clf_list[model_indx]
 loaded_model = pickle.load(open(modelname, 'rb'))
 result = loaded_model.score(X_test, y_test)
+
 print("Resultado final del modelo medio: ")
 print(result)
+
+logging.info("Resultado final del modelo medio: ")
+logging.info(result)
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es la matriz de confusión. y la mostramos de varia formas. Solo mostramos la matriz de confusion del modelo medio.
 
