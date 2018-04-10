@@ -279,8 +279,6 @@ desviacion_standar = (np.std(val_accuracy_list))
 print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
-#print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
-#logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
 
 ruta_actual = os.getcwd()
 #print(ruta_actual)
