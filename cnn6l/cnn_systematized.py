@@ -181,7 +181,7 @@ print(skf)
 logging.info(skf)
 #cnn_classifier = cnn_model()
 
-#
+
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
