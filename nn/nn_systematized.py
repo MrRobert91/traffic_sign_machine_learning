@@ -82,17 +82,6 @@ def baseline_nn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
-
-#Modelo utilizando reguralizacion (dropout)
-def reg_nn_model():
-    model_reg = Sequential()
-    model_reg.add(Dense(512, activation='relu', input_shape=(dim_data,)))
-    model_reg.add(Dropout(0.5))
-    model_reg.add(Dense(384, activation='relu'))
-    model_reg.add(Dropout(0.5))
-    model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
-    return model_reg
-
 #Modelo utilizando reguralizacion (dropout)
 def reg_nn_model():
     model_reg = Sequential()
@@ -104,6 +93,28 @@ def reg_nn_model():
     model_reg.add(Dropout(0.5))
     model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
     return model_reg
+
+#Modelo utilizando reguralizacion (dropout)
+def reg_nn_model_2():
+    model_reg = Sequential()
+    model_reg.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(512, activation='relu'))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model_reg
+
+#Modelo utilizando reguralizacion (dropout)
+def reg_nn_model_3():
+    model_reg = Sequential()
+    model_reg.add(Dense(512, activation='relu', input_shape=(dim_data,)))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(512, activation='relu'))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model_reg
+
+
 
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
@@ -135,8 +146,6 @@ root_dir = 'GTSRB/Final_Training/Images/'
 imgs = []
 labels = []
 
-ruta_actual = os.getcwd()
-print(ruta_actual)
 
 all_img_paths = glob.glob(os.path.join(root_dir, '*/*.ppm'))
 
@@ -212,7 +221,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    nn_classifier = reg_nn_model()
+    nn_classifier = reg_nn_model_2()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
@@ -230,15 +239,7 @@ for train_index, test_index in skf.split(X, Y):
     #filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
-    '''hist = nn_classifier.fit(x_train, y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              validation_split=0.2,
-              verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule),
-                         ModelCheckpoint(filepath, save_best_only=True)]
 
-              )'''
 
     hist = nn_classifier.fit(x_train, y_train,
                              batch_size=batch_size,
@@ -290,24 +291,13 @@ desviacion_standar = (np.std(val_accuracy_list))
 print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
-#print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
-#logging.info("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
-
-ruta_actual = os.getcwd()
-#print(ruta_actual)
-#print(os.listdir(ruta_actual))
+# Cargamos el archivo csv con los datos de test
 os.chdir(dataset_path+'/GTSRB')#En local
-#os.chdir('/home/drobert/tfg/GTSRB')#En corleone
-
-# Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
 test = pd.read_csv('GT-final_test.csv', sep=';')
-#test.head(10)
-
-# In[61]:
 
 # Cargamos el dataset de test
-os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
-#os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')
+
 
 X_test = []
 y_test = []
