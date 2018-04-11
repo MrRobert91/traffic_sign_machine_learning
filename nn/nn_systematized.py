@@ -251,10 +251,10 @@ for train_index, test_index in skf.split(X, Y):
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
-    print("history:")
-    print(hist.history)
-    logging.info("history:")
-    logging.info(hist.history)
+    #print("history:")
+    #print(hist.history)
+    #logging.info("history:")
+    #logging.info(hist.history)
 
 
     val_accuracy = nn_classifier.evaluate(x_test, y_test, verbose=1)
