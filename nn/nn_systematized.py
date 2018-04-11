@@ -82,6 +82,17 @@ def baseline_nn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
+
+#Modelo utilizando reguralizacion (dropout)
+def reg_nn_model():
+    model_reg = Sequential()
+    model_reg.add(Dense(512, activation='relu', input_shape=(dim_data,)))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(384, activation='relu'))
+    model_reg.add(Dropout(0.5))
+    model_reg.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model_reg
+
 #Modelo utilizando reguralizacion (dropout)
 def reg_nn_model():
     model_reg = Sequential()
