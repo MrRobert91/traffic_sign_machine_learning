@@ -144,8 +144,9 @@ filename_clf_list = []
 
 n_trees = 1000
 fold = 1
+splits = 3
 
-skf = StratifiedKFold(n_splits=3)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
+skf = StratifiedKFold(n_splits=splits)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
 
 for train_index, test_index in skf.split(X, Y):
@@ -177,21 +178,16 @@ for train_index, test_index in skf.split(X, Y):
     filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
     filename_clf_list.append(filename)
 
-    pickle.dump(rf_classifier, open((code_path + str(filename)), 'wb'))
+    #pickle.dump(rf_classifier, open((code_path + str(filename)), 'wb'))
 
     fold = fold + 1
 
-#
 #  test_scores_list con 35 arboles 94% aprox:
 #  [0.93603672532517213, 0.9406273909716909, 0.94008722932129463]
-
-# In[55]:
 
 
 precision_media = (np.mean(test_scores_list))
 desviacion_standar = (np.std(test_scores_list))
-
-# In[56]:
 
 
 print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
@@ -231,29 +227,11 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 X_test = np.array(X_test)
 y_test = np.array(y_test)
 
-
-print(X_test.shape)
-print(y_test.shape)
-
-
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
 X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
-print(X_test.shape)
-print(y_test.shape)
 
-# cargamos un modelo de disco
-'''filename = 'rf_35trees_1fold'
-loaded_model = pickle.load(open(filename, 'rb'))
-result = loaded_model.score(X_test, y_test)
-print(result)'''
-
-# Es una medida que es la media de las clasificaciones correctas.
-# https://stackoverflow.com/questions/31438476/parameter-oob-score-in-scikit-learn-equals-accuracy-or-error
-
-# Función para encontrar el modelo que está mas proximo a la media
-
-
+# Función para encontrar el modelo que está más próximo a la media
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
         menor = numeros[0]
@@ -279,12 +257,23 @@ model_indx = modelo_medio_indx(precision_media, test_scores_list)
 print(model_indx)
 logging.info("indice del modelo medio: "+str(model_indx))
 
-# cargamos el modelo medio de disco
-
 os.chdir(code_path)
+
+# cargamos el modelo medio de disco
+#modelname = filename_clf_list[model_indx]
+#loaded_model = pickle.load(open(modelname, 'rb'))
+#result = loaded_model.score(X_test, y_test)
+
+#--------------------------
+#Otra forma sin guardar todods los modelos de entrenamiento
+#filename_bestmodel = 'rf_' + str(n_trees) + 'trees_' + str(splits) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
 modelname = filename_clf_list[model_indx]
-loaded_model = pickle.load(open(modelname, 'rb'))
-result = loaded_model.score(X_test, y_test)
+bestmodel = clf_list[model_indx]
+result = bestmodel.score(X_test, y_test)
+
+
+pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
+
 
 print("Resultado final del modelo medio: ")
 print(result)
@@ -292,11 +281,12 @@ print(result)
 logging.info("Resultado final del modelo medio: ")
 logging.info(result)
 
+
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
 # la matriz de confusión.
 # Solo mostramos la matriz de confusion del modelo medio.
 
-y_pred = loaded_model.predict(X_test)
+y_pred = bestmodel.predict(X_test)
 cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
 
 #cm = confusion_matrix_list[model_indx]
