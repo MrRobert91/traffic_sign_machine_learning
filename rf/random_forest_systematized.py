@@ -305,4 +305,4 @@ print(cm)
 
 print("-----------Fin de la prueba con RF -----------")
 logging.info("-----------Fin de la prueba con RF -----------")
-logging.info("program started on - " + str(datetime.datetime.now))
+logging.info("program ended on - " + str(datetime.datetime.now))

@@ -401,8 +401,8 @@ print(y_pred_no_one_hot.shape)
 
 cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
-logging.info("matriz de confusión del modelo medio: ")
-logging.info(cm)
+#logging.info("matriz de confusión del modelo medio: ")
+#logging.info(cm)
 
 
 print("Fin de la prueba con CNN de 6 capas convolucionales")
