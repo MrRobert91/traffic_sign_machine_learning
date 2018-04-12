@@ -47,8 +47,6 @@ import datetime
 from keras.utils.np_utils import to_categorical
 
 
-logging.info("program started on - " + str(datetime.datetime.now))
-
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -70,6 +68,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
+logging.info("program started on - " + str(datetime.datetime.now))
 logging.info('Clasificación de señales de tráfico con nn')
 
 dim_data = (IMG_SIZE*IMG_SIZE*3)
