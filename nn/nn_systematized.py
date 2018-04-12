@@ -68,6 +68,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
+logging.info("-----------Inicio de la prueba con NN -----------")
 logging.info("program started on - " + str(datetime.datetime.now))
 logging.info('Clasificación de señales de tráfico con nn')
 
