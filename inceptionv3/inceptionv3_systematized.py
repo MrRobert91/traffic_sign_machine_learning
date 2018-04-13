@@ -27,7 +27,7 @@ import datetime
 import time
 
 # load the user configs
-with open('conf.json') as f:
+with open('conf_local.json') as f:
 	config = json.load(f)
 
 # config variables
