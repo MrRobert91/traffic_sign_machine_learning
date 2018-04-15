@@ -68,6 +68,7 @@ le.fit([tl for tl in train_labels])
 features = []
 labels = []
 
+
 # loop over all the labels in the folder
 count = 1
 for i, label in enumerate(train_labels):
