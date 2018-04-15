@@ -49,9 +49,9 @@ start = time.time()
 # check for pretrained weight usage or not
 # check for top layers to be included or not
 
-base_model = InceptionV3(include_top=include_top, weights=weights, input_tensor=Input(shape=(299,299,3)))
-model = Model(input=base_model.input, output=base_model.get_layer('custom').output)
-image_size = (299, 299)
+base_model = VGG19(weights=weights)
+model = Model(input=base_model.input, output=base_model.get_layer('fc1').output)
+image_size = (224, 224)
 
 
 print ("[INFO] successfully loaded base model and model...")
