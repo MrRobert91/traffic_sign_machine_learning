@@ -1,0 +1,17 @@
+{
+	"model"           : "vgg19",
+	"weights"         : "imagenet",
+	"include_top"     : false,
+
+	"train_path"      : "/home/drobert/tfg/GTSRB/Final_Training/Images/",
+	"test_path"		  : "/home/drobert/tfg/GTSRB/Final_Test/Images/",
+	"features_path"   : "/home/drobert/tfg/traffic_sign_machine_learning/vgg19/output/features.h5",
+	"labels_path"     : "/home/drobert/tfg/traffic_sign_machine_learning/vgg19/output/labels.h5",
+	"results"         : "/home/drobert/tfg/traffic_sign_machine_learning/vgg19/output/results.txt",
+	"classifier_path" : "/home/drobert/tfg/traffic_sign_machine_learning/vgg19/output/classifier.pickle",
+	"model_path"	  : "/home/drobert/tfg/traffic_sign_machine_learning/vgg19/output/model",
+
+	"test_size"       : 0.20,
+	"seed"            : 13,
+	"num_classes"     : 43
+}
