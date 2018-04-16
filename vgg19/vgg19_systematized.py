@@ -81,6 +81,9 @@ features = []
 labels = []
 
 
+# Vamos a medir cuanto tarda en recorrer todas las imagenes
+init_loop = datetime.datetime.now().replace(microsecond=0)
+
 # loop over all the labels in the folder
 count = 1
 for i, label in enumerate(train_labels):
@@ -98,6 +101,10 @@ for i, label in enumerate(train_labels):
 	    #print ("[INFO] processed - " + str(count))
 	    count += 1
 	print ("[INFO] completed label - " + label)
+
+end_loop = datetime.datetime.now().replace(microsecond=0)
+print("Tarda %s en recorrer todas las imagenes" % format((init_loop-end_loop).strftime("%Y-%m-%d %H:%M")))
+
 
 # encode the labels using LabelEncoder
 le = LabelEncoder()
