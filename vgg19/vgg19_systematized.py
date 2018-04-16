@@ -56,6 +56,8 @@ image_size = (224, 224)
 
 print ("[INFO] successfully loaded base model and model...")
 
+
+
 # path to training dataset
 train_labels = os.listdir(train_path)
 
@@ -74,16 +76,16 @@ count = 1
 for i, label in enumerate(train_labels):
 	cur_path = train_path + "/" + label
 	count = 1
-	for image_path in glob.glob(cur_path + "/*.jpg"):
+	for image_path in glob.glob(cur_path + "/*.ppm"):
 	    img = image.load_img(image_path, target_size=image_size)
 	    x = image.img_to_array(img)
 	    x = np.expand_dims(x, axis=0)
-	    x = preprocess_input(x)
+	    x = preprocess_input(x) #will scale pixels between -1 and 1,sample-wise.
 	    feature = model.predict(x)
 	    flat = feature.flatten()
 	    features.append(flat)
 	    labels.append(label)
-	    print ("[INFO] processed - " + str(count))
+	    #print ("[INFO] processed - " + str(count))
 	    count += 1
 	print ("[INFO] completed label - " + label)
 
