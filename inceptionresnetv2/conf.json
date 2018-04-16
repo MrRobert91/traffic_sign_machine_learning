@@ -10,7 +10,7 @@
 	"results"         : "/home/drobert/tfg/traffic_sign_machine_learning/inceptionresnetv2/output/results.txt",
 	"classifier_path" : "/home/drobert/tfg/traffic_sign_machine_learning/inceptionresnetv2/output/classifier.pickle",
 	"model_path"	  : "/home/drobert/tfg/traffic_sign_machine_learning/inceptionresnetv2/output/model",
-	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/inceptionresnetv2/output/vgg19.log",
+	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/inceptionresnetv2/output/inceptionresnetv2.log",
 
 	"test_size"       : 0.20,
 	"seed"            : 13,
