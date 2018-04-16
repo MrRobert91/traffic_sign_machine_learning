@@ -10,7 +10,7 @@
 	"results"         : "/home/drobert/tfg/traffic_sign_machine_learning/xception/output/results.txt",
 	"classifier_path" : "/home/drobert/tfg/traffic_sign_machine_learning/xception/output/classifier.pickle",
 	"model_path"	  : "/home/drobert/tfg/traffic_sign_machine_learning/xception/output/model",
-	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/xception/output/vgg19.log",
+	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/xception/output/xception.log",
 
 	"test_size"       : 0.20,
 	"seed"            : 13,
