@@ -65,7 +65,6 @@ image_size = (224, 224)
 
 print ("[INFO] successfully loaded base model and model...")
 
-
 # path to training dataset
 train_labels = os.listdir(train_path)
 
