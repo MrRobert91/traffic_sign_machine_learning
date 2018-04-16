@@ -53,7 +53,7 @@ seed      		= config["seed"]
 classifier_path = config["classifier_path"]
 log_path		= config["log_path"]
 
-fichero_log = (log_path +'rf.log')
+fichero_log = (log_path)
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
