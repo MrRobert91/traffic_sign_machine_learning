@@ -33,6 +33,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import pickle
+import logging
 
 # load the user configs
 with open('conf.json') as f:
@@ -50,9 +51,18 @@ results 		= config["results"]
 model_path 		= config["model_path"]
 seed      		= config["seed"]
 classifier_path = config["classifier_path"]
+log_path		= config["log_path"]
 
+fichero_log = (log_path +'rf.log')
+
+print('Archivo Log en ', fichero_log)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s : %(levelname)s : %(message)s',
+                    filename = fichero_log,
+                    filemode = 'a',)
 # start time
 print ("[STATUS] start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
 # create the pretrained models
@@ -64,12 +74,14 @@ model = Model(input=base_model.input, output=base_model.get_layer('fc1').output)
 image_size = (224, 224)
 
 print ("[INFO] successfully loaded base model and model...")
+logging.info((" successfully loaded base model and model..."))
 
 # path to training dataset
 train_labels = os.listdir(train_path)
 
 # encode the labels
 print ("[INFO] encoding labels...")
+logging.info("encoding labels...")
 le = LabelEncoder()
 le.fit([tl for tl in train_labels])
 
@@ -97,11 +109,12 @@ for i, label in enumerate(train_labels):
 	    labels.append(label)
 	    #print ("[INFO] processed - " + str(count))
 	    count += 1
-	print ("[INFO] completed label - " + label)
+	print("[INFO] completed label - " + label)
+	logging.info((" completed label - " + label))
 
 end_loop = datetime.datetime.now().replace(microsecond=0)
 print("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
-
+logging.info("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 
 # encode the labels using LabelEncoder
 le = LabelEncoder()
@@ -110,6 +123,10 @@ le_labels = le.fit_transform(labels)
 # get the shape of training labels
 print ("[STATUS] training labels: {}".format(le_labels))
 print ("[STATUS] training labels shape: {}".format(le_labels.shape))
+
+logging.info((" training labels: {}".format(le_labels)))
+logging.info(" training labels shape: {}".format(le_labels.shape))
+
 
 # save features and labels
 h5f_data = h5py.File(features_path, 'w')
@@ -129,15 +146,18 @@ with open(model_path + str(test_size) + ".json", "w") as json_file:
 # save weights
 model.save_weights(model_path + str(test_size) + ".h5")
 print("[STATUS] saved model and weights to disk..")
+logging.info("saved model and weights to disk..")
 
 print ("[STATUS] features and labels saved..")
+logging.info(" features and labels saved..")
 
-# end time
-end = time.time()
-print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+
 
 print("--------------- Feature extraction completed. --------------------")
+logging.info("--------------- Feature extraction completed. --------------------")
+
 print("--------------- Start training. --------------------")
+logging.info("--------------- Start training. --------------------")
 
 # import features and labels
 h5f_data  = h5py.File(features_path, 'r')
@@ -153,29 +173,42 @@ h5f_data.close()
 h5f_label.close()
 
 # verify the shape of features and labels
-print ("[INFO] features shape: {}".format(features.shape))
-print ("[INFO] labels shape: {}".format(labels.shape))
+print("[INFO] features shape: {}".format(features.shape))
+print("[INFO] labels shape: {}".format(labels.shape))
 
-print ("[INFO] training started...")
+logging.info(" features shape: {}".format(features.shape))
+logging.info("[INFO] labels shape: {}".format(labels.shape))
+
+print("[INFO] training started...")
+logging.info("[INFO] training started...")
 # split the training and testing data
 (trainData, testData, trainLabels, testLabels) = train_test_split(np.array(features),
                                                                   np.array(labels),
                                                                   test_size=test_size,
                                                                   random_state=seed)
 
-print ("[INFO] splitted train and test data...")
-print ("[INFO] train data  : {}".format(trainData.shape))
-print ("[INFO] test data   : {}".format(testData.shape))
-print ("[INFO] train labels: {}".format(trainLabels.shape))
-print ("[INFO] test labels : {}".format(testLabels.shape))
+print("[INFO] splitted train and test data...")
+print("[INFO] train data  : {}".format(trainData.shape))
+print("[INFO] test data   : {}".format(testData.shape))
+print("[INFO] train labels: {}".format(trainLabels.shape))
+print("[INFO] test labels : {}".format(testLabels.shape))
+
+logging.info(" splitted train and test data...")
+logging.info(" train data  : {}".format(trainData.shape))
+logging.info(" test data   : {}".format(testData.shape))
+logging.info(" train labels: {}".format(trainLabels.shape))
+logging.info(" test labels : {}".format(testLabels.shape))
 
 # use logistic regression as the model
-print ("[INFO] creating model...")
+print("[INFO] creating model...")
+logging.info("[INFO] creating model...")
+
 model = LogisticRegression(random_state=seed)
 model.fit(trainData, trainLabels)
 
 # use rank-1 and rank-5 predictions
 print ("[INFO] evaluating model...")
+logging.info(" evaluating model...")
 f = open(results, "w")
 rank_1 = 0
 rank_5 = 0
@@ -203,6 +236,9 @@ rank_5 = (rank_5 / float(len(testLabels))) * 100
 f.write("Rank-1: {:.2f}%\n".format(rank_1))
 f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
 
+logging.info("Rank-1: {:.2f}%\n".format(rank_1))
+logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
+
 # evaluate the model of test data
 preds = model.predict(testData)
 
@@ -212,19 +248,21 @@ f.close()
 
 # dump classifier to file
 print ("[INFO] saving model...")
+logging.info(" saving model...")
 pickle.dump(model, open(classifier_path, 'wb'))
 
 # display the confusion matrix
-print ("[INFO] confusion matrix")
+#print ("[INFO] confusion matrix")
 
 # get the list of training lables
 labels = sorted(list(os.listdir(train_path)))
 
 # plot the confusion matrix
 cm = confusion_matrix(testLabels, preds)
-sns.heatmap(cm,
-            annot=True,
-            cmap="Set2")
-plt.show()
+#sns.heatmap(cm, annot=True, cmap="Set2")
+#plt.show()
 
-
+# end time
+end = time.time()
+print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
