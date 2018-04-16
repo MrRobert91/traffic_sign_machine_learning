@@ -100,7 +100,7 @@ for i, label in enumerate(train_labels):
 	print ("[INFO] completed label - " + label)
 
 end_loop = datetime.datetime.now().replace(microsecond=0)
-print("Tarda %s en recorrer todas las imagenes" % format((init_loop-end_loop).strftime("%Y-%m-%d %H:%M")))
+print("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 
 
 # encode the labels using LabelEncoder
