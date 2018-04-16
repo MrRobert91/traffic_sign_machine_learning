@@ -35,7 +35,7 @@ from sklearn.metrics import confusion_matrix
 import pickle
 
 # load the user configs
-with open('conf_local.json') as f:
+with open('conf.json') as f:
 	config = json.load(f)
 
 # config variables
@@ -63,9 +63,7 @@ base_model = VGG19(weights=weights)
 model = Model(input=base_model.input, output=base_model.get_layer('fc1').output)
 image_size = (224, 224)
 
-
 print ("[INFO] successfully loaded base model and model...")
-
 
 
 # path to training dataset
