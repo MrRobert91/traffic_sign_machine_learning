@@ -121,3 +121,9 @@ print ("[STATUS] features and labels saved..")
 # end time
 end = time.time()
 print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+
+print("--------------- Feature extraction completed. --------------------")
+
+
+
+
