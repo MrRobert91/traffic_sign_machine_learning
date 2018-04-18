@@ -79,6 +79,7 @@ logging.info((" successfully loaded base model and model..."))
 # path to training dataset
 train_labels = os.listdir(train_path)
 
+
 # encode the labels
 print ("[INFO] encoding labels...")
 logging.info("encoding labels...")
