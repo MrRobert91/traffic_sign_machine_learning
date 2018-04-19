@@ -35,6 +35,11 @@ from sklearn.metrics import confusion_matrix
 import pickle
 import logging
 
+
+#Errores de memoria. Parece que solo se puede lanzar un programa que use la gpu
+# a la vez. https://github.com/tensorflow/models/issues/1064
+
+
 # load the user configs
 with open('conf.json') as f:
 	config = json.load(f)
