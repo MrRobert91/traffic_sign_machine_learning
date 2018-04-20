@@ -152,7 +152,6 @@ print ("[STATUS] features and labels saved..")
 logging.info(" features and labels saved..")
 
 
-
 print("--------------- Feature extraction completed. --------------------")
 logging.info("--------------- Feature extraction completed. --------------------")
 
