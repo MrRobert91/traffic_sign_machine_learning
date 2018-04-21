@@ -3,8 +3,6 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # keras imports
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.applications.vgg19 import VGG19, preprocess_input
 from keras.applications.xception import Xception, preprocess_input
 from keras.applications.resnet50 import ResNet50, preprocess_input
 from keras.applications.inception_resnet_v2 import InceptionResNetV2, preprocess_input
