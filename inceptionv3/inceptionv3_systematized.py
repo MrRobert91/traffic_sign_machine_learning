@@ -61,7 +61,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filename = fichero_log,
                     filemode = 'a',)
 # start time
-print ("[STATUS] start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] ------------- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
@@ -263,7 +263,7 @@ cm = confusion_matrix(testLabels, preds)
 
 # end time
 end = time.time()
-print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] ------------------- end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
