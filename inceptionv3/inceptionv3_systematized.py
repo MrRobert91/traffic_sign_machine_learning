@@ -89,7 +89,6 @@ le.fit([tl for tl in train_labels])
 features = []
 labels = []
 
-
 # Vamos a medir cuanto tarda en recorrer todas las imagenes
 init_loop = datetime.datetime.now().replace(microsecond=0)
 
