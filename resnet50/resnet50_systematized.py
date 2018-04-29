@@ -70,8 +70,8 @@ start = time.time()
 # check for top layers to be included or not
 
 base_model = ResNet50(weights=weights)
-model = Model(input=base_model.input, output=base_model.get_layer('flatten').output)
-#model = Model(input=base_model.input, output=base_model.get_layer('custom').output)
+#model = Model(input=base_model.input, output=base_model.get_layer('flatten').output)
+model = Model(input=base_model.input, output=base_model.get_layer('custom').output)
 image_size = (224, 224)
 
 print ("[INFO] successfully loaded base model and model...")
