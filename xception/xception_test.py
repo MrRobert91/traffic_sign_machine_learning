@@ -90,7 +90,7 @@ test_images = os.listdir(test_path)
 # variables to hold features and labels
 features = []
 labels = []
-
+'''
 print("looping through each image in the test data...")
 logging.info("looping through each image in the test data...")
 # loop through each image in the test data
@@ -111,36 +111,41 @@ for image_path in test_images:
     # perform prediction on test image
     #print("I think it is a " + train_labels[preds[0]])
     #img_color = cv2.imread(path, 1)
-
-
-
+'''
 
 
 
 
 # Cargamos el archivo csv con los datos de test
 test = pd.read_csv('GT-final_test.csv', sep=';')
-print("test.head(10) :")
-test.head(10)
-
-# In[61]:
+#print("test.head(10) :")
+#test.head(10)
 
 
 # Cargamos el dataset de test
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(test_path)#en corleone
 
-X_test = []
-y_test = []
+#X_test = []
+#y_test = []
 i = 0
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
     # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
     img_path = os.path.join(os.getcwd(), file_name)
-    X_test.append(preprocess_input(io.imread(img_path)))
-    y_test.append(class_id)
+    #--recorremos todas las imagenes de test y extraemos la features--
+    img = image.load_img(img_path, target_size=image_size)
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
+    feature = model.predict(x)
+    flat = feature.flatten()
+    flat = np.expand_dims(flat, axis=0)
+    features.append(flat)
+    #----
+    labels.append(class_id)
 
-X_test = np.array(X_test)
-y_test = np.array(y_test)
+X_test = np.array(features)
+y_test = np.array(labels)
 
 #result on the logistic regression classifier
 result = classifier.score(X_test, y_test)
