@@ -145,6 +145,7 @@ result = classifier.score(X_test, y_test)
 print("Resultado final del modelo en test: ")
 print(result)
 
+
 logging.info("Resultado final del modelo en test: ")
 logging.info(result)
 
