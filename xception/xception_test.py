@@ -77,6 +77,8 @@ image_size = (299, 299)
 # get all the train labels
 train_labels = os.listdir(train_path)
 
+
+print('nombres de las etiquetas(labels): ')
 for label in train_labels:
     print(label)
 
