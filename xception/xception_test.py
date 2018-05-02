@@ -31,6 +31,8 @@ import pickle
 import datetime
 import time
 import logging
+import pandas as pd
+from skimage import io
 
 # load the user configs
 with open('conf.json') as f:
@@ -107,13 +109,44 @@ for image_path in test_images:
     # perform prediction on test image
     #print("I think it is a " + train_labels[preds[0]])
     #img_color = cv2.imread(path, 1)
-    #cv2.putText(img_color, "I think it is a " + prediction, (140, 445), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-    #cv2.imshow("test", img_color)
 
-    # key tracker
-    #key = cv2.waitKey(0) & 0xFF
-    #if (key == ord('q')):
-        #cv2.destroyAllWindows()
+
+
+
+
+
+
+# Cargamos el archivo csv con los datos de test
+test = pd.read_csv('GT-final_test.csv', sep=';')
+print("test.head(10) :")
+test.head(10)
+
+# In[61]:
+
+
+# Cargamos el dataset de test
+#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
+os.chdir(test_path)#en corleone
+
+X_test = []
+y_test = []
+i = 0
+for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
+    img_path = os.path.join(os.getcwd(), file_name)
+    X_test.append(preprocess_input(io.imread(img_path)))
+    y_test.append(class_id)
+
+X_test = np.array(X_test)
+y_test = np.array(y_test)
+
+#result on the logistic regression classifier
+result = classifier.score(X_test, y_test)
+print("Resultado final del modelo en test: ")
+print(result)
+
+logging.info("Resultado final del modelo en test: ")
+logging.info(result)
 
 end = time.time()
 print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
