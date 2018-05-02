@@ -80,9 +80,9 @@ image_size = (299, 299)
 train_labels = os.listdir(train_path)
 
 
-print('nombres de las etiquetas(labels): ')
-for label in train_labels:
-    print(label)
+#print('nombres de las etiquetas(labels): ')
+#for label in train_labels:
+#    print(label)
 
 # get all the test images paths
 test_images = os.listdir(test_path)
