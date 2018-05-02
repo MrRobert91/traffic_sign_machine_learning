@@ -77,8 +77,15 @@ image_size = (299, 299)
 # get all the train labels
 train_labels = os.listdir(train_path)
 
+for label in train_labels:
+    print(label)
+
 # get all the test images paths
 test_images = os.listdir(test_path)
+
+# variables to hold features and labels
+features = []
+labels = []
 
 # loop through each image in the test data
 for image_path in test_images:
@@ -90,11 +97,13 @@ for image_path in test_images:
     feature = model.predict(x)
     flat = feature.flatten()
     flat = np.expand_dims(flat, axis=0)
-    preds = classifier.predict(flat)
-    prediction = train_labels[preds[0]]
+    features.append(flat)
+
+    #preds = classifier.predict(flat)
+    #prediction = train_labels[preds[0]]
 
     # perform prediction on test image
-    print("I think it is a " + train_labels[preds[0]])
+    #print("I think it is a " + train_labels[preds[0]])
     #img_color = cv2.imread(path, 1)
     #cv2.putText(img_color, "I think it is a " + prediction, (140, 445), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     #cv2.imshow("test", img_color)
