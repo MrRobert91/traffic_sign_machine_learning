@@ -91,6 +91,8 @@ test_images = os.listdir(test_path)
 features = []
 labels = []
 
+print("looping through each image in the test data...")
+logging.info("looping through each image in the test data...")
 # loop through each image in the test data
 for image_path in test_images:
     path = test_path + "/" + image_path
