@@ -28,6 +28,10 @@ import json
 import pickle
 #import cv2
 
+import datetime
+import time
+import logging
+
 # load the user configs
 with open('conf/conf.json') as f:
     config = json.load(f)
@@ -45,6 +49,20 @@ results = config["results"]
 model_path = config["model_path"]
 seed = config["seed"]
 classifier_path = config["classifier_path"]
+log_path		= config["log_path"]
+
+
+fichero_log = (log_path)
+
+print('Archivo Log en ', fichero_log)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s : %(levelname)s : %(message)s',
+                    filename = fichero_log,
+                    filemode = 'a',)
+# start time
+print ("[STATUS] xception test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" xception test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+start = time.time()
 
 # load the trained logistic regression classifier
 print("[INFO] loading the classifier...")
@@ -85,3 +103,8 @@ for image_path in test_images:
     #key = cv2.waitKey(0) & 0xFF
     #if (key == ord('q')):
         #cv2.destroyAllWindows()
+
+end = time.time()
+print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+
