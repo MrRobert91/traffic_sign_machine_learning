@@ -77,7 +77,7 @@ image_size = (299, 299)
 
 
 # get all the train labels
-train_labels = os.listdir(train_path)
+#train_labels = os.listdir(train_path)
 
 
 #print('nombres de las etiquetas(labels): ')
@@ -85,7 +85,7 @@ train_labels = os.listdir(train_path)
 #    print(label)
 
 # get all the test images paths
-test_images = os.listdir(test_path)
+#test_images = os.listdir(test_path)
 
 # variables to hold features and labels
 features = []
@@ -114,7 +114,7 @@ for image_path in test_images:
 '''
 
 
-
+os.chdir('/home/drobert/tfg/GTSRB')
 
 # Cargamos el archivo csv con los datos de test
 test = pd.read_csv('GT-final_test.csv', sep=';')
