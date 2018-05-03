@@ -159,8 +159,8 @@ logging.info("[INFO] test labels : {}".format(y_test.shape))
 #result on the logistic regression classifier
 result = classifier.score(X_test, y_test)
 
-print("test_accuracy final del modelo en test: %.2f%% " % (result))
-logging.info("test_accuracy final del modelo en test: %.2f%% " % (result))
+print("test_accuracy final del modelo en test: %.2f%% " % (result * 100))
+logging.info("test_accuracy final del modelo en test: %.2f%% " % (result * 100))
 
 
 end = time.time()
