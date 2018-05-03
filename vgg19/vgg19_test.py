@@ -62,7 +62,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filename = fichero_log,
                     filemode = 'a',)
 # start time
-print ("[STATUS] vgg19 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] ---------vgg19 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" vgg19 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
