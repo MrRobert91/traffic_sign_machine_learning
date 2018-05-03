@@ -63,7 +63,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)
 # start time
 print ("[STATUS] ------------ xception test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" xception test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" -------------xception test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
 # load the trained logistic regression classifier

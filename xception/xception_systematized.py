@@ -62,7 +62,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)
 # start time
 print ("[STATUS] --------xception systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" -------xception systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
 # create the pretrained models
