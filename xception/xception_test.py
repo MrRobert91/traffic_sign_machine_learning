@@ -157,9 +157,8 @@ logging.info("[INFO] test labels : {}".format(y_test.shape))
 #print("Tiene que ser algo como: (31367, 2048) y las labels : (7842,) ")
 
 #result on the logistic regression classifier
-
 result = classifier.score(X_test, y_test)
-print("result: "+result)
+print("result: "+ result)
 
 test_accuracy = classifier.evaluate(X_test, y_test, verbose=1)
 print("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy))
