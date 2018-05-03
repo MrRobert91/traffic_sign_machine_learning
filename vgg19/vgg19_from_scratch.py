@@ -76,7 +76,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)
 # start time
 print ("[STATUS] -------------vgg19 from scratch - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" -------------vgg19 from scratch - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
 # create the pretrained models
