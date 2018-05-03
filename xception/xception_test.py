@@ -139,7 +139,7 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
     x = preprocess_input(x)
     feature = model.predict(x)
     flat = feature.flatten()
-    flat = np.expand_dims(flat, axis=0)
+    #flat = np.expand_dims(flat, axis=0)#Para predecir las imagenes una a una
     features.append(flat)
     #----
     labels.append(class_id)
