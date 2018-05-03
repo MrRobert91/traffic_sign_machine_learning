@@ -51,6 +51,7 @@ from keras.utils.np_utils import to_categorical
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
+
 #Corleone
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn/"
 dataset_path='/home/drobert/tfg/'
