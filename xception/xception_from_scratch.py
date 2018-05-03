@@ -83,11 +83,12 @@ start = time.time()
 # check for pretrained weight usage or not
 # check for top layers to be included or not
 NUM_CLASSES = 43
-IMG_SIZE = 71
+IMG_SIZE = 299
 
 
 
-model = Xception(weights=None,include_top=True,input_shape=(IMG_SIZE, IMG_SIZE, 3),classes=1000 )
+model = Xception(include_top=True,classes=1000 )
+
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
     # normalizacion del histograma en el canal 'v'
@@ -218,8 +219,7 @@ for train_index, test_index in skf.split(X, Y):
               epochs=epochs,
               validation_split=0.2,
               verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule),
-                         ModelCheckpoint(filepath, save_best_only=True)]
+              callbacks=[LearningRateScheduler(lr_schedule)]
 
               )
 
