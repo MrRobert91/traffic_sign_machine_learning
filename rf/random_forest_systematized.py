@@ -249,8 +249,8 @@ def modelo_medio_indx(final, numeros):
     # return numeros[index(el_menor(diferencia))]
 
 
-print("precision media: "+str(precision_media))
-logging.info("precision media: "+str(precision_media))
+print("precision media en training : "+str(precision_media))
+logging.info("precision media en training: "+str(precision_media))
 
 model_indx = modelo_medio_indx(precision_media, test_scores_list)
 
@@ -275,10 +275,10 @@ result = bestmodel.score(X_test, y_test)
 pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
 
 
-print("Resultado final del modelo medio: ")
+print("Resultado final del modelo medio en Test: ")
 print(result)
 
-logging.info("Resultado final del modelo medio: ")
+logging.info("Resultado final del modelo medio en Test: ")
 logging.info(result)
 
 
