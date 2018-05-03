@@ -137,7 +137,7 @@ logging.info("[INFO] test labels : {}".format(y_test.shape))
 result = classifier.score(X_test, y_test)
 print("result: "+ result)
 
-test_accuracy = classifier.evaluate(X_test, y_test, verbose=1)
+score, test_accuracy = classifier.evaluate(X_test, y_test, verbose=1)
 print("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy))
 logging.info("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy))
 
