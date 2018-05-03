@@ -147,6 +147,12 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 X_test = np.array(features)
 y_test = np.array(labels)
 
+print("[INFO] test data   : {}".format(X_test.shape))
+print("[INFO] test labels : {}".format(y_test.shape))
+logging.info("[INFO] test data   : {}".format(X_test.shape))
+logging.info("[INFO] test labels : {}".format(y_test.shape))
+print("Tiene que ser algo como: (31367, 2048) y las labels : (7842,) ")
+
 #result on the logistic regression classifier
 result = classifier.score(X_test, y_test)
 print("Resultado final del modelo en test: ")
