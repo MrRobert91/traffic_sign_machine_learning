@@ -87,9 +87,7 @@ image_size = (299, 299)
 # get all the test images paths
 #test_images = os.listdir(test_path)
 
-# variables to hold features and labels
-features = []
-labels = []
+
 '''
 print("looping through each image in the test data...")
 logging.info("looping through each image in the test data...")
@@ -126,8 +124,13 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(test_path)#en corleone
 
-#X_test = []
-#y_test = []
+print("looping through each image in the test data...")
+logging.info("looping through each image in the test data...")
+
+# variables to hold features and labels
+features = []
+labels = []
+
 i = 0
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
     # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
