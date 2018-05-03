@@ -39,6 +39,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D
 from keras.layers.pooling import MaxPooling2D
+from keras.optimizers import RMSprop
 
 # load the user configs
 with open('conf.json') as f:
@@ -220,6 +221,11 @@ def nn_model():
     model.add(Dense(43, activation='softmax'))
 
 model = nn_model()
+
+#Compilamos el modelo
+model.compile(optimizer=RMSprop(lr=2e-4),
+              loss='categorical_crossentropy',
+              metrics=['acc'])
 
 model.fit(trainData, trainLabels)
 
