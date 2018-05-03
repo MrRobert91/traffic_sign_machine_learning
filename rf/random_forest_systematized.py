@@ -271,15 +271,12 @@ modelname = filename_clf_list[model_indx]
 bestmodel = clf_list[model_indx]
 result = bestmodel.score(X_test, y_test)
 
-
+#Guardamos el modelo medio
 pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
 
 
-print("Resultado final del modelo medio en Test: ")
-print(result)
-
-logging.info("Resultado final del modelo medio en Test: ")
-logging.info(result)
+print("Resultado final del modelo en test: %.2f%% " % (result))
+logging.info("Resultado final del modelo en test: %.2f%% " % (result))
 
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
