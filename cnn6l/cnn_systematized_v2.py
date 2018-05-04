@@ -254,7 +254,6 @@ for train_index, test_index in skf.split(X, Y):
     #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
     #datagen.fit(x_train)
 
-
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                         steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
@@ -317,8 +316,8 @@ logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list),
 ruta_actual = os.getcwd()
 #print(ruta_actual)
 #print(os.listdir(ruta_actual))
-os.chdir(dataset_path+'/GTSRB')#En local
-#os.chdir('/home/drobert/tfg/GTSRB')#En corleone
+os.chdir(dataset_path+'/GTSRB')
+
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
 test = pd.read_csv('GT-final_test.csv', sep=';')
