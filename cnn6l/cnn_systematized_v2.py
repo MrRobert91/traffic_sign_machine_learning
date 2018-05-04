@@ -228,7 +228,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 
-
+print('justo antes del for del skf ---')
 for train_index, test_index in skf.split(X, Y):
     # conjuntos de train y test(validacion) para cada fold
     x_train, x_test = X[train_index], X[test_index]
@@ -256,7 +256,8 @@ for train_index, test_index in skf.split(X, Y):
 
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                        steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
+                        steps_per_epoch=(len(x_train) / batch_size), epochs=epochs,
+                        verbose=1, validation_data=(x_test, y_test)                )
 
 
     print("tamaños de x_train e y_train")
@@ -268,7 +269,6 @@ for train_index, test_index in skf.split(X, Y):
     filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5
-
 
 
     #Guardar training / validation loss/accuracy en cada epoch
