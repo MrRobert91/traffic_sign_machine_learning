@@ -233,11 +233,11 @@ def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
 
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
+X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.2)
 
 # Make one hot targets
 y_train_one_hot = np.eye(num_classes, dtype='uint8')[y_train]
-y_test_one_hot = np.eye(num_classes, dtype='uint8')[y_test]
+y_test_one_hot = np.eye(num_classes, dtype='uint8')[y_val]
 
 
 
@@ -251,17 +251,18 @@ model.fit(X, y_train_one_hot,
         batch_size=batch_size,
         nb_epoch=nb_epoch,
         shuffle=True,
+        #validation_split=0.2,
         verbose=1,
-        validation_data=(X_test, y_test_one_hot),
+        validation_data=(X_val, y_test_one_hot),
         )
 
 # Make predictions
-predictions_valid = model.predict(X_test, batch_size=batch_size, verbose=1)
+predictions_valid = model.predict(X_val, batch_size=batch_size, verbose=1)
 
 # Cross-entropy loss score
-score = log_loss(y_test, predictions_valid)
+score = log_loss(y_val, predictions_valid)
 
-val_accuracy = model.evaluate(X_test, y_test, verbose=1)
+val_accuracy = model.evaluate(X_val, y_val, verbose=1)
 
 print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
@@ -270,16 +271,18 @@ clf_list.append(model)  # lista de cada uno de los los clasificadores
 
 
 
-print('lista de accuracys de los modelos: '+str(val_accuracy_list))
-logging.info('lista de accuracys de los modelos: '+str(val_accuracy_list))
+#print('lista de accuracys de los modelos: '+str(val_accuracy_list))
+#logging.info('lista de accuracys de los modelos: '+str(val_accuracy_list))
 
-precision_media = (np.mean(val_accuracy_list))
-desviacion_standar = (np.std(val_accuracy_list))
+#precision_media = (np.mean(val_accuracy_list))
+#desviacion_standar = (np.std(val_accuracy_list))
 
 
-print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
-logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+#print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+#logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
+
+# ---------TEST--------
 
 ruta_actual = os.getcwd()
 #print(ruta_actual)
@@ -315,6 +318,7 @@ y_test = np.array(y_test)
 y_test_one_target = np.eye(num_classes, dtype='uint8')[y_test]
 
 # Función para encontrar el modelo que está mas proximo a la media
+'''
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
         menor = numeros[0]
@@ -330,20 +334,21 @@ def modelo_medio_indx(final, numeros):
         diferencia.append(abs(final - numeros[x]))
     # devuelve el indice del modelo más próximo a la media
     return numeros.index(numeros[el_menor(diferencia)])
+    '''
 
 
 
-print("precision media: "+str(precision_media))
-logging.info("precision media: "+str(precision_media))
+#print("precision media: "+str(precision_media))
+#logging.info("precision media: "+str(precision_media))
 
-model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
+#model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
 
-print("indice del modelo medio: "+str(model_indx))
-logging.info("indice del modelo medio: "+str(model_indx))
+#print("indice del modelo medio: "+str(model_indx))
+#logging.info("indice del modelo medio: "+str(model_indx))
 
 # cargamos el modelo medio de disco
 os.chdir(code_path)
-best_model =clf_list[model_indx]
+best_model =clf_list[0]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
