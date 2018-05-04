@@ -220,7 +220,7 @@ def nn_model():
     model.add(Dropout(0.5))
     model.add(Dense(43, activation='softmax'))
 
-model = nn_model()
+nn_model = nn_model()
 
 #Compilamos el modelo
 ''''model.compile(optimizer=RMSprop(lr=2e-4),
@@ -229,11 +229,11 @@ model = nn_model()
 
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(loss='categorical_crossentropy',
+nn_model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
 
-model.fit(trainData, trainLabels)
+nn_model.fit(trainData, trainLabels)
 
 # use rank-1 and rank-5 predictions
 print ("[INFO] evaluating model...")
@@ -246,7 +246,7 @@ rank_5 = 0
 for (label, features) in zip(testLabels, testData):
 	# predict the probability of each class label and
 	# take the top-5 class labels
-	predictions = model.predict_proba(np.atleast_2d(features))[0]
+	predictions = nn_model.predict_proba(np.atleast_2d(features))[0]
 	predictions = np.argsort(predictions)[::-1][:5]
 
 	# rank-1 prediction increment
@@ -269,7 +269,7 @@ logging.info("Rank-1: {:.2f}%\n".format(rank_1))
 logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
 
 # evaluate the model of test data
-preds = model.predict(testData)
+preds = nn_model.predict(testData)
 
 # write the classification report to file
 f.write("{}\n".format(classification_report(testLabels, preds)))
@@ -278,7 +278,7 @@ f.close()
 # dump classifier to file
 print ("[INFO] saving model...")
 logging.info(" saving model...")
-pickle.dump(model, open(classifier_path, 'wb'))
+pickle.dump(nn_model, open(classifier_path, 'wb'))
 
 # display the confusion matrix
 #print ("[INFO] confusion matrix")
