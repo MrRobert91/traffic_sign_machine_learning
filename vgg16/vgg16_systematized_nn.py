@@ -276,8 +276,12 @@ logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
 # evaluate the model of test data
 preds = model.predict(testData)
 
+#pasamos a one-hot encoding las etiquetas de test
+one_hot_test_labels = np.eye(NUM_CLASSES, dtype='uint8')[testLabels]
+
 # write the classification report to file
-f.write("{}\n".format(classification_report(testLabels, preds)))
+#f.write("{}\n".format(classification_report(testLabels, preds)))
+f.write("{}\n".format(classification_report(one_hot_test_labels, preds)))
 f.close()
 
 # dump classifier to file
