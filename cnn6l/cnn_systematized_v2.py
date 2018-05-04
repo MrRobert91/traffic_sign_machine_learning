@@ -252,7 +252,7 @@ for train_index, test_index in skf.split(X, Y):
                            metrics=[metrics.categorical_accuracy])
 
     #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
-    #datagen.fit(x_train)
+    datagen.fit(x_train)
 
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
@@ -290,15 +290,10 @@ for train_index, test_index in skf.split(X, Y):
     #y_pred = cnn_classifier.predict_classes(x_test)
     #test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
 
-
     print("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
     logging.info("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
 
-
-
     clf_list.append(cnn_classifier)  # lista de cada uno de los los clasificadores
-
-    #NO hacemos un pickle porque ya lo guardaos en formato h5
 
     fold = fold + 1
 
