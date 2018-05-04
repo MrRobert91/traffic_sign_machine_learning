@@ -12,7 +12,6 @@
 	"model_path"	  : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/model",
 	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/cnn6l.log",
 
-
 	"test_size"       : 0.20,
 	"seed"            : 13,
 	"num_classes"     : 43
