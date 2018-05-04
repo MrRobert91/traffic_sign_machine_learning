@@ -269,8 +269,7 @@ for train_index, test_index in skf.split(X, Y):
               epochs=epochs,
               validation_split=0.2,
               verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule),
-                         ModelCheckpoint(filepath, save_best_only=True)]
+              callbacks=[LearningRateScheduler(lr_schedule)]
 
               )
 
