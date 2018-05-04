@@ -265,5 +265,158 @@ for train_index, test_index in skf.split(X, Y):
     # Make predictions
     predictions_valid = model.predict(x_test, batch_size=batch_size, verbose=1)
 
-    #   Cross-entropy loss score
+    # Cross-entropy loss score
     score = log_loss(y_test_no_one_hot, predictions_valid)
+
+    val_accuracy = model.evaluate(x_test, y_test, verbose=1)
+
+    print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+    logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+
+    clf_list.append(model)  # lista de cada uno de los los clasificadores
+
+    # NO hacemos un pickle porque ya lo guardaos en formato h5
+
+    fold = fold + 1
+
+
+
+print('lista de accuracys de los modelos: '+str(val_accuracy_list))
+logging.info('lista de accuracys de los modelos: '+str(val_accuracy_list))
+
+precision_media = (np.mean(val_accuracy_list))
+desviacion_standar = (np.std(val_accuracy_list))
+
+
+print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
+
+
+ruta_actual = os.getcwd()
+#print(ruta_actual)
+#print(os.listdir(ruta_actual))
+os.chdir(dataset_path+'/GTSRB')#En local
+#os.chdir('/home/drobert/tfg/GTSRB')#En corleone
+
+# Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
+test = pd.read_csv('GT-final_test.csv', sep=';')
+#test.head(10)
+
+# In[61]:
+
+# Cargamos el dataset de test
+os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
+#os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+
+X_test = []
+y_test = []
+i = 0
+
+for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
+    img_path = os.path.join(os.getcwd(), file_name)
+    X_test.append(preprocess_img(io.imread(img_path)))
+    y_test.append(class_id)
+
+X_test = np.array(X_test)
+y_test = np.array(y_test)
+
+
+#Los targets tienen que estar en formato one target
+y_test_one_target = np.eye(num_classes, dtype='uint8')[y_test]
+
+# Función para encontrar el modelo que está mas proximo a la media
+def modelo_medio_indx(final, numeros):
+    def el_menor(numeros):
+        menor = numeros[0]
+        retorno = 0
+        for x in range(len(numeros)):
+            if numeros[x] < menor:
+                menor = numeros[x]
+                retorno = x
+        return retorno
+
+    diferencia = []
+    for x in range(len(numeros)):
+        diferencia.append(abs(final - numeros[x]))
+    # devuelve el indice del modelo más próximo a la media
+    return numeros.index(numeros[el_menor(diferencia)])
+
+
+
+print("precision media: "+str(precision_media))
+logging.info("precision media: "+str(precision_media))
+
+model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
+
+print("indice del modelo medio: "+str(model_indx))
+logging.info("indice del modelo medio: "+str(model_indx))
+
+# cargamos el modelo medio de disco
+os.chdir(code_path)
+best_model =clf_list[model_indx]
+
+test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+#Guardar best_model en un pickle
+
+
+today_date = datetime.date.today().strftime("%d-%m-%Y")
+
+best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%_%s.h5" % (nb_epoch,test_accuracy[1] * 100, today_date))
+
+#pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
+
+#guardar con h5 no funciona por tener un metodo custom de accuracy
+best_model.save(best_model_filename)
+
+print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+
+logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+
+
+#Comprobamos que el modelo cargado tiene la misma precision
+
+#loaded_model = pickle.load(open(best_model_filename, 'rb'))
+loaded_model = load_model(best_model_filename)# No funciona con custom metrics
+
+loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+#https://github.com/keras-team/keras/issues/3911
+#La solucion propuesta arriba tampoco funciona
+
+#loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
+#loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
+# la matriz de confusión. y la mostramos de varia formas. Solo mostramos
+# la matriz de confusion del modelo medio.
+
+#Para generar la matriz de confusión necesitamos los targets en formato lista
+#No en one hot encoding.
+
+
+y_pred = loaded_model.predict(X_test)
+#pasamos a one hot encoding para que tenga la misma estructura que y_pred
+#No funciona así, tendran que ser los 2 vectores unidimensionales
+#y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
+
+#pasamos y_pred que esta en one hot encoding a un vector plano
+y_pred_no_one_hot= np.argmax(y_pred, axis=1, out=None)
+
+print("shape de y_test , y_pred_no_one_hot :")
+
+print(y_test.shape)
+print(y_pred_no_one_hot.shape)
+
+
+
+cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
+
+#logging.info("matriz de confusión del modelo medio: ")
+#logging.info(cm)
+
+
+print("Fin de la prueba vgg16 finetuning ")
+logging.info("-----------Fin de la prueba vgg16 finetuning-----------")
+logging.info("program ended on - " + str(datetime.datetime.now))
