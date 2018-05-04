@@ -40,6 +40,8 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D
 from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import RMSprop
+from keras import metrics
+from keras.optimizers import SGD
 
 # load the user configs
 with open('conf.json') as f:
@@ -205,17 +207,15 @@ logging.info(" test data   : {}".format(testData.shape))
 logging.info(" train labels: {}".format(trainLabels.shape))
 logging.info(" test labels : {}".format(testLabels.shape))
 
-# use logistic regression as the model
+# use neural network as the model
 print("[INFO] creating model...")
 logging.info("[INFO] creating model...")
 
 #model = LogisticRegression(random_state=seed)
 
 
-
 def nn_model():
     model = Sequential()
-    #model.add(Dense(256, activation='relu', input_dim=7 * 7 * 512))
     model.add(Dense(256, activation='relu', input_dim=4096))
     model.add(Dropout(0.5))
     model.add(Dense(43, activation='softmax'))
@@ -223,9 +223,15 @@ def nn_model():
 model = nn_model()
 
 #Compilamos el modelo
-model.compile(optimizer=RMSprop(lr=2e-4),
+''''model.compile(optimizer=RMSprop(lr=2e-4),
               loss='categorical_crossentropy',
-              metrics=['acc'])
+              metrics=['accuracy'])'''
+
+
+sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss='categorical_crossentropy',
+                  optimizer=sgd,
+                  metrics=[metrics.categorical_accuracy])
 
 model.fit(trainData, trainLabels)
 
