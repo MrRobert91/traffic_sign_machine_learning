@@ -259,6 +259,7 @@ for train_index, test_index in skf.split(X, Y):
     print(x_train.shape)
     print(y_train.shape)
 
+
     #ruta para local
     filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
