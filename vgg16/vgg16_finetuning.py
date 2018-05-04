@@ -230,7 +230,7 @@ filename_clf_list = []
 
 fold = 1
 
-skf = StratifiedKFold(n_splits=1)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
+skf = StratifiedKFold(n_splits=2)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
 logging.info(skf)
 #cnn_classifier = cnn_model()
