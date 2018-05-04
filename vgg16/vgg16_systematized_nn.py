@@ -76,6 +76,7 @@ start = time.time()
 # create the pretrained models
 # check for pretrained weight usage or not
 # check for top layers to be included or not
+NUM_CLASSES = 43
 
 base_model = VGG16(weights=weights)
 model = Model(input=base_model.input, output=base_model.get_layer('fc1').output)
@@ -218,7 +219,7 @@ def nn_model():
     model = Sequential()
     model.add(Dense(256, activation='relu', input_dim=4096))
     model.add(Dropout(0.5))
-    model.add(Dense(43, activation='softmax'))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
 model = nn_model()
@@ -234,7 +235,10 @@ model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
 
-model.fit(trainData, trainLabels)
+#Pasamos las etiquetas a one-hot encoding
+one_hot_train_labels = np.eye(NUM_CLASSES, dtype='uint8')[trainLabels]
+
+model.fit(trainData, one_hot_train_labels)
 
 # use rank-1 and rank-5 predictions
 print ("[INFO] evaluating model...")
