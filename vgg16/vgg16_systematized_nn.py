@@ -43,6 +43,9 @@ from keras.optimizers import RMSprop
 from keras import metrics
 from keras.optimizers import SGD
 
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+
+
 # load the user configs
 with open('conf.json') as f:
 	config = json.load(f)
@@ -238,12 +241,27 @@ model.compile(loss='categorical_crossentropy',
 #Pasamos las etiquetas a one-hot encoding
 one_hot_train_labels = np.eye(NUM_CLASSES, dtype='uint8')[trainLabels]
 
-model.fit(trainData, one_hot_train_labels)
+#model.fit(trainData, one_hot_train_labels)
+def lr_schedule(epoch):
+    return lr * (0.1 ** int(epoch / 10))
+
+batch_size = 32
+epochs = 20
+lr = 0.01
+
+model.fit(trainData, one_hot_train_labels,
+              batch_size=batch_size,
+              epochs=epochs,
+              validation_split=0.2,
+              verbose=1,
+              callbacks=[LearningRateScheduler(lr_schedule)]
+
+              )
 
 # use rank-1 and rank-5 predictions
 print ("[INFO] evaluating model...")
 logging.info(" evaluating model...")
-f = open(results, "w")
+#f = open(results, "w")
 rank_1 = 0
 rank_5 = 0
 
@@ -293,8 +311,8 @@ logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_acc
 
 # write the classification report to file
 #f.write("{}\n".format(classification_report(testLabels, preds)))
-f.write("{}\n".format(classification_report(one_hot_test_labels, preds)))
-f.close()
+#f.write("{}\n".format(classification_report(one_hot_test_labels, preds)))
+#f.close()
 
 # dump classifier to file
 print ("[INFO] saving model...")
