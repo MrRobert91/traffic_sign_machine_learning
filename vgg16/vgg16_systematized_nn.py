@@ -250,6 +250,7 @@ rank_5 = 0
 #pasamos a one-hot encoding las etiquetas de test ¿Aqui o abajo?
 #one_hot_test_labels = np.eye(NUM_CLASSES, dtype='uint8')[testLabels]
 
+'''
 # loop over test data
 for (label, features) in zip(testLabels, testData):
 	# predict the probability of each class label and
@@ -265,6 +266,8 @@ for (label, features) in zip(testLabels, testData):
 	if label in predictions:
 		rank_5 += 1
 
+
+
 # convert accuracies to percentages
 rank_1 = (rank_1 / float(len(testLabels))) * 100
 rank_5 = (rank_5 / float(len(testLabels))) * 100
@@ -276,11 +279,17 @@ f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
 logging.info("Rank-1: {:.2f}%\n".format(rank_1))
 logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
 
+'''
+
 # evaluate the model of test data
 preds = model.predict(testData)
 
 #pasamos a one-hot encoding las etiquetas de test
 one_hot_test_labels = np.eye(NUM_CLASSES, dtype='uint8')[testLabels]
+
+test_accuracy = model.evaluate(testData, one_hot_test_labels, verbose=1)
+print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 
 # write the classification report to file
 #f.write("{}\n".format(classification_report(testLabels, preds)))
