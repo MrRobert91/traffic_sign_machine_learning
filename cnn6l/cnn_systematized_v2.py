@@ -251,28 +251,14 @@ for train_index, test_index in skf.split(X, Y):
                            # metrics=['accuracy'])
                            metrics=[metrics.categorical_accuracy])
 
-
-
-    # compute quantities required for featurewise normalization
-    # (std, mean, and principal components if ZCA whitening is applied)
     #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
     #datagen.fit(x_train)
 
 
-
     # fits the model on batches with real-time data augmentation:
-    cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
+    hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                         steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
 
-
-
-    # vamos a entrenar nuestro modelo con SGD + momentum
-    sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
-    cnn_classifier.compile(loss='categorical_crossentropy',
-                  optimizer=sgd,
-                  #metrics=['accuracy'])
-                  metrics=[metrics.categorical_accuracy])
-                  #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
     print("tamaños de x_train e y_train")
     print(x_train.shape)
@@ -282,14 +268,7 @@ for train_index, test_index in skf.split(X, Y):
     #ruta para local
     filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
-    #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
-    hist = cnn_classifier.fit(x_train, y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              validation_split=0.2,
-              verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule)]
-              )
+    #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5
 
 
 
