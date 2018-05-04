@@ -133,9 +133,6 @@ def get_class(img_path):
 os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
 root_dir = 'GTSRB/Final_Training/Images/'
 
-#os.chdir('/home/drobert/tfg/')#direccion en corleone
-#root_dir = 'GTSRB/Final_Training/Images/'
-
 
 imgs = []
 labels = []
@@ -167,20 +164,40 @@ logging.info(Y.shape)
 
 
 #Data Augmentation:
-
-datagen = ImageDataGenerator(
+'''
+# this is the augmentation configuration we will use for training
+train_datagen = ImageDataGenerator(
         rotation_range=25,
         width_shift_range=0.1,
         height_shift_range=0.1,
         shear_range=0.2,
         zoom_range=0.1,
         fill_mode='nearest',
-        preprocessing_function=None)
+        preprocessing_function=preprocess_img(img))
+
+# this is the augmentation configuration we will use for testing:
+# only rescaling
+test_datagen = ImageDataGenerator(
+        rescale=1./255,
+        preprocessing_function=preprocess_img(img))
+
+# this is a generator that will read pictures found in
+# subfolers of 'data/train', and indefinitely generate
+# batches of augmented image data
+train_generator = train_datagen.flow_from_directory(
+        'data/train',  # this is the target directory
+        target_size=(150, 150),  # all images will be resized to 150x150
+        batch_size=batch_size,
+        class_mode='binary')  # since we use binary_crossentropy loss, we need binary labels
 
 
-
-
-
+# this is a similar generator, for validation data
+validation_generator = test_datagen.flow_from_directory(
+        'data/validation',
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='binary')
+'''
 # Vamos a hacer cross validation con nuestro conjunt de test.
 # En concreto vamos a hacer un Kfold con 10 splits estratificado,
 # de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje
@@ -192,7 +209,6 @@ val_accuracy_list = []
 confusion_matrix_list = []
 clf_list = []
 filename_clf_list = []
-
 
 fold = 1
 
