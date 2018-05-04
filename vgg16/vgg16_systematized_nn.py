@@ -247,6 +247,9 @@ f = open(results, "w")
 rank_1 = 0
 rank_5 = 0
 
+#pasamos a one-hot encoding las etiquetas de test ¿Aqui o abajo?
+#one_hot_test_labels = np.eye(NUM_CLASSES, dtype='uint8')[testLabels]
+
 # loop over test data
 for (label, features) in zip(testLabels, testData):
 	# predict the probability of each class label and
@@ -287,7 +290,9 @@ f.close()
 # dump classifier to file
 print ("[INFO] saving model...")
 logging.info(" saving model...")
-pickle.dump(model, open(classifier_path, 'wb'))
+#pickle.dump(model, open(classifier_path, 'wb'))
+moldel_name = "vgg16_nn_model.h5"
+model.save(moldel_name)
 
 # display the confusion matrix
 #print ("[INFO] confusion matrix")
