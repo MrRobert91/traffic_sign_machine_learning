@@ -47,8 +47,28 @@ from skimage import color
 from skimage import io
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils.np_utils import to_categorical
+import json
 
 logging.info("cnnv2 started on - " + str(datetime.datetime.now))
+
+# load the user configs
+with open('conf.json') as f:
+	config = json.load(f)
+
+# config variables
+model_name 		= config["model"]
+weights 		= config["weights"]
+include_top 	= config["include_top"]
+train_path 		= config["train_path"]
+features_path 	= config["features_path"]
+labels_path 	= config["labels_path"]
+test_size 		= config["test_size"]
+results 		= config["results"]
+model_path 		= config["model_path"]
+seed      		= config["seed"]
+classifier_path = config["classifier_path"]
+log_path		= config["log_path"]
+
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -103,6 +123,9 @@ def cnn_model():
 NUM_CLASSES = 43
 IMG_SIZE = 32 # Como se sugiere en el paper de LeCunn
 
+batch_size = 32 #16
+epochs = 20 #30 o 50
+lr = 0.01
 
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
@@ -164,9 +187,9 @@ logging.info(Y.shape)
 
 
 #Data Augmentation:
-'''
+
 # this is the augmentation configuration we will use for training
-train_datagen = ImageDataGenerator(
+datagen = ImageDataGenerator(
         rotation_range=25,
         width_shift_range=0.1,
         height_shift_range=0.1,
@@ -175,29 +198,7 @@ train_datagen = ImageDataGenerator(
         fill_mode='nearest',
         preprocessing_function=preprocess_img(img))
 
-# this is the augmentation configuration we will use for testing:
-# only rescaling
-test_datagen = ImageDataGenerator(
-        rescale=1./255,
-        preprocessing_function=preprocess_img(img))
 
-# this is a generator that will read pictures found in
-# subfolers of 'data/train', and indefinitely generate
-# batches of augmented image data
-train_generator = train_datagen.flow_from_directory(
-        'data/train',  # this is the target directory
-        target_size=(150, 150),  # all images will be resized to 150x150
-        batch_size=batch_size,
-        class_mode='binary')  # since we use binary_crossentropy loss, we need binary labels
-
-
-# this is a similar generator, for validation data
-validation_generator = test_datagen.flow_from_directory(
-        'data/validation',
-        target_size=(150, 150),
-        batch_size=batch_size,
-        class_mode='binary')
-'''
 # Vamos a hacer cross validation con nuestro conjunt de test.
 # En concreto vamos a hacer un Kfold con 10 splits estratificado,
 # de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje
@@ -226,9 +227,7 @@ def lr_schedule(epoch):
 def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
-batch_size = 32
-epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
-lr = 0.01
+
 
 for train_index, test_index in skf.split(X, Y):
     # conjuntos de train y test(validacion) para cada fold
@@ -243,9 +242,29 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-
-
     cnn_classifier = cnn_model()
+
+    # vamos a entrenar nuestro modelo con SGD + momentum
+    sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    cnn_classifier.compile(loss='categorical_crossentropy',
+                           optimizer=sgd,
+                           # metrics=['accuracy'])
+                           metrics=[metrics.categorical_accuracy])
+
+
+
+    # compute quantities required for featurewise normalization
+    # (std, mean, and principal components if ZCA whitening is applied)
+    #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
+    #datagen.fit(x_train)
+
+
+
+    # fits the model on batches with real-time data augmentation:
+    cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
+                        steps_per_epoch=len(x_train) / batch_size, epochs=epochs)
+
+
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
@@ -270,8 +289,8 @@ for train_index, test_index in skf.split(X, Y):
               validation_split=0.2,
               verbose=1,
               callbacks=[LearningRateScheduler(lr_schedule)]
-
               )
+
 
 
     #Guardar training / validation loss/accuracy en cada epoch
