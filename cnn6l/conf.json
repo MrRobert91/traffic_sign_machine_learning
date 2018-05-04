@@ -1,0 +1,18 @@
+{
+	"model"           : "cnn",
+	"weights"         : "imagenet",
+	"include_top"     : false,
+
+	"train_path"      : "/home/drobert/tfg/GTSRB/Final_Training/Images/",
+	"test_path"		  : "/home/drobert/tfg/GTSRB/Final_Test/Images/",
+	"features_path"   : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/features.h5",
+	"labels_path"     : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/labels.h5",
+	"results"         : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/results.txt",
+	"classifier_path" : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/classifier.pickle",
+	"model_path"	  : "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/model",
+	"log_path"		  :	"/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/output/cnn6l.log",
+
+	"test_size"       : 0.20,
+	"seed"            : 13,
+	"num_classes"     : 43
+}
