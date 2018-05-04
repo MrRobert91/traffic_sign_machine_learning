@@ -33,6 +33,7 @@ from keras import metrics
 from keras.models import load_model
 import datetime
 import json
+from sklearn.model_selection import train_test_split
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
@@ -213,7 +214,7 @@ print(Y.shape)
 
 logging.info(X.shape)
 logging.info(Y.shape)
-# In[4]:
+
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
 # En concreto vamos a hacer un Kfold con 10 splits estratificado,
@@ -228,56 +229,44 @@ clf_list = []
 filename_clf_list = []
 
 
-fold = 1
-
-skf = StratifiedKFold(n_splits=2)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
-print(skf)
-logging.info(skf)
-#cnn_classifier = cnn_model()
-
-
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
 
-for train_index, test_index in skf.split(X, Y):
-    # conjuntos de train y test(validacion) para cada fold
-    x_train, x_test = X[train_index], X[test_index]
-    y_train_no_one_hot, y_test_no_one_hot = Y[train_index], Y[test_index]
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
-    # Make one hot targets
-    y_train = np.eye(num_classes, dtype='uint8')[y_train_no_one_hot]
-    y_test = np.eye(num_classes, dtype='uint8')[y_test_no_one_hot]
-
-    # Load our model
-    model = vgg16_model(img_rows, img_cols, channel, num_classes)
+# Make one hot targets
+y_train_one_hot = np.eye(num_classes, dtype='uint8')[y_train]
+y_test_one_hot = np.eye(num_classes, dtype='uint8')[y_test]
 
 
-    # Start Fine-tuning
-    model.fit(x_train, y_train_no_one_hot,
-            batch_size=batch_size,
-            nb_epoch=nb_epoch,
-            shuffle=True,
-            verbose=1,
-            validation_data=(x_test, y_test_no_one_hot),
-            )
 
-    # Make predictions
-    predictions_valid = model.predict(x_test, batch_size=batch_size, verbose=1)
 
-    # Cross-entropy loss score
-    score = log_loss(y_test_no_one_hot, predictions_valid)
+# Load our model
+model = vgg16_model(img_rows, img_cols, channel, num_classes)
 
-    val_accuracy = model.evaluate(x_test, y_test, verbose=1)
 
-    print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
-    logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+# Start Fine-tuning
+model.fit(X, y_train_one_hot,
+        batch_size=batch_size,
+        nb_epoch=nb_epoch,
+        shuffle=True,
+        verbose=1,
+        validation_data=(X_test, y_test_one_hot),
+        )
 
-    clf_list.append(model)  # lista de cada uno de los los clasificadores
+# Make predictions
+predictions_valid = model.predict(X_test, batch_size=batch_size, verbose=1)
 
-    # NO hacemos un pickle porque ya lo guardaos en formato h5
+# Cross-entropy loss score
+score = log_loss(y_test, predictions_valid)
 
-    fold = fold + 1
+val_accuracy = model.evaluate(X_test, y_test, verbose=1)
+
+print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+
+clf_list.append(model)  # lista de cada uno de los los clasificadores
 
 
 
