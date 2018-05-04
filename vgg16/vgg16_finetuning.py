@@ -58,12 +58,12 @@ log_path		= config["log_path"]
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
-img_rows, img_cols = 64,64#224, 224 # 48, 48 Resolution of inputs
+img_rows, img_cols = 100,100#224, 224 # 48, 48 Resolution of inputs
 channel = 3
 num_classes = 43
 batch_size = 16
 nb_epoch = 10
-IMG_SIZE = 64
+IMG_SIZE = 100
 lr = 0.01
 
 fichero_log = (code_path +'cnn6l.log')
