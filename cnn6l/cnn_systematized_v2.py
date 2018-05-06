@@ -124,7 +124,7 @@ NUM_CLASSES = 43
 IMG_SIZE = 32 # Como se sugiere en el paper de LeCunn
 
 batch_size = 32 #16
-epochs = 50 #30 o 50
+epochs = 20 #30 o 50
 lr = 0.01
 
 # Funcion para preprocesar las imagenes
@@ -145,7 +145,7 @@ def preprocess_img(img):
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
     #Imagen en escala de grises, en escala [0,1]
-    #img = color.rgb2gray(img)
+    img = color.rgb2gray(img)
 
     return img
 
