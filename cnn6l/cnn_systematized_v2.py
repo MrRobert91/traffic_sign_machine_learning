@@ -264,16 +264,9 @@ for train_index, test_index in skf.split(X, Y):
 
     #ruta para local
     filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
-    #ruta para corleone
-    #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5
-
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
-    #print("history:")
-    #print(hist.history)
-    #logging.info("history:")
-    #logging.info(hist.history)
 
 
     val_accuracy = cnn_classifier.evaluate(x_test, y_test, verbose=1)
