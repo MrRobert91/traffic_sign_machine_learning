@@ -50,7 +50,6 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 from keras.utils.np_utils import to_categorical
 import json
 
-logging.info("cnnv2 started on - " + str(datetime.datetime.now))
 
 # load the user configs
 with open('conf.json') as f:
@@ -86,7 +85,7 @@ print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
-                    filemode = 'a',)# w for new log each time
+                    filemode = 'w',)# w for new log each time
 
 
 print ("[STATUS] --------cnn_v2 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
@@ -424,6 +423,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info(cm)
 
 
-print("Fin de la prueba con CNN de 6 capas convolucionales")
-logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
+print("Fin de la prueba con CNN v2 con data augmentation")
+logging.info("-----------Fin de la prueba con CNN v2 con data augmentation-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
