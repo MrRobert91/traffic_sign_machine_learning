@@ -250,6 +250,7 @@ for train_index, test_index in skf.split(X, Y):
     #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
     #datagen.fit(x_train)
     print("Hasta el fit generator en el fold "+ str(fold))
+    print("len x_train: "+str(len(x_train)))
 
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
