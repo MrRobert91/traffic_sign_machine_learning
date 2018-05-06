@@ -195,8 +195,8 @@ datagen = ImageDataGenerator(
         height_shift_range=0.1,
         shear_range=0.2,
         zoom_range=0.1,
-        fill_mode='nearest',
-        preprocessing_function=preprocess_img(img))
+        fill_mode='nearest')
+        #preprocessing_function=preprocess_img(img))
 
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
@@ -235,12 +235,12 @@ for train_index, test_index in skf.split(X, Y):
     y_train_no_one_hot, y_test_no_one_hot = Y[train_index], Y[test_index]
 
     # Make one hot targets
-    y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
-    y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
+    #y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
+    #y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
 
     #one hot encodig con to_categorical
-    #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
-    #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
+    y_train = to_categorical(y_train_no_one_hot, NUM_CLASSES)
+    y_test = to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
     cnn_classifier = cnn_model()
 
