@@ -25,6 +25,7 @@ import os
 import glob
 
 import pandas as pd
+from sklearn import metrics
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 import pickle
@@ -222,11 +223,6 @@ logging.info(skf)
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
-#Me daba un error.
-#https://stackoverflow.com/questions/46305252/valueerror-dimension-1-must-be-in-the-range-0-2-in-keras
-def get_categorical_accuracy_keras(y_true, y_pred):
-    return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
-
 
 print('justo antes del for del skf ---')
 for train_index, test_index in skf.split(X, Y):
@@ -252,7 +248,8 @@ for train_index, test_index in skf.split(X, Y):
                            metrics=[metrics.categorical_accuracy])
 
     #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
-    datagen.fit(x_train)
+    #datagen.fit(x_train)
+    print("Hasta el fit generator en el fold "+ str(fold))
 
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
