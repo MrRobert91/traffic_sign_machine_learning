@@ -85,7 +85,7 @@ print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
-                    filemode = 'w',)# w for new log each time
+                    filemode = 'a',)# w for new log each time
 
 
 print ("[STATUS] --------cnn_v2 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
@@ -254,7 +254,8 @@ for train_index, test_index in skf.split(X, Y):
     # fits the model on batches with real-time data augmentation:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                         steps_per_epoch=(len(x_train) / batch_size), epochs=epochs,
-                        verbose=1, validation_data=(x_test, y_test)                )
+                        verbose=1, validation_data=(x_test, y_test),
+                        callbacks=[LearningRateScheduler(lr_schedule)])
 
 
     print("tamaños de x_train e y_train")
