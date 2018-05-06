@@ -97,7 +97,8 @@ def cnn_model():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
-                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     #input_shape=(IMG_SIZE, IMG_SIZE, 3), #imagenes a color
+                     input_shape=(IMG_SIZE, IMG_SIZE),
                      activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.1))
