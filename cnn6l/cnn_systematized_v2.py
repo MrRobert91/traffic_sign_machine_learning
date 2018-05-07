@@ -149,7 +149,7 @@ def preprocess_img(img):
     #img = color.rgb2gray(img)
 
     # Scale features to be in [0, 1]
-    img = (img / 255.).astype(np.float32)
+    #img = (img / 255.).astype(np.float32)
 
     return img
 
