@@ -88,8 +88,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn_v2 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn_v2 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------cnn_v2  [0,1] norm systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn_v2 [0,1] Norm normystematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 #Modelo: red neuronal con 6 capas convolucionales
@@ -146,7 +146,10 @@ def preprocess_img(img):
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
     #Imagen en escala de grises, en escala [0,1]
-    img = color.rgb2gray(img)
+    #img = color.rgb2gray(img)
+
+    # Scale features to be in [0, 1]
+    #img = (img / 255.).astype(np.float32)
 
     return img
 
@@ -265,7 +268,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
     #ruta para local
-    filepath = code_path+"cnn6l_v2_BN-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"cnn6l_v2_0-1Norm-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
