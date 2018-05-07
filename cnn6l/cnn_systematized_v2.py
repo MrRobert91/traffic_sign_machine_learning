@@ -375,7 +375,7 @@ test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn6l_v2_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("cnn6l_v2[0-1]Norm_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
