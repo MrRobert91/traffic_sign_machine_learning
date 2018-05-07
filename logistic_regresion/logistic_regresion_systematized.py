@@ -167,6 +167,11 @@ print(Y.shape)
 
 logging.info(X.shape)
 logging.info(Y.shape)
+
+# Tenemos que cambiar los formatos de entrada
+X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+print(X.shape)
+
 # In[4]:
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
@@ -287,6 +292,8 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 X_test = np.array(X_test)
 y_test = np.array(y_test)
 
+# Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
+X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
