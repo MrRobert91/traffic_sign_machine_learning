@@ -205,8 +205,8 @@ for train_index, test_index in skf.split(X, Y):
     y_train_no_one_hot, y_test_no_one_hot = Y[train_index], Y[test_index]
 
     # Make one hot targets
-    y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
-    y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
+    #y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
+    #y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
 
     #one hot encodig con to_categorical
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
@@ -217,9 +217,9 @@ for train_index, test_index in skf.split(X, Y):
 
     print("tamaños de x_train e y_train")
     print(x_train.shape)
-    print(y_train.shape)
+    print(y_train_no_one_hot.shape)
 
-    hist = classifier.fit(x_train, y_train)
+    hist = classifier.fit(x_train, y_train_no_one_hot)
 
 
     #Guardar training / validation loss/accuracy en cada epoch
@@ -230,7 +230,7 @@ for train_index, test_index in skf.split(X, Y):
     #logging.info(hist.history)
 
 
-    val_accuracy = classifier.evaluate(x_test, y_test, verbose=1)
+    val_accuracy = classifier.evaluate(x_test, y_test_no_one_hot, verbose=1)
 
     print("%s: %.2f%%" % (classifier.metrics_names[1], val_accuracy[1] * 100))
     logging.info("%s: %.2f%%" % (classifier.metrics_names[1], val_accuracy[1] * 100))
@@ -296,7 +296,7 @@ y_test = np.array(y_test)
 X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
 #Los targets tienen que estar en formato one target
-y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
+#y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
 # Función para encontrar el modelo que está mas proximo a la media
 def modelo_medio_indx(final, numeros):
@@ -329,7 +329,7 @@ logging.info("indice del modelo medio: "+str(model_indx))
 os.chdir(code_path)
 best_model =clf_list[model_indx]
 
-test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+test_accuracy = best_model.evaluate(X_test, y_test, verbose=1)
 
 #Guardar best_model en un pickle
 
@@ -353,7 +353,7 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
-loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test, verbose=1)
 print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
