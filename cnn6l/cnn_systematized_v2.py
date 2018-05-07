@@ -194,6 +194,7 @@ logging.info(Y.shape)
 
 # this is the augmentation configuration we will use for training
 datagen = ImageDataGenerator(
+        rescale=1./255,
         rotation_range=25,
         width_shift_range=0.1,
         height_shift_range=0.1,
