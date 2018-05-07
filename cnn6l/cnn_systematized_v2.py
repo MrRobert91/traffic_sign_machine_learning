@@ -265,7 +265,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
     #ruta para local
-    filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"cnn6l_v2_BN-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
