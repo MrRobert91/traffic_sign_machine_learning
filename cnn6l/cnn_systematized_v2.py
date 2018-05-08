@@ -194,7 +194,7 @@ logging.info(Y.shape)
 
 # this is the augmentation configuration we will use for training
 datagen = ImageDataGenerator(
-        rescale=1./255,
+        #rescale=1./255,
         rotation_range=25,
         width_shift_range=0.1,
         height_shift_range=0.1,
@@ -269,7 +269,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
     #ruta para local
-    filepath = code_path+"cnn6l_v2_0-1Norm-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"cnn6l_v2-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
@@ -371,18 +371,20 @@ logging.info("indice del modelo medio: "+str(model_indx))
 os.chdir(code_path)
 best_model =clf_list[model_indx]
 
-#test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+#NO RULA LO DE ABAJO
 # this is the augmentation configuration we will use for testing:
 # only rescaling
-test_datagen = ImageDataGenerator(rescale=1./255)
-test_accuracy = best_model.evaluate_generator(test_datagen.flow(x_train, y_train))
+#test_datagen = ImageDataGenerator(rescale=1./255)
+#test_accuracy = best_model.evaluate_generator(test_datagen.flow(x_train, y_train))
 
 #Guardar best_model en un pickle
 
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn6l_v2[0-1]Norm_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("cnn6l_v2_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
