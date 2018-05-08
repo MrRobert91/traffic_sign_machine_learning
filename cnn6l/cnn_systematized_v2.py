@@ -88,8 +88,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn_v2  [0,1] norm systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn_v2 [0,1] Norm normystematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------cnn_v2   systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn_v2  systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 #Modelo: red neuronal con 6 capas convolucionales
