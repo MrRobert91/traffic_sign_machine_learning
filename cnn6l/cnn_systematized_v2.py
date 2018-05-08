@@ -186,7 +186,7 @@ NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
 batch_size = 32 #16
-epochs = 100 #30 o 50
+epochs = 30 #30 o 50
 lr = 0.01
 
 # Funcion para preprocesar las imagenes
