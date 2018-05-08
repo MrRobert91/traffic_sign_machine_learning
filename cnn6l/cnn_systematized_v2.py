@@ -337,6 +337,9 @@ y_test = np.array(y_test)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
+
+
+
 # Función para encontrar el modelo que está mas proximo a la media
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
@@ -368,7 +371,11 @@ logging.info("indice del modelo medio: "+str(model_indx))
 os.chdir(code_path)
 best_model =clf_list[model_indx]
 
-test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+#test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+# this is the augmentation configuration we will use for testing:
+# only rescaling
+test_datagen = ImageDataGenerator(rescale=1./255)
+test_accuracy = best_model.evaluate_generator(test_datagen.flow(x_train, y_train))
 
 #Guardar best_model en un pickle
 
