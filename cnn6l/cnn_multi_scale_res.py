@@ -95,7 +95,8 @@ def cnn_model_res_multi():
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_principal, x_flatten],axis=-1)#probar tambien con add
-    concatenated = layers.Dense(512, activation='relu')(concatenated)
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
 
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
@@ -105,7 +106,7 @@ def cnn_model_res_multi():
 def cnn_model_res_multi_v2():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
-    #1ª Etapa
+    #1ª Etapa: la salida de esta etapa va
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.3)(x)
@@ -125,13 +126,15 @@ def cnn_model_res_multi_v2():
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_3, x_flatten_1, x_flatten_2],axis=-1)#probar tambien con add
-    concatenated = layers.Dense(512, activation='relu')(concatenated)
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
 
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
     return model
 
+#Igual que el cnn:model v2 con API Funcional
 def cnn_model_funcional():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
@@ -305,7 +308,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 50 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 30 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -322,7 +325,7 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_model_res_multi_v2()
+    cnn_classifier = cnn_model_res_multi()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
