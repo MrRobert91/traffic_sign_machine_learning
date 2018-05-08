@@ -73,7 +73,7 @@ print ("[STATUS] --------cnn funcional - start time - {}".format(datetime.dateti
 logging.info(" ---------cnn funcional- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
-def cnn_model_res():
+def cnn_model_res_multi():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
