@@ -37,6 +37,10 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import SGD
 from keras import backend as K
+from keras import layers
+from keras.models import Model
+
+from keras.layers import Input, Dense
 K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
@@ -91,6 +95,35 @@ logging.basicConfig(level=logging.DEBUG,
 print ("[STATUS] --------cnn_v2   systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn_v2  systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
+def cnn_model_res_multi_v2():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.5)(x)
+    x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.5)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.5)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_3, x_flatten_1, x_flatten_2],axis=-1)#probar tambien con add
+    concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
 
 #Modelo: red neuronal con 6 capas convolucionales
 def cnn_model_v2():
@@ -153,7 +186,7 @@ NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
 batch_size = 32 #16
-epochs = 50 #30 o 50
+epochs = 100 #30 o 50
 lr = 0.01
 
 # Funcion para preprocesar las imagenes
@@ -270,7 +303,7 @@ for train_index, test_index in skf.split(X, Y):
     y_train = to_categorical(y_train_no_one_hot, NUM_CLASSES)
     y_test = to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_model()
+    cnn_classifier = cnn_model_res_multi_v2()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
