@@ -80,6 +80,7 @@ def cnn_model_res_multi():
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.1)(x)
+    x_flatten = layers.Flatten()(x)
 
     #2ª Etapa
     x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
@@ -90,10 +91,10 @@ def cnn_model_res_multi():
     x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
     x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
     x_principal = layers.Dropout(0.3)(x_principal)
+    x_principal = layers.Flatten()(x_principal)
 
-    #Etapa de concatenacion
-    concatenated = layers.concatenate([x_principal, x],axis=-1)#probar tambien con add
-    concatenated = layers.Flatten()(concatenated)
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_principal, x_flatten],axis=-1)#probar tambien con add
     concatenated = layers.Dense(512, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
 
