@@ -69,8 +69,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn funcional - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn funcional- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 def cnn_model_res_multi():
@@ -434,7 +434,7 @@ test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn_funcional_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("cnn_multi_scale_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
@@ -488,6 +488,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info(cm)
 
 
-print("Fin de la prueba con CNN de 6 capas convolucionales")
+print("Fin de la prueba con CNN multi scale ")
 logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
