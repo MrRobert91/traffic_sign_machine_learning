@@ -93,7 +93,7 @@ logging.info(" ---------cnn_v2  systematized - start time - {}".format(datetime.
 
 
 #Modelo: red neuronal con 6 capas convolucionales
-def cnn_model():
+def cnn_model_v2():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
@@ -113,6 +113,34 @@ def cnn_model():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.3))#antes 0.2
 
+
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+def cnn_model():
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Conv2D(64, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Conv2D(128, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
 
     model.add(Flatten())
     model.add(Dense(512, activation='relu'))
