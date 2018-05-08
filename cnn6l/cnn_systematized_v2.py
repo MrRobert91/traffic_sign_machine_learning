@@ -150,7 +150,7 @@ def cnn_model():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 # Como se sugiere en el paper de LeCunn
+IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
 batch_size = 32 #16
 epochs = 20 #30 o 50
