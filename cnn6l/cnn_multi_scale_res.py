@@ -72,6 +72,30 @@ logging.basicConfig(level=logging.DEBUG,
 print ("[STATUS] --------cnn funcional - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn funcional- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
+
+def cnn_model_res():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.1)(x)
+
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+
 def cnn_model_res():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
@@ -153,7 +177,7 @@ def cnn_model_old():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 48
+IMG_SIZE = 32 #48
 
 
 # Funcion para preprocesar las imagenes
