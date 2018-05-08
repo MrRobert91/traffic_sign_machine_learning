@@ -76,22 +76,28 @@ logging.info(" ---------cnn funcional- start time - {}".format(datetime.datetime
 def cnn_model_res_multi():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
+    #1ª Etapa
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.1)(x)
 
-    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
-    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.2)(x)
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.2)(x_principal)
 
-    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
-    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.3)(x)
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.3)(x_principal)
 
-    x = layers.Flatten()(x)
-    x = layers.Dense(512, activation='relu')(x)
-    x = layers.Dropout(0.5)(x)
-    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    #Etapa de concatenacion
+    concatenated = layers.concatenate([x_principal, x],axis=-1)#probar tambien con add
+    concatenated = layers.Flatten()(concatenated)
+    concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
     return model
 
