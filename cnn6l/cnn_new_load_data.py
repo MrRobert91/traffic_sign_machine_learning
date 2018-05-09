@@ -84,7 +84,7 @@ code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
-fichero_log = (code_path +'cnn_new_arch.log')
+fichero_log = (code_path +'cnn_new_load_data.log')
 
 
 print('Archivo Log en ', fichero_log)
