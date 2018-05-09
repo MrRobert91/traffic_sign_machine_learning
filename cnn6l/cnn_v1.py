@@ -373,7 +373,7 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 y_pred = best_model.predict_classes(X_test)
 acc = np.sum(y_pred == y_test) / np.size(y_pred)
 print(" Test accuracy (other version) = {}".format(acc))
-
+logging.info(" Test accuracy (other version) = {}".format(acc))
 #Comprobamos que el modelo cargado tiene la misma precision
 
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
