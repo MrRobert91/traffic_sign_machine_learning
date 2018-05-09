@@ -94,8 +94,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn new architecture - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn new architecture - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------cnn new load_data - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn new load_data - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 def cnn_model_res_multi_v2():
@@ -349,7 +349,7 @@ y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
-model_filename= ("cnn_new_architecture_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+model_filename= ("cnn_new_load_data_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
@@ -363,6 +363,6 @@ loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, ve
 print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 
 
-print("Fin de la prueba con CNN new architecture")
-logging.info("-----------Fin de la prueba con CNN new architecture-----------")
+print("Fin de la prueba con CNN load_data")
+logging.info("-----------Fin de la prueba con CNN load_data-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
