@@ -251,7 +251,12 @@ print(Y.shape)
 logging.info(X.shape)
 logging.info(Y.shape)
 
+
+
 X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.25, random_state=42)
+
+y_train_one_hot = to_categorical(y_train, NUM_CLASSES)
+y_val_one_hot = to_categorical(y_val, NUM_CLASSES)
 
 
 train_datagen = ImageDataGenerator(
@@ -272,7 +277,7 @@ train_generator = train_datagen.flow_from_directory(
 '''
 train_generator = train_datagen.flow(
     X_train,
-    y_train,
+    y_train_one_hot,
     batch_size=32)
 
 '''
@@ -286,7 +291,7 @@ test_generator = test_datagen.flow_from_directory(
 
 val_generator = test_datagen.flow(
     X_val,
-    y_val,
+    y_val_one_hot,
     batch_size=32)
 
 
