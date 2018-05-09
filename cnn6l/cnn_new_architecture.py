@@ -260,11 +260,11 @@ y_val_one_hot = to_categorical(y_val, NUM_CLASSES)
 
 
 train_datagen = ImageDataGenerator(
-    rescale=1./255,
+    #rescale=1./255,
     preprocessing_function=preprocess_img)#
 
 test_datagen = ImageDataGenerator(
-    rescale=1./255,
+    #rescale=1./255,
     preprocessing_function=preprocess_img)
 
 '''
