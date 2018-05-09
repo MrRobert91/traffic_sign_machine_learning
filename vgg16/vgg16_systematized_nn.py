@@ -88,6 +88,8 @@ image_size = (224, 224)
 print ("[INFO] successfully loaded base model and model...")
 logging.info((" successfully loaded base model and model..."))
 
+print(model.summary())
+
 # path to training dataset
 train_labels = os.listdir(train_path)
 
