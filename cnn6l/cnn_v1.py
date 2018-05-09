@@ -376,6 +376,8 @@ print(" Test accuracy (other version) = {}".format(acc))
 logging.info(" Test accuracy (other version) = {}".format(acc))
 #Comprobamos que el modelo cargado tiene la misma precision
 
+
+
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
