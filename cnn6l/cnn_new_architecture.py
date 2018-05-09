@@ -53,7 +53,7 @@ from skimage import io
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils.np_utils import to_categorical
 import json
-
+from sklearn.model_selection import train_test_split
 
 # load the user configs
 with open('conf.json') as f:
@@ -187,6 +187,38 @@ def preprocess_img(img):
     return img
 
 
+def get_class(img_path):
+    return int(img_path.split('/')[-2])
+
+
+os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
+root_dir = 'GTSRB/Final_Training/Images/'
+
+
+imgs = []
+labels = []
+
+ruta_actual = os.getcwd()
+print(ruta_actual)
+
+all_img_paths = glob.glob(os.path.join(root_dir, '*/*.ppm'))
+
+print(os.path.join(root_dir, '*/*.ppm'))
+print(len(all_img_paths))
+
+np.random.shuffle(all_img_paths)
+
+for img_path in all_img_paths:
+    img = preprocess_img(io.imread(img_path))
+    label = get_class(img_path)
+    imgs.append(img)
+    labels.append(label)
+
+X = np.array(imgs, dtype='float32')
+Y = np.asarray(labels)
+
+X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.25, random_state=42)
+
 
 train_datagen = ImageDataGenerator(
     rescale=1./255,
@@ -196,21 +228,32 @@ test_datagen = ImageDataGenerator(
     rescale=1./255,
     preprocessing_function=preprocess_img)
 
-
+'''
 train_generator = train_datagen.flow_from_directory(
     train_path,
     target_size=(32, 32),
     color_mode='rgb',#or 'greyscale'
     batch_size=32,
     class_mode='categorical')
+'''
+train_generator = train_datagen.flow(
+    X_train,
+    y_train,
+    batch_size=32)
 
-
+'''
 test_generator = test_datagen.flow_from_directory(
     test_path,
     target_size=(32, 32),
     color_mode='rgb',#or 'greyscale'
     batch_size=32,
     class_mode='categorical')
+'''
+
+val_generator = test_datagen.flow(
+    X_val,
+    y_val,
+    batch_size=32)
 
 
 model = cnn_model_v2()
