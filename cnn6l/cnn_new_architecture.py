@@ -127,6 +127,34 @@ def cnn_model_res_multi_v2():
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
     return model
+#Modelo: original
+def cnn_model():
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Conv2D(64, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Conv2D(128, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
 
 #Modelo: red neuronal con 6 capas convolucionales
 def cnn_model_v2():
@@ -216,6 +244,12 @@ for img_path in all_img_paths:
 
 X = np.array(imgs, dtype='float32')
 Y = np.asarray(labels)
+
+print(X.shape)
+print(Y.shape)
+
+logging.info(X.shape)
+logging.info(Y.shape)
 
 X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.25, random_state=42)
 
