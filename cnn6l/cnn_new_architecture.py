@@ -190,11 +190,11 @@ def preprocess_img(img):
 
 train_datagen = ImageDataGenerator(
     rescale=1./255,
-    preprocessing_function=preprocess_img())#
+    preprocessing_function=preprocess_img)#
 
 test_datagen = ImageDataGenerator(
     rescale=1./255,
-    preprocessing_function=preprocess_img())
+    preprocessing_function=preprocess_img)
 
 
 train_generator = train_datagen.flow_from_directory(
