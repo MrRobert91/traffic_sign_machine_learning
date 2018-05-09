@@ -271,7 +271,7 @@ history = model.fit_generator(
     steps_per_epoch=(31367 / batch_size), #39209*0,8 = 31367 train_data length
     epochs=30,
     verbose=1,
-    validation_data=0.2,
+    validation_data=val_generator,
     validation_steps=50,
     callbacks=[LearningRateScheduler(lr_schedule)])
 
