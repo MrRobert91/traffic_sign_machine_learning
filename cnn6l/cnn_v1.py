@@ -119,10 +119,10 @@ def preprocess_img(img):
           :]
 
     # reescalado de imagenes a tamaño standard
-    img = transform.resize( (IMG_SIZE, IMG_SIZE), img, mode='constant')
+    img = transform.resize( img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
     # roll color axis to axis 0
-    img = np.rollaxis(img, -1)
+    #img = np.rollaxis(img, -1)
 
 
     return img
