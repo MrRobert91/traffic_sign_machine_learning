@@ -237,8 +237,8 @@ print(len(all_img_paths))
 np.random.shuffle(all_img_paths)
 
 for img_path in all_img_paths:
-    #img = preprocess_img(io.imread(img_path))
-    img = io.imread(img_path)#Se preprocesa en el ImageDataGenerator
+    img = preprocess_img(io.imread(img_path))
+    #img = io.imread(img_path)#Se preprocesa en el ImageDataGenerator
     label = get_class(img_path)
     imgs.append(img)
     labels.append(label)
