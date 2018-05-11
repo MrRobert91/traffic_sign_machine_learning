@@ -213,8 +213,6 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-
-
     cnn_classifier = cnn_model()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
@@ -242,13 +240,8 @@ for train_index, test_index in skf.split(X, Y):
                          ModelCheckpoint(filepath, save_best_only=True)]
               )
 
-
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
-    #print("history:")
-    #print(hist.history)
-    #logging.info("history:")
-    #logging.info(hist.history)
 
 
     val_accuracy = cnn_classifier.evaluate(x_test, y_test, verbose=1)
