@@ -54,6 +54,7 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 from keras.utils.np_utils import to_categorical
 import json
 from sklearn.model_selection import train_test_split
+from keras.callbacks import TensorBoard
 
 # load the user configs
 with open('conf.json') as f:
@@ -85,7 +86,7 @@ dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_new_load_data.log')
-
+fichero_log_tb = (code_path +'tb_new_load_data.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -195,6 +196,8 @@ lr = 0.01
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
+tensorboard = TensorBoard(log_dir=fichero_log_tb, histogram_freq=1)
+
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
     # normalizacion del histograma en el canal 'v'
@@ -284,6 +287,7 @@ val_generator = test_datagen.flow(
 
 model = cnn_model_v2()
 
+
 sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
 
 model.compile(
@@ -299,7 +303,7 @@ history = model.fit_generator(
     verbose=1,
     validation_data=val_generator,
     validation_steps=50,
-    callbacks=[LearningRateScheduler(lr_schedule)])
+    callbacks=[LearningRateScheduler(lr_schedule),tensorboard])
 
 
 
