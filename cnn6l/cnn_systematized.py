@@ -65,7 +65,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-logging.info('Clasificación de señales de tráfico con cnn de 6 capas')
+print ("[STATUS] --------cnn6l systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn6l - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 #Modelo: red neuronal con 6 capas convolucionales
@@ -96,6 +97,7 @@ def cnn_model():
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
+
 
 
 NUM_CLASSES = 43
