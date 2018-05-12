@@ -66,7 +66,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 print ("[STATUS] --------cnn6l systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn6l - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn6l systematized- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 #Modelo: red neuronal con 6 capas convolucionales
