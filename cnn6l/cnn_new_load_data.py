@@ -303,7 +303,7 @@ history = model.fit_generator(
     verbose=1,
     validation_data=val_generator,
     validation_steps=50,
-    callbacks=[LearningRateScheduler(lr_schedule),tensorboard])
+    callbacks=[LearningRateScheduler(lr_schedule), tensorboard])
 
 
 
