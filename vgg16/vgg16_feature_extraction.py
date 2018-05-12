@@ -34,7 +34,7 @@ import os
 import json
 import datetime
 import time
-
+import pandas as pd
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -95,22 +95,6 @@ dataset_path='/home/drobert/tfg/'
 NUM_CLASSES = 43
 IMG_SIZE = 48
 
-model = VGG16(weights = "imagenet", include_top=False, input_shape = (IMG_SIZE, IMG_SIZE, 3))
-
-print(model.summary())
-
-
-# Freeze the layers which you don't want to train. Here I am freezing the first 5 layers.
-for layer in model.layers[:5]:
-    layer.trainable = False
-
-#Adding custom Layers
-x = model.output
-#x = Flatten()(x) #YA añadimos un Flatten() directamente en applicatons en keras
-x = Dense(1024, activation="relu")(x)
-x = Dropout(0.5)(x)
-x = Dense(1024, activation="relu")(x)
-predictions = Dense(NUM_CLASSES, activation="softmax")(x)
 
 
 # Funcion para preprocesar las imagenes
@@ -143,6 +127,7 @@ root_dir = 'GTSRB/Final_Training/Images/'
 #os.chdir('/home/drobert/tfg/')#direccion en corleone
 #root_dir = 'GTSRB/Final_Training/Images/'
 
+top_model_weights_path = "/home/drobert/tfg/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
 
 imgs = []
 labels = []
@@ -189,14 +174,45 @@ def lr_schedule(epoch):
 
 
 # creating the final model
-model_final = Model(input = model.input, output = predictions)
+#model_final = Model(input = model.input, output = predictions)
+#-------------Extract features----------------------
+
+# build the VGG16 network
+model = VGG16(include_top=False, weights='imagenet')
+
+
+bottleneck_features_train = model.predict(X_train)
+
+np.save(open('bottleneck_features_train.npy', 'w'),
+            bottleneck_features_train)
+
+bottleneck_features_validation = model.predict(X_val)
+
+np.save(open('bottleneck_features_validation.npy', 'w'),
+            bottleneck_features_validation)
+
+#--------------Train Top model---------------------
+
+train_data = np.load(open('bottleneck_features_train.npy'))
+train_labels = y_train_one_hot
+validation_data = np.load(open('bottleneck_features_validation.npy'))
+validation_labels = y_val_one_hot
+
+
+model = Sequential()
+model.add(Flatten(input_shape=train_data.shape[1:]))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(43, activation='softmax'))
+
+
+#model.compile(optimizer='rmsprop',loss='binary_crossentropy', metrics=['accuracy'])
 
 # compile the model
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
-
 
 
 model.fit(X_train, y_train_one_hot,
@@ -206,6 +222,16 @@ model.fit(X_train, y_train_one_hot,
               verbose=1,
               callbacks=[LearningRateScheduler(lr_schedule)]
               )
+
+
+model.save_weights(top_model_weights_path)
+
+#---------------------------------
+os.chdir(dataset_path+'/GTSRB')#En local
+#os.chdir('/home/drobert/tfg/GTSRB')#En corleone
+
+# Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
+test = pd.read_csv('GT-final_test.csv', sep=';')
 
 #Cargamos el dataset de test
 # Cargamos el dataset de test
