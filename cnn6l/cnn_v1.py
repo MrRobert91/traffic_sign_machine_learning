@@ -47,12 +47,12 @@ from keras.utils.np_utils import to_categorical
 
 logging.info("program started on - " + str(datetime.datetime.now))
 #local
-code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
-dataset_path="/home/david/Escritorio/TFG/Pruebas"
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
 #Corleone
-#code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
-#dataset_path='/home/drobert/tfg/'
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
+dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_v1.log')
