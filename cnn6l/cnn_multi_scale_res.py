@@ -522,5 +522,5 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
 
 print("Fin de la prueba con CNN multi scale ")
-logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
+logging.info("-----------Fin de la prueba con CNN multi scale-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
