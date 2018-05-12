@@ -352,6 +352,10 @@ loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, ve
 print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 
 
+#Guardar imagen del modelo
+from keras.utils import plot_model
+plot_model(loaded_model, show_shapes=True, to_file='cnn_new_load_data.png')
+
 print("Fin de la prueba con CNN load_data")
 logging.info("-----------Fin de la prueba con CNN load_data-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
