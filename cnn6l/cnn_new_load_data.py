@@ -268,27 +268,12 @@ test_datagen = ImageDataGenerator(
     #rescale=1./255,
     preprocessing_function=preprocess_img)
 
-'''
-train_generator = train_datagen.flow_from_directory(
-    train_path,
-    target_size=(32, 32),
-    color_mode='rgb',#or 'greyscale'
-    batch_size=32,
-    class_mode='categorical')
-'''
+
 train_generator = train_datagen.flow(
     X_train,
     y_train_one_hot,
     batch_size=32)
 
-'''
-test_generator = test_datagen.flow_from_directory(
-    test_path,
-    target_size=(32, 32),
-    color_mode='rgb',#or 'greyscale'
-    batch_size=32,
-    class_mode='categorical')
-'''
 
 val_generator = test_datagen.flow(
     X_val,
