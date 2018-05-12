@@ -254,7 +254,7 @@ logging.info(Y.shape)
 
 
 
-X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.25, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.20, random_state=42)
 
 y_train_one_hot = to_categorical(y_train, NUM_CLASSES)
 y_val_one_hot = to_categorical(y_val, NUM_CLASSES)
