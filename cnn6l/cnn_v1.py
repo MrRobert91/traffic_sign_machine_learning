@@ -47,15 +47,15 @@ from keras.utils.np_utils import to_categorical
 
 logging.info("program started on - " + str(datetime.datetime.now))
 #local
-#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
-#dataset_path="/home/david/Escritorio/TFG/Pruebas"
+code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
+dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
-dataset_path='/home/drobert/tfg/'
+#code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
+#dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
-fichero_log = (code_path +'cnn6l.log')
+fichero_log = (code_path +'cnn_v1.log')
 
 
 print('Archivo Log en ', fichero_log)
@@ -65,8 +65,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn6l systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn6l - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------cnn6l v1 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------cnn6l v1- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 #Modelo: red neuronal con 6 capas convolucionales
@@ -220,8 +220,8 @@ for train_index, test_index in skf.split(X, Y):
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   #metrics=['accuracy'])
-                  metrics=[metrics.categorical_accuracy])
-                  #metrics=[get_categorical_accuracy_keras])#unico que funciona
+                  #metrics=[metrics.categorical_accuracy])
+                  metrics=[get_categorical_accuracy_keras])#unico que funciona
 
     print("tamaños de x_train e y_train")
     print(x_train.shape)
@@ -411,6 +411,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info(cm)
 
 
-print("Fin de la prueba con CNN de 6 capas convolucionales")
-logging.info("-----------Fin de la prueba con CNN de 6 capas convolucionales-----------")
+print("Fin de la prueba con CNN v1 de 6 capas convolucionales")
+logging.info("-----------Fin de la prueba con CNN v1 de 6 capas convolucionales-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
