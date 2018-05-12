@@ -308,8 +308,6 @@ history = model.fit_generator(
 
 
 
-
-
 os.chdir(dataset_path+'/GTSRB')#En local
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
