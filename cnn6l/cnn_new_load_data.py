@@ -196,7 +196,7 @@ lr = 0.01
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
-tensorboard = TensorBoard(log_dir=fichero_log_tb, histogram_freq=1)
+tensorboard = TensorBoard(log_dir=fichero_log_tb)
 
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
