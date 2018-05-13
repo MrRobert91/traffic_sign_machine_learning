@@ -178,17 +178,17 @@ def lr_schedule(epoch):
 #-------------Extract features----------------------
 
 # build the VGG16 network
-model = VGG16(include_top=False, weights='imagenet')
+base_model = VGG16(include_top=False, weights='imagenet')
 
 
-bottleneck_features_train = model.predict(X_train)
+bottleneck_features_train = base_model.predict(X_train)
 
-np.save(open('bottleneck_features_train.npy', 'w'),
+np.save(open('bottleneck_features_train.npy', 'wb'),
             bottleneck_features_train)
 
-bottleneck_features_validation = model.predict(X_val)
+bottleneck_features_validation = base_model.predict(X_val)
 
-np.save(open('bottleneck_features_validation.npy', 'w'),
+np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
 
 #--------------Train Top model---------------------
@@ -199,23 +199,23 @@ validation_data = np.load(open('bottleneck_features_validation.npy'))
 validation_labels = y_val_one_hot
 
 
-model = Sequential()
-model.add(Flatten(input_shape=train_data.shape[1:]))
-model.add(Dense(256, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(43, activation='softmax'))
+top_model = Sequential()
+top_model.add(Flatten(input_shape=train_data.shape[1:]))
+top_model.add(Dense(256, activation='relu'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(43, activation='softmax'))
 
 
 #model.compile(optimizer='rmsprop',loss='binary_crossentropy', metrics=['accuracy'])
 
 # compile the model
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(loss='categorical_crossentropy',
+top_model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
 
 
-model.fit(X_train, y_train_one_hot,
+top_model.fit(X_train, y_train_one_hot,
               batch_size=batch_size,
               epochs=epochs,
               validation_split=(X_val,y_val_one_hot),
@@ -224,7 +224,7 @@ model.fit(X_train, y_train_one_hot,
               )
 
 
-model.save_weights(top_model_weights_path)
+top_model.save_weights(top_model_weights_path)
 
 #---------------------------------
 os.chdir(dataset_path+'/GTSRB')#En local
@@ -254,7 +254,7 @@ y_test = np.array(y_test)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
-test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
+test_accuracy = top_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 #Guardar best_model en un pickle
 
@@ -266,11 +266,11 @@ model_filename= ("finetuningVGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accur
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
 #guardar con h5 no funciona por tener un metodo custom de accuracy
-model.save(model_filename)
+top_model.save(model_filename)
 
-print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+print("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
 
-logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+logging.info("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
 
 
 
