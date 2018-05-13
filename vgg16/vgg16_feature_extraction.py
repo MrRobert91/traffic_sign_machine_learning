@@ -193,9 +193,9 @@ np.save(open('bottleneck_features_validation.npy', 'wb'),
 
 #--------------Train Top model---------------------
 
-train_data = np.load(open('bottleneck_features_train.npy'))
+train_data = np.load(open('bottleneck_features_train.npy','rb'))
 train_labels = y_train_one_hot
-validation_data = np.load(open('bottleneck_features_validation.npy'))
+validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
 validation_labels = y_val_one_hot
 
 
