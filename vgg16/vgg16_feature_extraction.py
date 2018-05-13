@@ -215,10 +215,10 @@ top_model.compile(loss='categorical_crossentropy',
                   metrics=[metrics.categorical_accuracy])
 
 
-top_model.fit(X_train, y_train_one_hot,
+top_model.fit(bottleneck_features_train, train_labels,
               batch_size=batch_size,
               epochs=epochs,
-              validation_split=(X_val,y_val_one_hot),
+              validation_split=(validation_data,validation_labels),
               verbose=1,
               callbacks=[LearningRateScheduler(lr_schedule)]
               )
