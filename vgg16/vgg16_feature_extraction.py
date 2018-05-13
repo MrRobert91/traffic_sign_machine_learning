@@ -55,6 +55,8 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.utils.np_utils import to_categorical
 
+from keras.callbacks import TensorBoard
+
 # load the user configs
 with open('conf.json') as f:
 	config = json.load(f)
@@ -73,7 +75,13 @@ seed      		= config["seed"]
 classifier_path = config["classifier_path"]
 log_path		= config["log_path"]
 
+
+#Corleone
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
+dataset_path='/home/drobert/tfg/'
+
 fichero_log = (log_path)
+fichero_log_tb = (code_path +'tb_vgg16_feature_extraction.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -85,9 +93,9 @@ print ("[STATUS]-------vgg16 systematized with nn - start time - {}".format(date
 logging.info(" --------vgg16 systematized with nn - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
-#Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
-dataset_path='/home/drobert/tfg/'
+
+
+
 
 # create the pretrained models
 # check for pretrained weight usage or not
@@ -172,6 +180,7 @@ lr = 0.01
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
+tensorboard = TensorBoard(log_dir=fichero_log_tb, histogram_freq = 1, write_graph =True)
 
 # creating the final model
 #model_final = Model(input = model.input, output = predictions)
@@ -218,9 +227,9 @@ top_model.compile(loss='categorical_crossentropy',
 top_model.fit(bottleneck_features_train, train_labels,
               batch_size=batch_size,
               epochs=epochs,
-              validation_split=(validation_data,validation_labels),
+              validation_data=(validation_data,validation_labels),
               verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule)]
+              callbacks=[LearningRateScheduler(lr_schedule),tensorboard]
               )
 
 
