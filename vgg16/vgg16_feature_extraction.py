@@ -243,9 +243,7 @@ os.chdir(dataset_path+'/GTSRB')#En local
 test = pd.read_csv('GT-final_test.csv', sep=';')
 
 #Cargamos el dataset de test
-# Cargamos el dataset de test
-os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
-#os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')
 
 X_test = []
 y_test = []
