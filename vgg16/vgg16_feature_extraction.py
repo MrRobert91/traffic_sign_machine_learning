@@ -81,7 +81,7 @@ code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
 dataset_path='/home/drobert/tfg/'
 
 fichero_log = (log_path)
-fichero_log_tb = (code_path +'tb_vgg16_feature_extraction.log')
+fichero_log_tb = (code_path +'tb_log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
