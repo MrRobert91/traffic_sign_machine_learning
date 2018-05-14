@@ -241,8 +241,8 @@ top_model.save_weights(top_model_weights_path)
 print('Los pesos del top_model se han guardado')
 logging.info('Los pesos del top_model se han guardado')
 
-print('Cargando dataset de Test')
-logging.info('Cargando dataset de Test')
+print('Cargando dataset de Test...')
+logging.info('Cargando dataset de Test...')
 
 #---------------------------------
 os.chdir(dataset_path+'/GTSRB')#En local
