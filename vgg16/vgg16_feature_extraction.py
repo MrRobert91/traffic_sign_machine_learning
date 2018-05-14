@@ -263,7 +263,15 @@ y_test = np.array(y_test)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
-test_accuracy = top_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+bottleneck_features_test = base_model.predict(X_test)
+
+test_accuracy = top_model.evaluate(bottleneck_features_test, y_test_one_target, verbose=1)
+
+result = top_model.score(bottleneck_features_test, y_test_one_target)
+
+print("test_accuracy final del modelo en test: %.2f%% " % (result*100))
+logging.info("test_accuracy final del modelo en test: %.2f%% " % (result *100))
 
 #Guardar best_model en un pickle
 
@@ -280,7 +288,6 @@ top_model.save(model_filename)
 print("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
 
 logging.info("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
-
 
 
 # end time
