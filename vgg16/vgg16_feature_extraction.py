@@ -85,6 +85,7 @@ fichero_log_tb = (code_path +'tb_vgg16_feature_extraction.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
+
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
                     filemode = 'a',)
@@ -216,7 +217,8 @@ top_model.add(Dense(43, activation='softmax'))
 
 
 #model.compile(optimizer='rmsprop',loss='binary_crossentropy', metrics=['accuracy'])
-
+print('compilando el modelo...')
+logging.info('compilando el modelo')
 # compile the model
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 top_model.compile(loss='categorical_crossentropy',
@@ -234,6 +236,13 @@ top_model.fit(bottleneck_features_train, train_labels,
 
 
 top_model.save_weights(top_model_weights_path)
+
+
+print('Los pesos del top_model se han guardado')
+logging.info('Los pesos del top_model se han guardado')
+
+print('Cargando dataset de Test')
+logging.info('Cargando dataset de Test')
 
 #---------------------------------
 os.chdir(dataset_path+'/GTSRB')#En local
