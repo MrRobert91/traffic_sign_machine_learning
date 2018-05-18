@@ -199,39 +199,6 @@ logging.info(("mean_accuarcy: " + str(precision_media) + " std: " + str(desviaci
 # El accuracy medio con 35 arboles y 3 fold es de 0.938917115206 con un desviacion standar de 0.00204864639076
 
 
-ruta_actual = os.getcwd()
-print(ruta_actual)
-print(os.listdir(ruta_actual))
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
-os.chdir(dataset_path+'GTSRB')#En corleone
-
-# Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
-test = pd.read_csv('GT-final_test.csv', sep=';')
-#test.head(10)
-
-# In[61]:
-
-
-# Cargamos el dataset de test
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
-os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
-
-X_test = []
-y_test = []
-i = 0
-for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
-    img_path = os.path.join(os.getcwd(), file_name)
-    X_test.append(preprocess_img(io.imread(img_path)))
-    y_test.append(class_id)
-
-X_test = np.array(X_test)
-y_test = np.array(y_test)
-
-# Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
-
-
 # Función para encontrar el modelo que está más próximo a la media
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
@@ -270,15 +237,56 @@ os.chdir(code_path)
 #filename_bestmodel = 'rf_' + str(n_trees) + 'trees_' + str(splits) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
 modelname = filename_clf_list[model_indx]
 bestmodel = clf_list[model_indx]
-result = bestmodel.score(X_test, y_test)
+
+##Cargamos los datos de test
+
+ruta_actual = os.getcwd()
+print(ruta_actual)
+print(os.listdir(ruta_actual))
+#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
+os.chdir(dataset_path+'GTSRB')#En corleone
+
+# Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
+test = pd.read_csv('GT-final_test.csv', sep=';')
+#test.head(10)
+
+# Cargamos el dataset de test
+#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
+os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
+
+X_test = []
+y_test = []
+i = 0
+for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
+    img_path = os.path.join(os.getcwd(), file_name)
+    X_test.append(preprocess_img(io.imread(img_path)))
+    y_test.append(class_id)
+
+X_test = np.array(X_test)
+y_test = np.array(y_test)
+
+# Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
+X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+#------------------------------------------------
 
 #Guardamos el modelo medio
 pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
 
 
+#Evaluamos el modelo en test
+result = bestmodel.score(X_test, y_test)
+
 print("Resultado final del modelo en test: %.2f%% " % (result))
 logging.info("Resultado final del modelo en test: %.2f%% " % (result))
 
+#Cargamos el modelo
+loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
+
+result_loaded_model = loaded_model.score(X_test, y_test)
+
+print("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model))
+logging.info("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model))
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
 # la matriz de confusión.
