@@ -143,6 +143,7 @@ clf_list = []
 filename_clf_list = []
 
 n_trees = 100
+depth = 5
 fold = 1
 splits = 3
 
@@ -155,7 +156,7 @@ for train_index, test_index in skf.split(X, Y):
     y_train, y_test = Y[train_index], Y[test_index]
 
     # El clasificador es un random forest, probamos con 35 arboles para que no tarde mucho
-    rf_classifier = RandomForestClassifier(n_estimators=n_trees, oob_score=True)
+    rf_classifier = RandomForestClassifier(n_estimators=n_trees, max_depth=depth, oob_score=True)
     rf_classifier.fit(x_train, y_train)
 
     test_scores_list.append(rf_classifier.score(x_test, y_test))  # lista de los scores  obtenidas por los random forest
@@ -175,7 +176,7 @@ for train_index, test_index in skf.split(X, Y):
     # save the model to disk
 
     #filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + str(test_accuracy)+'val_acc'
-    filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
+    filename = 'rf_' + str(n_trees) + 'trees_' + str(depth) + 'depth_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
     filename_clf_list.append(filename)
 
     #pickle.dump(rf_classifier, open((code_path + str(filename)), 'wb'))
