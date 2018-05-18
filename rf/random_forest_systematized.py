@@ -299,13 +299,18 @@ logging.info("Resultado final del modelo en test cargado: %.2f%% " % (result_loa
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
 # la matriz de confusión.
 # Solo mostramos la matriz de confusion del modelo medio.
+X_test_shape = X_test.shape
+y_test_shape = y_test.shape
 
-y_pred = bestmodel.predict(X_test)
-cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
+print('X_test_shape: '+str(X_test_shape))
+print('y_test_shape: '+str(y_test_shape))
+
+#y_pred = bestmodel.predict(X_test)
+#cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
 
 #cm = confusion_matrix_list[model_indx]
 
-print(cm)
+#print(cm)
 
 print("-----------Fin de la prueba con RF -----------")
 logging.info("-----------Fin de la prueba con RF -----------")
