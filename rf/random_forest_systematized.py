@@ -136,7 +136,7 @@ print(X.shape)
 
 
 
-test_scores_list = []
+#test_scores_list = []
 test_accuracy_list = []
 confusion_matrix_list = []
 clf_list = []
@@ -159,7 +159,7 @@ for train_index, test_index in skf.split(X, Y):
     rf_classifier = RandomForestClassifier(n_estimators=n_trees, max_depth=depth, oob_score=True)
     rf_classifier.fit(x_train, y_train)
 
-    test_scores_list.append(rf_classifier.score(x_test, y_test))  # lista de los scores  obtenidas por los random forest
+    #test_scores_list.append(rf_classifier.score(x_test, y_test))  # lista de los scores  obtenidas por los random forest
 
     pred_y = rf_classifier.predict(x_test)
     test_accuracy = accuracy_score(y_test, pred_y)  # igual que scores
@@ -187,8 +187,8 @@ for train_index, test_index in skf.split(X, Y):
 #  [0.93603672532517213, 0.9406273909716909, 0.94008722932129463]
 
 
-precision_media = (np.mean(test_scores_list))
-desviacion_standar = (np.std(test_scores_list))
+precision_media = (np.mean(test_accuracy_list))
+desviacion_standar = (np.std(test_accuracy_list))
 
 
 print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
@@ -220,7 +220,7 @@ def modelo_medio_indx(final, numeros):
 print("precision media en training : "+str(precision_media))
 logging.info("precision media en training: "+str(precision_media))
 
-model_indx = modelo_medio_indx(precision_media, test_scores_list)
+model_indx = modelo_medio_indx(precision_media, test_accuracy_list)
 
 print(model_indx)
 logging.info("indice del modelo medio: "+str(model_indx))
