@@ -218,6 +218,7 @@ def modelo_medio_indx(final, numeros):
 
 
 print("precision media en training : "+str(precision_media))
+
 logging.info("precision media en training: "+str(precision_media))
 
 model_indx = modelo_medio_indx(precision_media, test_accuracy_list)
@@ -283,10 +284,16 @@ X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
 
 #Evaluamos el modelo en test
-result = bestmodel.score(X_test, y_test)
+#test_accuracy = bestmodel.score(X_test, y_test)
+test_accuracy = bestmodel.accuracy_score(X_test, y_test)
 
-print("Resultado final del modelo en test: %.2f%% " % (result))
-logging.info("Resultado final del modelo en test: %.2f%% " % (result))
+
+print("Accuracy en test : %s: %.2f%%" % (bestmodel.metrics_names[1], test_accuracy[1] * 100))
+logging.info("Accuracy en test : %s: %.2f%%" % (bestmodel.metrics_names[1], test_accuracy[1] * 100))
+
+
+print("Resultado final del modelo en test: %.2f%% " % (test_accuracy))
+logging.info("Resultado final del modelo en test: %.2f%% " % (test_accuracy))
 
 #Cargamos el modelo
 loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
