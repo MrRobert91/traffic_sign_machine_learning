@@ -285,7 +285,7 @@ X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
 #Evaluamos el modelo en test
 #test_accuracy = bestmodel.score(X_test, y_test)
-test_accuracy = bestmodel.accuracy_score(X_test, y_test)
+test_accuracy = accuracy_score(X_test, y_test)
 
 
 print("Accuracy en test : %s: %.2f%%" % (bestmodel.metrics_names[1], test_accuracy[1] * 100))
