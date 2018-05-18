@@ -142,7 +142,7 @@ confusion_matrix_list = []
 clf_list = []
 filename_clf_list = []
 
-n_trees = 100
+n_trees = 300
 depth = 3
 fold = 1
 splits = 3
