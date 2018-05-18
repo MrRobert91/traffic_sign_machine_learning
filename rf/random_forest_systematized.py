@@ -250,6 +250,15 @@ os.chdir(dataset_path+'GTSRB')#En corleone
 test = pd.read_csv('GT-final_test.csv', sep=';')
 #test.head(10)
 
+#Guardamos el modelo medio
+pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
+
+
+#Probamos a liberar memoria
+import gc
+gc.collect()
+
+
 # Cargamos el dataset de test
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
@@ -270,8 +279,7 @@ y_test = np.array(y_test)
 X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 #------------------------------------------------
 
-#Guardamos el modelo medio
-pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
+
 
 
 #Evaluamos el modelo en test
