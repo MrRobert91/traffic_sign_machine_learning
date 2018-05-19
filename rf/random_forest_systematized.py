@@ -143,9 +143,9 @@ clf_list = []
 filename_clf_list = []
 
 n_trees = 100
-depth = 3
+depth = 5
 fold = 1
-splits = 5
+splits = 3
 
 skf = StratifiedKFold(n_splits=splits)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
