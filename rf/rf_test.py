@@ -52,7 +52,8 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 
 # In[61]:
 
-
+print('Cargando imagenes de test ...')
+logging.info('Cargando imagenes de test ...')
 # Cargamos el dataset de test
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
@@ -75,5 +76,5 @@ X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
 
 result = loaded_model.score(X_test, y_test)
-print("Resultado final del modelo en test: %.2f%% " % (result))
-logging.info("Resultado final del modelo en test: %.2f%% " % (result))
+print("Resultado final del modelo en test: %.2f%% " % (result*100))
+logging.info("Resultado final del modelo en test: %.2f%% " % (result*100))
