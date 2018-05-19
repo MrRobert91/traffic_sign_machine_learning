@@ -36,7 +36,7 @@ import logging
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
-#dataset_path="/home/david/Escritorio/TFG/Pruebas"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas/"
 
 #Corleone
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
@@ -143,7 +143,7 @@ clf_list = []
 filename_clf_list = []
 
 n_trees = 100
-depth = 15
+depth = 16
 fold = 1
 splits = 3
 
