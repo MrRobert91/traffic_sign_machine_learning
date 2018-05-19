@@ -116,6 +116,24 @@ def preprocess_img(img):
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
     return img
+# Función para encontrar el modelo que está mas proximo a la media
+def modelo_medio_indx(final, numeros):
+    def el_menor(numeros):
+        menor = numeros[0]
+        retorno = 0
+        for x in range(len(numeros)):
+            if numeros[x] < menor:
+                menor = numeros[x]
+                retorno = x
+        return retorno
+
+    diferencia = []
+    for x in range(len(numeros)):
+        diferencia.append(abs(final - numeros[x]))
+    # devuelve el indice del modelo más próximo a la media
+    return numeros.index(numeros[el_menor(diferencia)])
+
+
 
 def get_class(img_path):
     return int(img_path.split('/')[-2])
@@ -273,6 +291,33 @@ desviacion_standar = (np.std(val_accuracy_list))
 print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
+
+print("precision media: "+str(precision_media))
+logging.info("precision media: "+str(precision_media))
+
+model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
+
+print("indice del modelo medio: "+str(model_indx))
+logging.info("indice del modelo medio: "+str(model_indx))
+
+# cargamos el modelo medio de disco
+os.chdir(code_path)
+best_model =clf_list[model_indx]
+
+modelname = filename_clf_list[model_indx]
+
+
+
+#Guardamos el modelo medio
+pickle.dump(best_model, open((code_path + str(modelname)), 'wb'))
+
+#guardar con h5 no funciona por tener un metodo custom de accuracy
+#best_model.save(modelname)
+
+
+
+
+#-------------------------------------------------
 # Cargamos el archivo csv con los datos de test
 os.chdir(dataset_path+'/GTSRB')#En local
 test = pd.read_csv('GT-final_test.csv', sep=';')
@@ -300,36 +345,10 @@ X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
-# Función para encontrar el modelo que está mas proximo a la media
-def modelo_medio_indx(final, numeros):
-    def el_menor(numeros):
-        menor = numeros[0]
-        retorno = 0
-        for x in range(len(numeros)):
-            if numeros[x] < menor:
-                menor = numeros[x]
-                retorno = x
-        return retorno
-
-    diferencia = []
-    for x in range(len(numeros)):
-        diferencia.append(abs(final - numeros[x]))
-    # devuelve el indice del modelo más próximo a la media
-    return numeros.index(numeros[el_menor(diferencia)])
 
 
 
-print("precision media: "+str(precision_media))
-logging.info("precision media: "+str(precision_media))
 
-model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
-
-print("indice del modelo medio: "+str(model_indx))
-logging.info("indice del modelo medio: "+str(model_indx))
-
-# cargamos el modelo medio de disco
-os.chdir(code_path)
-best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
@@ -342,8 +361,7 @@ best_model_filename= ("nn_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accurac
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
-#guardar con h5 no funciona por tener un metodo custom de accuracy
-best_model.save(best_model_filename)
+
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
