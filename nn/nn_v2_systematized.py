@@ -69,9 +69,9 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-logging.info("-----------Inicio de la prueba con NN -----------")
+logging.info("-----------Inicio de la prueba con NN v2 -----------")
 logging.info("program started on - " + str(datetime.datetime.now))
-logging.info('Clasificación de señales de tráfico con nn')
+logging.info('Clasificación de señales de tráfico con nn v2')
 
 dim_data = (IMG_SIZE*IMG_SIZE*3)
 
@@ -410,6 +410,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info(cm)
 
 
-print("---------- Fin de la prueba con NN ----------")
-logging.info("-----------Fin de la prueba con NN -----------")
+print("---------- Fin de la prueba con NN v2 ----------")
+logging.info("-----------Fin de la prueba con NN v2 -----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
