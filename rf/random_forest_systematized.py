@@ -143,7 +143,7 @@ clf_list = []
 filename_clf_list = []
 
 n_trees = 300
-depth = 14
+depth = 13
 fold = 1
 splits = 3
 
