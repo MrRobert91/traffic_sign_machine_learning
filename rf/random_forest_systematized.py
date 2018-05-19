@@ -288,20 +288,18 @@ test_accuracy = bestmodel.score(X_test, y_test)
 #test_accuracy = accuracy_score(X_test, y_test)
 
 
-print("Accuracy en test : %s: %.2f%%" % (bestmodel.metrics_names[1], test_accuracy[1] * 100))
-logging.info("Accuracy en test : %s: %.2f%%" % (bestmodel.metrics_names[1], test_accuracy[1] * 100))
 
 
-print("Resultado final del modelo en test: %.2f%% " % (test_accuracy))
-logging.info("Resultado final del modelo en test: %.2f%% " % (test_accuracy))
+print("Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+logging.info("Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
 
 #Cargamos el modelo
 loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
 
 result_loaded_model = loaded_model.score(X_test, y_test)
 
-print("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model))
-logging.info("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model))
+print("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model * 100))
+logging.info("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model *100))
 
 # Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
 # la matriz de confusión.
