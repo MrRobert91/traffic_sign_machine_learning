@@ -35,12 +35,12 @@ import logging
 
 
 #local
-#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
-#dataset_path="/home/david/Escritorio/TFG/Pruebas/"
+code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
+dataset_path="/home/david/Escritorio/TFG/Pruebas/"
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
-dataset_path='/home/drobert/tfg/'
+#code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
+#dataset_path='/home/drobert/tfg/'
 
 # Fichero de log
 fichero_log = (code_path +'rf.log')
@@ -142,8 +142,8 @@ confusion_matrix_list = []
 clf_list = []
 filename_clf_list = []
 
-n_trees = 300
-depth = 16
+n_trees = 100
+depth = 19
 fold = 1
 splits = 3
 
