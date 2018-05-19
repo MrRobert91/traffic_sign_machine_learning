@@ -239,6 +239,16 @@ os.chdir(code_path)
 modelname = filename_clf_list[model_indx]
 bestmodel = clf_list[model_indx]
 
+
+#Guardamos el modelo medio
+pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
+
+
+
+'''
+
+
+'''
 ##Cargamos los datos de test
 
 ruta_actual = os.getcwd()
@@ -251,8 +261,6 @@ os.chdir(dataset_path+'GTSRB')#En corleone
 test = pd.read_csv('GT-final_test.csv', sep=';')
 #test.head(10)
 
-#Guardamos el modelo medio
-pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
 
 
 #Probamos a liberar memoria
