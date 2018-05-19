@@ -142,10 +142,10 @@ confusion_matrix_list = []
 clf_list = []
 filename_clf_list = []
 
-n_trees = 300
+n_trees = 100
 depth = 3
 fold = 1
-splits = 3
+splits = 5
 
 skf = StratifiedKFold(n_splits=splits)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
@@ -217,9 +217,9 @@ def modelo_medio_indx(final, numeros):
     # return numeros[index(el_menor(diferencia))]
 
 
-print("precision media en training : "+str(precision_media))
+print("precision media en training : "+str(precision_media * 100))
 
-logging.info("precision media en training: "+str(precision_media))
+logging.info("precision media en training: "+str(precision_media * 100))
 
 model_indx = modelo_medio_indx(precision_media, test_accuracy_list)
 
