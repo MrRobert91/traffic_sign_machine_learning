@@ -45,6 +45,7 @@ from keras import metrics
 from keras.models import load_model
 import datetime
 from sklearn.model_selection import train_test_split
+from keras.models import load_model
 from keras.utils.np_utils import to_categorical
 
 
@@ -292,10 +293,10 @@ modelname = ("nn_3H_epochs%s_val_acc_%.2f%%_%s.h5" % (epochs,val_accuracy[1] * 1
 
 
 #Guardamos el modelo medio
-pickle.dump(model, open((code_path + str(modelname)), 'wb'))
+#pickle.dump(model, open((code_path + str(modelname)), 'wb'))
 
 #guardar con h5 no funciona por tener un metodo custom de accuracy
-#best_model.save(modelname)
+model.save(modelname)
 
 
 #-------------------------------------------------
@@ -337,7 +338,8 @@ logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_acc
 
 
 #Cargamos el modelo
-loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
+#loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
+loaded_model = load_model(modelname)
 
 loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
