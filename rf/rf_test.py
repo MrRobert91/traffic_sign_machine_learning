@@ -38,7 +38,9 @@ def preprocess_img(img):
     return img
 
 os.chdir(code_path)
-modelname = "rf_500trees_2fold_0.968val_acc"
+#modelname = "rf_500trees_2fold_0.968val_acc"
+modelname = "rf_100trees_5depth_2fold_0.540val_acc"
+
 loaded_model = pickle.load(open(modelname, 'rb'))
 
 #os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
