@@ -39,7 +39,7 @@ def preprocess_img(img):
 
 os.chdir(code_path)
 #modelname = "rf_500trees_2fold_0.968val_acc"
-modelname = "rf_100trees_12depth_2fold_0.895val_acc"
+modelname = "rf_300trees_12depth_3fold_0.902val_acc"
 
 loaded_model = pickle.load(open(modelname, 'rb'))
 
