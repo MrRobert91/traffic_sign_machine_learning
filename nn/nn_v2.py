@@ -199,7 +199,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 10
+epochs = 20
 lr = 0.01
 
 x_train, x_val, y_train_no_one_hot, y_val_no_one_hot = train_test_split(X, Y, test_size=0.33, random_state=42)
