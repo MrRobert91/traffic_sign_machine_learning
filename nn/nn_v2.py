@@ -50,13 +50,13 @@ from keras.utils.np_utils import to_categorical
 
 
 #local
-#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
-#dataset_path="/home/david/Escritorio/TFG/Pruebas"
+code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
+dataset_path="/home/david/Escritorio/TFG/Pruebas"
 
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn/"
-dataset_path='/home/drobert/tfg/'
+#code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn/"
+#dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/nn/nn.log')
 fichero_log = (code_path +'nn.log')
@@ -78,7 +78,7 @@ logging.info('Clasificación de señales de tráfico con nn v2')
 dim_data = (IMG_SIZE*IMG_SIZE*3)
 
 
-#Modelo sugerido por Alfredo2
+#Modelo sugerido por Alfredo 3H layers
 def nn_model():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
@@ -88,7 +88,7 @@ def nn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
-#Modelo sugerido por Alfredo2
+#Modelo sugerido por Alfredo, 4H layers
 def nn_model_v2():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
@@ -167,7 +167,7 @@ Y = np.asarray(labels)
 
 # Tenemos que cambiar los formatos de entrada para la capa densamente conexa.
 # No hay convoluciones aquí
-X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+X = X.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 
 print(X.shape)
 print(Y.shape)
@@ -209,7 +209,7 @@ y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
 y_val = np.eye(NUM_CLASSES, dtype='uint8')[y_val_no_one_hot]
 
 
-nn_classifier = nn_model()
+nn_classifier = nn_model_v2()
 
 # vamos a entrenar nuestro modelo con SGD + momentum
 sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
@@ -289,7 +289,7 @@ os.chdir(code_path)
 model =nn_classifier
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
-modelname = ("nn_3H_input%s_epochs%s_val_acc_%.2f%%_%s.h5" % (IMG_SIZE,epochs,val_accuracy[1] * 100, today_date))
+modelname = ("nn_4H_input%s_epochs%s_val_acc_%.2f%%_%s.h5" % (IMG_SIZE ,epochs,val_accuracy[1] * 100, today_date))
 
 
 #Guardamos el modelo medio
@@ -323,7 +323,7 @@ y_test = np.array(y_test)
 
 
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
