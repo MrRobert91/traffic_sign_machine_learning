@@ -62,7 +62,7 @@ dataset_path='/home/drobert/tfg/'
 fichero_log = (code_path +'nn.log')
 
 NUM_CLASSES = 43
-IMG_SIZE = 48
+IMG_SIZE = 32 #48
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -215,8 +215,8 @@ nn_classifier = nn_model()
 sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
 nn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=[metrics.categorical_accuracy])
-                  #metrics=[get_categorical_accuracy_keras])#unico que funciona
+                  #metrics=[metrics.categorical_accuracy])
+                  metrics=[get_categorical_accuracy_keras])#unico que funciona
 
 print("tamaños de x_train e y_train")
 print(x_train.shape)
@@ -289,7 +289,7 @@ os.chdir(code_path)
 model =nn_classifier
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
-modelname = ("nn_3H_epochs%s_val_acc_%.2f%%_%s.h5" % (epochs,val_accuracy[1] * 100, today_date))
+modelname = ("nn_3H_input%s_epochs%s_val_acc_%.2f%%_%s.h5" % (IMG_SIZE,epochs,val_accuracy[1] * 100, today_date))
 
 
 #Guardamos el modelo medio
@@ -326,6 +326,8 @@ y_test = np.array(y_test)
 X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
+
+
 
 
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
