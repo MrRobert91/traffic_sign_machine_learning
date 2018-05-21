@@ -285,7 +285,7 @@ logging.info("test_accuracy final del modelo en test: %.2f%% " % (result *100))
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-model_filename= ("finetuningVGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+model_filename= ("feature_extraction_VGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
@@ -293,7 +293,6 @@ model_filename= ("finetuningVGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accur
 top_model.save(model_filename)
 
 print("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
-
 logging.info("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
 
 
