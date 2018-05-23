@@ -73,7 +73,7 @@ img_rows, img_cols = 48, 48 #80,80 #100,100#224, 224 # 48, 48 Resolution of inpu
 channel = 3
 num_classes = 43
 batch_size = 16
-epochs = 20
+epochs = 2 #20
 IMG_SIZE = 48
 lr = 0.01
 
@@ -257,7 +257,7 @@ predictions_valid = model.predict(X_val, batch_size=batch_size, verbose=1)
 # Cross-entropy loss score
 score = log_loss(y_val, predictions_valid)
 
-val_accuracy = model.evaluate(X_val, y_val, verbose=1)
+val_accuracy = model.evaluate(X_val, y_val_one_hot, verbose=1)
 
 print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
