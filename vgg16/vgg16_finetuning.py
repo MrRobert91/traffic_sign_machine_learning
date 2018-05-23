@@ -202,6 +202,8 @@ model = Model(inputs=base_model.input, outputs=predictions)
 for layer in base_model.layers:
     layer.trainable = False
 
+print("Entrenendo top model...")
+logging.info("Entrenendo top model...")
 
 # compile the model (should be done *after* setting layers to non-trainable)
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
@@ -230,6 +232,9 @@ for layer in model.layers[:15]:
    layer.trainable = False
 for layer in model.layers[15:]:
    layer.trainable = True
+
+print("Entrenando model ensamblado (top+base) ...")
+logging.info("Entrenando ensamblado (top+base) ...")
 
 # we need to recompile the model for these modifications to take effect
 # we use SGD with a low learning rate
@@ -270,6 +275,9 @@ logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 
 
 # ---------TEST--------
+print("Cargando imagenes de Test...")
+logging.info("Cargando imagenes de Test...")
+
 
 ruta_actual = os.getcwd()
 #print(ruta_actual)
