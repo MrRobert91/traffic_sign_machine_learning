@@ -37,6 +37,7 @@ from keras.models import load_model
 import datetime
 import json
 from sklearn.model_selection import train_test_split
+from keras import metrics
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
@@ -206,7 +207,7 @@ print("Entrenendo top model...")
 logging.info("Entrenendo top model...")
 
 # compile the model (should be done *after* setting layers to non-trainable)
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=[metrics.categorical_accuracy])
 
 # train the model on the new data for a few epochs
 model.fit(X_train, y_train_one_hot,
@@ -240,7 +241,7 @@ logging.info("Entrenando ensamblado (top+base) ...")
 # we use SGD with a low learning rate
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.00001, momentum=0.9),
-              loss='categorical_crossentropy')
+              loss='categorical_crossentropy',metrics=[metrics.categorical_accuracy])
 
 # we train our model again (this time fine-tuning the top vgg16 conv block
 # alongside the top Dense layers
