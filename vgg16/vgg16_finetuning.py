@@ -74,7 +74,7 @@ img_rows, img_cols = 48, 48 #80,80 #100,100#224, 224 # 48, 48 Resolution of inpu
 channel = 3
 num_classes = 43
 batch_size = 16
-epochs = 2 #20
+epochs = 20
 IMG_SIZE = 48
 lr = 0.01
 
