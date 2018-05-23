@@ -18,12 +18,15 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 import pickle
 from sklearn.model_selection import StratifiedKFold
-
+from keras.applications.vgg16 import VGG16, preprocess_input
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D
 from keras.layers.pooling import MaxPooling2D
+
+from keras.layers import Dense, GlobalAveragePooling2D
 from keras.optimizers import SGD
+from keras.models import Model
 from keras import backend as K
 K.set_image_data_format('channels_last')
 
@@ -54,20 +57,27 @@ model_path 		= config["model_path"]
 seed      		= config["seed"]
 classifier_path = config["classifier_path"]
 log_path		= config["log_path"]
+#top_model_path  = config["top_model_path"]
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
 dataset_path='/home/drobert/tfg/'
+top_model_path  = config["top_model_path"]
 
-img_rows, img_cols = 90, 90 #80,80 #100,100#224, 224 # 48, 48 Resolution of inputs
+#local
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas/"
+#top_model_path =code_path+"output/vgg16_top_classifier.h5"
+
+img_rows, img_cols = 48, 48 #80,80 #100,100#224, 224 # 48, 48 Resolution of inputs
 channel = 3
 num_classes = 43
 batch_size = 16
-nb_epoch = 10
-IMG_SIZE = 90
+epochs = 20
+IMG_SIZE = 48
 lr = 0.01
 
-fichero_log = (code_path +'cnn6l.log')
+fichero_log = (code_path +'vgg16.log')
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -78,83 +88,6 @@ logging.basicConfig(level=logging.DEBUG,
 
 print ("[STATUS] --------vgg16 finetuning - systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------vgg16 finetuning - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-
-
-def vgg16_model(img_rows, img_cols, channel=1, num_classes=None):
-    """VGG 16 Model for Keras
-    Model Schema is based on
-    https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3
-    ImageNet Pretrained Weights
-    https://drive.google.com/file/d/0Bz7KyqmuGsilT0J5dmRCM0ROVHc/view?usp=sharing
-    Parameters:
-      img_rows, img_cols - resolution of inputs
-      channel - 1 for grayscale, 3 for color
-      num_classes - number of categories for our classification task
-    """
-    model = Sequential()
-    model.add(ZeroPadding2D((1, 1), input_shape=(channel, img_rows, img_cols)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(256, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(256, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(256, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Conv2D(512, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-    # Add Fully Connected Layer
-    model.add(Flatten())
-    model.add(Dense(4096, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(4096, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1000, activation='softmax'))
-
-    # Loads ImageNet pre-trained data
-    model.load_weights('imagenet_models/vgg16_weights.h5')
-
-    # Truncate and replace softmax layer for transfer learning
-    model.layers.pop()
-    model.outputs = [model.layers[-1].output]
-    model.layers[-1].outbound_nodes = []
-    model.add(Dense(num_classes, activation='softmax'))
-
-    # Uncomment below to set the first 10 layers to non-trainable (weights will not be updated)
-    #for layer in model.layers[:10]:
-    #    layer.trainable = False
-
-    # Learning rate is changed to 0.001
-    sgd = SGD(lr=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
-
-    return model
-
 
 
 def preprocess_img(img):
@@ -237,28 +170,85 @@ X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.2)
 
 # Make one hot targets
 y_train_one_hot = np.eye(num_classes, dtype='uint8')[y_train]
-y_test_one_hot = np.eye(num_classes, dtype='uint8')[y_val]
-
+y_val_one_hot = np.eye(num_classes, dtype='uint8')[y_val]
 
 
 
 # Load our model
-model = vgg16_model(img_rows, img_cols, channel, num_classes)
+#-------------------------------------------
+
+top_model_weights_path = top_model_path
+
+# build the VGG16 network
+#model = VGG16(weights='imagenet', include_top=False)
 
 
-# Start Fine-tuning
-model.fit(X, y_train_one_hot,
+# create the base pre-trained model
+base_model = VGG16(weights='imagenet', include_top=False)
+
+# add a global spatial average pooling layer
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
+# let's add a fully-connected layer
+x = Dense(1024, activation='relu')(x)
+# and a logistic layer -- let's say we have 43 classes
+predictions = Dense(43, activation='softmax')(x)
+
+# this is the model we will train
+model = Model(inputs=base_model.input, outputs=predictions)
+
+# first: train only the top layers (which were randomly initialized)
+# i.e. freeze all convolutional InceptionV3 layers
+for layer in base_model.layers:
+    layer.trainable = False
+
+
+# compile the model (should be done *after* setting layers to non-trainable)
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+
+# train the model on the new data for a few epochs
+model.fit(X_train, y_train_one_hot,
         batch_size=batch_size,
-        nb_epoch=nb_epoch,
+        epochs=epochs,
         shuffle=True,
-        #validation_split=0.2,
         verbose=1,
-        validation_data=(X_val, y_test_one_hot),
+        validation_data=(X_val, y_val_one_hot),
+        )
+
+# at this point, the top layers are well trained and we can start fine-tuning
+# convolutional layers from inception V3. We will freeze the bottom N layers
+# and train the remaining top layers.
+
+# let's visualize layer names and layer indices to see how many layers
+# we should freeze:
+for i, layer in enumerate(base_model.layers):
+   print(i, layer.name)
+
+# we chose to train the top 2 inception blocks, i.e. we will freeze
+# the first 15 layers and unfreeze the rest:
+for layer in model.layers[:15]:
+   layer.trainable = False
+for layer in model.layers[15:]:
+   layer.trainable = True
+
+# we need to recompile the model for these modifications to take effect
+# we use SGD with a low learning rate
+from keras.optimizers import SGD
+model.compile(optimizer=SGD(lr=0.00001, momentum=0.9),
+              loss='categorical_crossentropy')
+
+# we train our model again (this time fine-tuning the top vgg16 conv block
+# alongside the top Dense layers
+model.fit(X_train, y_train_one_hot,
+        batch_size=batch_size,
+        epochs=epochs,
+        shuffle=True,
+        verbose=1,
+        validation_data=(X_val, y_val_one_hot),
         )
 
 # Make predictions
 predictions_valid = model.predict(X_val, batch_size=batch_size, verbose=1)
-
 # Cross-entropy loss score
 score = log_loss(y_val, predictions_valid)
 
@@ -267,16 +257,13 @@ val_accuracy = model.evaluate(X_val, y_val, verbose=1)
 print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 
-clf_list.append(model)  # lista de cada uno de los los clasificadores
-
-
+#clf_list.append(model)  # lista de cada uno de los los clasificadores
 
 #print('lista de accuracys de los modelos: '+str(val_accuracy_list))
 #logging.info('lista de accuracys de los modelos: '+str(val_accuracy_list))
 
 #precision_media = (np.mean(val_accuracy_list))
 #desviacion_standar = (np.std(val_accuracy_list))
-
 
 #print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 #logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
@@ -287,7 +274,7 @@ clf_list.append(model)  # lista de cada uno de los los clasificadores
 ruta_actual = os.getcwd()
 #print(ruta_actual)
 #print(os.listdir(ruta_actual))
-os.chdir(dataset_path+'/GTSRB')#En local
+os.chdir(dataset_path+'GTSRB')#En local
 #os.chdir('/home/drobert/tfg/GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
@@ -297,7 +284,7 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 # In[61]:
 
 # Cargamos el dataset de test
-os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
+os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en local
 #os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
@@ -317,26 +304,6 @@ y_test = np.array(y_test)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(num_classes, dtype='uint8')[y_test]
 
-# Función para encontrar el modelo que está mas proximo a la media
-'''
-def modelo_medio_indx(final, numeros):
-    def el_menor(numeros):
-        menor = numeros[0]
-        retorno = 0
-        for x in range(len(numeros)):
-            if numeros[x] < menor:
-                menor = numeros[x]
-                retorno = x
-        return retorno
-
-    diferencia = []
-    for x in range(len(numeros)):
-        diferencia.append(abs(final - numeros[x]))
-    # devuelve el indice del modelo más próximo a la media
-    return numeros.index(numeros[el_menor(diferencia)])
-    '''
-
-
 
 #print("precision media: "+str(precision_media))
 #logging.info("precision media: "+str(precision_media))
@@ -348,25 +315,25 @@ def modelo_medio_indx(final, numeros):
 
 # cargamos el modelo medio de disco
 os.chdir(code_path)
-best_model =clf_list[0]
+#best_model =clf_list[0]
 
-test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
+
+print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+
 
 #Guardar best_model en un pickle
 
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn6l_epochs%s_test_acc_%.2f%%_%s.h5" % (nb_epoch,test_accuracy[1] * 100, today_date))
+best_model_filename= ("finetuningVGG16_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
 #guardar con h5 no funciona por tener un metodo custom de accuracy
-best_model.save(best_model_filename)
-
-print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
-
-logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
+model.save(best_model_filename)
 
 
 #Comprobamos que el modelo cargado tiene la misma precision
@@ -403,10 +370,7 @@ print("shape de y_test , y_pred_no_one_hot :")
 print(y_test.shape)
 print(y_pred_no_one_hot.shape)
 
-
-
-cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
-
+#cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info("matriz de confusión del modelo medio: ")
 #logging.info(cm)
 
