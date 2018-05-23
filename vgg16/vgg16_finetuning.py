@@ -259,8 +259,11 @@ score = log_loss(y_val, predictions_valid)
 
 val_accuracy = model.evaluate(X_val, y_val_one_hot, verbose=1)
 
-print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
-logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+print(val_accuracy)
+logging.info(val_accuracy)
+
+#print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+#logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 
 #clf_list.append(model)  # lista de cada uno de los los clasificadores
 
@@ -327,8 +330,11 @@ os.chdir(code_path)
 
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
 
-print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
-logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+print('test accuracy: '+test_accuracy)
+logging.info('test accuracy: '+test_accuracy)
+
+#print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+#logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 
 
 #Guardar best_model en un pickle
@@ -350,7 +356,12 @@ model.save(best_model_filename)
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
 loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
-print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+
+
+print('test accuracy: '+loaded_model_test_accuracy)
+logging.info('test accuracy: '+loaded_model_test_accuracy)
+
+#print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
 
