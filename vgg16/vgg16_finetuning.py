@@ -351,6 +351,7 @@ best_model_filename= ("finetuningVGG16_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs
 model.save(best_model_filename)
 
 
+
 #Comprobamos que el modelo cargado tiene la misma precision
 
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
