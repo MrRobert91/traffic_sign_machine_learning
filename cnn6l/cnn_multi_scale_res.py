@@ -361,6 +361,7 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
+
     cnn_classifier = cnn_model_res_multi_stage2()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
