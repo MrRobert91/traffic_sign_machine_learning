@@ -37,6 +37,7 @@ from keras.models import load_model
 import datetime
 import json
 from sklearn.model_selection import train_test_split
+from keras import metrics
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
@@ -206,7 +207,7 @@ print("Entrenendo top model...")
 logging.info("Entrenendo top model...")
 
 # compile the model (should be done *after* setting layers to non-trainable)
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=[metrics.categorical_accuracy])
 
 # train the model on the new data for a few epochs
 model.fit(X_train, y_train_one_hot,
@@ -240,7 +241,7 @@ logging.info("Entrenando ensamblado (top+base) ...")
 # we use SGD with a low learning rate
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.00001, momentum=0.9),
-              loss='categorical_crossentropy')
+              loss='categorical_crossentropy',metrics=[metrics.categorical_accuracy])
 
 # we train our model again (this time fine-tuning the top vgg16 conv block
 # alongside the top Dense layers
@@ -257,10 +258,13 @@ predictions_valid = model.predict(X_val, batch_size=batch_size, verbose=1)
 # Cross-entropy loss score
 score = log_loss(y_val, predictions_valid)
 
-val_accuracy = model.evaluate(X_val, y_val, verbose=1)
+val_accuracy = model.evaluate(X_val, y_val_one_hot, verbose=1)
 
-print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
-logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+print('val accuracy: '+ str(val_accuracy))
+logging.info('val accuracy: '+ str(val_accuracy))
+
+#print("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
+#logging.info("%s: %.2f%%" % (model.metrics_names[1], val_accuracy[1] * 100))
 
 #clf_list.append(model)  # lista de cada uno de los los clasificadores
 
@@ -327,8 +331,11 @@ os.chdir(code_path)
 
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
 
-print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
-logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+print('test accuracy: '+str(test_accuracy))
+logging.info('test accuracy: '+str(test_accuracy))
+
+#print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
+#logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 
 
 #Guardar best_model en un pickle
@@ -350,7 +357,12 @@ model.save(best_model_filename)
 loaded_model = load_model(best_model_filename)# No funciona con custom metrics
 
 loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
-print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
+
+
+print('test accuracy: '+str(loaded_model_test_accuracy))
+logging.info('test accuracy: '+str(loaded_model_test_accuracy))
+
+#print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
 #https://github.com/keras-team/keras/issues/3911
 #La solucion propuesta arriba tampoco funciona
 
