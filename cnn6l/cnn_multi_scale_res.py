@@ -76,6 +76,38 @@ logging.basicConfig(level=logging.DEBUG,
 print ("[STATUS] --------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
+def res_multi_stage2_GAPool():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.GlobalAveragePooling2D()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.GlobalAveragePooling2D()(x_principal)
+
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    #concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
 def cnn_model_res_multi_stage2():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
@@ -363,7 +395,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    cnn_classifier = cnn_model_res_multi_stage2()
+    cnn_classifier = res_multi_stage2_GAPool()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
