@@ -369,7 +369,7 @@ for train_index, test_index in skf.split(X, Y):
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
-    print("tamaños de x_train e y_train")
+    #print("tamaños de x_train e y_train")
     print(x_train.shape)
     print(y_train.shape)
 
