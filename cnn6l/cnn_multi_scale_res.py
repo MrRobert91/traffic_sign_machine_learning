@@ -99,8 +99,8 @@ def cnn_model_res_multi_stage2():
 
 
     # Etapa de concatenacion
-    #concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
-    concatenated = layers.add([x_flatten_3, x_flatten_2])# probar tambien con add
+    concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
+    #concatenated = layers.add([x_flatten_3, x_flatten_2])# probar tambien con add
     concatenated = layers.Dense(1024, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
 
