@@ -49,6 +49,10 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
+#from ann_visualizer.visualize import ann_viz
+
+
+
 logging.info("program started on - " + str(datetime.datetime.now))
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -71,6 +75,38 @@ logging.basicConfig(level=logging.DEBUG,
 
 print ("[STATUS] --------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+
+def cnn_model_res_multi_stage2():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+    #x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    #concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
+    concatenated = layers.add([x_flatten_3, x_flatten_2])# probar tambien con add
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
 
 
 def cnn_model_res_multi():
@@ -125,7 +161,7 @@ def cnn_model_res_multi_v2():
     x_flatten_3 = layers.Flatten()(x_principal)
 
     # Etapa de concatenacion
-    concatenated = layers.concatenate([x_flatten_3, x_flatten_1, x_flatten_2],axis=-1)#probar tambien con add
+    concatenated = layers.concatenate([x_flatten_1, x_flatten_2, x_flatten_3],axis=-1)#probar tambien con add
     #concatenated = layers.Dense(512, activation='relu')(concatenated)
     concatenated = layers.Dense(1024, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
@@ -325,7 +361,7 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_model_res_multi()
+    cnn_classifier = cnn_model_res_multi_stage2()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
@@ -396,6 +432,8 @@ print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std
 logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
 
+
+
 ruta_actual = os.getcwd()
 #print(ruta_actual)
 #print(os.listdir(ruta_actual))
@@ -461,6 +499,10 @@ os.chdir(code_path)
 best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+#Guardamos imagen de la Red Neuronal
+#ann_viz(best_model, filename='network.gv', title="My first neural network")
+
 
 #Guardar best_model en un pickle
 
