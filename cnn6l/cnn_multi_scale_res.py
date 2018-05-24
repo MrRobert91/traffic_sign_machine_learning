@@ -97,6 +97,7 @@ def cnn_model_res_multi_stage2():
     x_principal = layers.Dropout(0.4)(x_principal)
     x_flatten_3 = layers.Flatten()(x_principal)
 
+
     # Etapa de concatenacion
     #concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
     concatenated = layers.add([x_flatten_3, x_flatten_2])# probar tambien con add
