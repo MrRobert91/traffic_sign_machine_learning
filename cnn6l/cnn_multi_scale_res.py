@@ -409,7 +409,8 @@ for train_index, test_index in skf.split(X, Y):
     cnn_classifier = cnn_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
-    sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    #sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=lr, momentum=0.9, nesterov=True) # con el lr_schedule
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
@@ -430,7 +431,7 @@ for train_index, test_index in skf.split(X, Y):
               #validation_split=0.2,
               verbose=1,
               callbacks=[tensorboard,
-                         #LearningRateScheduler(lr_schedule),
+                         LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
 
               )
