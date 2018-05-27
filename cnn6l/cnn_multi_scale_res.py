@@ -212,7 +212,9 @@ def cnn_model_res_multi_v2():
     model = Model(input_tensor, output_tensor)
     return model
 
-#Igual que el cnn:model v2 con API Funcional
+# cnn_v1 Primera version en tfg
+# 96,04% en test con input de 32x32
+# 96,89% en test con input de 48x48
 def cnn_v1():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
@@ -294,7 +296,7 @@ def cnn_model_old():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 48 #48
+IMG_SIZE = 32 # 32 o 48
 
 
 # Funcion para preprocesar las imagenes
@@ -607,12 +609,18 @@ print(y_pred_no_one_hot.shape)
 
 
 
-cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
+#cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
 #logging.info("matriz de confusión del modelo medio: ")
 #logging.info(cm)
+
+print(loaded_model.summary())
+logging.info(loaded_model.summary())
 
 
 print("Fin de la prueba con CNN multi scale ")
 logging.info("-----------Fin de la prueba con CNN multi scale-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
+
+from keras.utils import plot_model
+plot_model(loaded_model, show_shapes=True, to_file=code_path+model_name+'.png')
