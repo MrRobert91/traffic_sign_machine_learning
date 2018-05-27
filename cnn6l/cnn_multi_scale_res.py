@@ -430,6 +430,7 @@ for train_index, test_index in skf.split(X, Y):
               #validation_split=0.2,
               verbose=1,
               callbacks=[tensorboard,
+                         LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
 
               )
