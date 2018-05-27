@@ -401,8 +401,8 @@ for train_index, test_index in skf.split(X, Y):
     y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
 
     #one hot encodig con to_categorical
-    #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
-    #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
+    #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
+    #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
     cnn_classifier = cnn_v1()
