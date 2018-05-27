@@ -311,7 +311,7 @@ def preprocess_img(img):
 
     # reescalado de imagenes a tamaño standard
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
-    img /= img.max() / 255.0
+    #img /= img.max() / 255.0
 
 
     return img
