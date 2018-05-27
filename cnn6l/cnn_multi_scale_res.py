@@ -426,7 +426,8 @@ for train_index, test_index in skf.split(X, Y):
     hist = cnn_classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
-              validation_split=0.2,
+              validation_data=(x_test,y_test),
+              #validation_split=0.2,
               verbose=1,
               callbacks=[tensorboard,
                          ModelCheckpoint(filepath, save_best_only=True)]
