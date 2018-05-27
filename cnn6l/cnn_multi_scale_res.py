@@ -56,6 +56,8 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
+model_name = "cnn_v1_32"
+
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -66,9 +68,9 @@ dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_multi_scale.log')
-fichero_log_tb = (code_path +'tensor_board_logs')
+fichero_log_tb = (code_path +'tensor_board_logs/'+model_name)
 
-model_name = "cnn_v1"
+
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
