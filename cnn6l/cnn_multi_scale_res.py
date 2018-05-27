@@ -292,7 +292,7 @@ def cnn_model_old():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 #32 #48
+IMG_SIZE = 32 #48
 
 
 # Funcion para preprocesar las imagenes
@@ -403,7 +403,6 @@ for train_index, test_index in skf.split(X, Y):
     #one hot encodig con to_categorical
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
-
 
 
     cnn_classifier = cnn_v1()
