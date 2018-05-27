@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_v1_32"
+model_name = "cnn_v1_48"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -384,7 +384,6 @@ def lr_schedule(epoch):
 
 tensorboard = TensorBoard(log_dir=fichero_log_tb,
                           histogram_freq=1,
-                          write_images=True,
                           write_graph=True)
 
 #Me daba un error.
