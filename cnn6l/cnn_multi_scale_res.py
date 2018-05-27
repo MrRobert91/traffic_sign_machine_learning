@@ -48,12 +48,14 @@ from keras import metrics
 from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
+from keras.callbacks import TensorBoard
 
 #from ann_visualizer.visualize import ann_viz
 
 
 
 logging.info("program started on - " + str(datetime.datetime.now))
+
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -64,7 +66,9 @@ dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_multi_scale.log')
+fichero_log_tb = (code_path +'tensor_board_logs')
 
+model_name = "cnn_v1"
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -207,23 +211,23 @@ def cnn_model_res_multi_v2():
     return model
 
 #Igual que el cnn:model v2 con API Funcional
-def cnn_model_funcional():
+def cnn_v1():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.1)(x)
+    x = layers.Dropout(0.3)(x)
 
     x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.2)(x)
+    x = layers.Dropout(0.4)(x)
 
     x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.3)(x)
+    x = layers.Dropout(0.4)(x)
 
     x = layers.Flatten()(x)
-    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dense(1024, activation='relu')(x)
     x = layers.Dropout(0.5)(x)
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
     model = Model(input_tensor, output_tensor)
@@ -231,7 +235,7 @@ def cnn_model_funcional():
 
 
 #Modelo: red neuronal v2
-def cnn_model_v2():
+def cnn_model_v1_seq():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
@@ -376,13 +380,15 @@ logging.info(skf)
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
+tensorboard = TensorBoard(log_dir=fichero_log_tb)
+
 #Me daba un error.
 #https://stackoverflow.com/questions/46305252/valueerror-dimension-1-must-be-in-the-range-0-2-in-keras
 def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 50 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -400,13 +406,12 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    cnn_classifier = res_multi_stage2_double_sep_conv()
+    cnn_classifier = cnn_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  #metrics=['accuracy'])
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
@@ -415,7 +420,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    filepath = code_path+"cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"cnn_v1_fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     hist = cnn_classifier.fit(x_train, y_train,
@@ -423,7 +428,7 @@ for train_index, test_index in skf.split(X, Y):
               epochs=epochs,
               validation_split=0.2,
               verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule),
+              callbacks=[tensorboard,
                          ModelCheckpoint(filepath, save_best_only=True)]
 
               )
@@ -548,7 +553,7 @@ test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= ("cnn_multi_scale_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("%s_epochs%s_test_acc_%.2f%%_%s.h5" % (model_name ,epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
