@@ -383,8 +383,9 @@ def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
 tensorboard = TensorBoard(log_dir=fichero_log_tb,
-                          histogram_freq=1,
-                          write_graph=True)
+                          #histogram_freq=1,
+                          write_graph=False,
+                          write_images=False)
 
 #Me daba un error.
 #https://stackoverflow.com/questions/46305252/valueerror-dimension-1-must-be-in-the-range-0-2-in-keras
