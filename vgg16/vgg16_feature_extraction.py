@@ -77,12 +77,12 @@ log_path		= config["log_path"]
 
 
 #Corleone
-#code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
-#dataset_path='/home/drobert/tfg/'
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
+dataset_path='/home/drobert/tfg/'
 
 #local
-code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/"
-dataset_path="/home/david/Escritorio/TFG/Pruebas/"
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas/"
 
 # Fichero de log Corleone
 #fichero_log = (log_path)
