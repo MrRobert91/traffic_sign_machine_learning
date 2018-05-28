@@ -38,9 +38,9 @@ import pandas as pd
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+
+#import matplotlib.pyplot as plt
+#from sklearn.metrics import confusion_matrix
 import pickle
 import logging
 
@@ -77,10 +77,18 @@ log_path		= config["log_path"]
 
 
 #Corleone
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
-dataset_path='/home/drobert/tfg/'
+#code_path="/home/drobert/tfg/traffic_sign_machine_learning/vgg16/"
+#dataset_path='/home/drobert/tfg/'
 
-fichero_log = (log_path)
+#local
+code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/"
+dataset_path="/home/david/Escritorio/TFG/Pruebas/"
+
+# Fichero de log Corleone
+#fichero_log = (log_path)
+
+# Fichero de log local
+fichero_log = (code_path +'output/vgg16.log')
 fichero_log_tb = (code_path +'tb_log')
 
 print('Archivo Log en ', fichero_log)
@@ -104,10 +112,15 @@ start = time.time()
 NUM_CLASSES = 43
 IMG_SIZE = 48
 
+#De la misma forma que la red preentrenada
+def preprocess_img(img):
+    img = image.img_to_array(img)
+    img = preprocess_input(img)
 
+    return img
 
 # Funcion para preprocesar las imagenes
-def preprocess_img(img):
+def preprocess_img_old(img):
     # normalizacion del histograma en el canal 'v'
     hsv = color.rgb2hsv(img)
     hsv[:, :, 2] = exposure.equalize_hist(hsv[:, :, 2])
@@ -124,6 +137,8 @@ def preprocess_img(img):
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
     return img
+
+
 #cargar imagenes
 
 def get_class(img_path):
@@ -136,7 +151,12 @@ root_dir = 'GTSRB/Final_Training/Images/'
 #os.chdir('/home/drobert/tfg/')#direccion en corleone
 #root_dir = 'GTSRB/Final_Training/Images/'
 
-top_model_weights_path = "/home/drobert/tfg/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
+#Corleone
+#top_model_weights_path = "/home/drobert/tfg/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
+
+#local
+top_model_weights_path = "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
+
 
 imgs = []
 labels = []
@@ -152,7 +172,9 @@ print(len(all_img_paths))
 np.random.shuffle(all_img_paths)
 
 for img_path in all_img_paths:
-    img = preprocess_img(io.imread(img_path))
+    #img = preprocess_img(io.imread(img_path))
+    img = image.load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
+    img = preprocess_img(img)
     label = get_class(img_path)
     imgs.append(img)
     labels.append(label)
@@ -183,12 +205,15 @@ def lr_schedule(epoch):
 
 tensorboard = TensorBoard(log_dir=fichero_log_tb, histogram_freq = 1, write_graph =True)
 
-# creating the final model
-#model_final = Model(input = model.input, output = predictions)
+
+print('Extracting features...')
+#Extract bottleneck features for train and val data and save them
 #-------------Extract features----------------------
 
 # build the VGG16 network
-base_model = VGG16(include_top=False, weights='imagenet')
+#base_model = VGG16(include_top=False, weights='imagenet' )
+base_model = VGG16(include_top=False, weights='imagenet', input_shape = (IMG_SIZE,IMG_SIZE,3))
+
 
 
 bottleneck_features_train = base_model.predict(X_train)
@@ -201,29 +226,48 @@ bottleneck_features_validation = base_model.predict(X_val)
 np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
 
-#--------------Train Top model---------------------
+#----------Train Top model with bottleneck features---------------------
+print('Training top model...')
 
 train_data = np.load(open('bottleneck_features_train.npy','rb'))
 train_labels = y_train_one_hot
 validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
 validation_labels = y_val_one_hot
 
-
+#---top model---
+'''
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(43, activation='softmax'))
+'''
+
+
+top_model = Sequential()
+top_model.add(Flatten(input_shape=train_data.shape[1:]))
+top_model.add(Dense(1024, activation='relu'))
+top_model.add(Dense(512, activation='relu'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(43, activation='softmax'))
+
+
+#Me daba un error.
+#https://stackoverflow.com/questions/46305252/valueerror-dimension-1-must-be-in-the-range-0-2-in-keras
+def get_categorical_accuracy_keras(y_true, y_pred):
+    return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 
 #model.compile(optimizer='rmsprop',loss='binary_crossentropy', metrics=['accuracy'])
 print('compilando el modelo...')
 logging.info('compilando el modelo')
+
 # compile the model
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 top_model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=[metrics.categorical_accuracy])
+                  metrics=[get_categorical_accuracy_keras])#unico que funciona
+                  #metrics=[metrics.categorical_accuracy])
 
 
 top_model.fit(bottleneck_features_train, train_labels,
@@ -259,9 +303,12 @@ y_test = []
 i = 0
 
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
+    #img_path = os.path.join(os.getcwd(), file_name)
+    #X_test.append(preprocess_img(io.imread(img_path)))
+
     img_path = os.path.join(os.getcwd(), file_name)
-    X_test.append(preprocess_img(io.imread(img_path)))
+    img = image.load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
+    X_test.append(preprocess_img(img))
     y_test.append(class_id)
 
 X_test = np.array(X_test)
@@ -275,10 +322,18 @@ bottleneck_features_test = base_model.predict(X_test)
 
 test_accuracy = top_model.evaluate(bottleneck_features_test, y_test_one_target, verbose=1)
 
-result = top_model.score(bottleneck_features_test, y_test_one_target)
 
-print("test_accuracy final del modelo en test: %.2f%% " % (result*100))
-logging.info("test_accuracy final del modelo en test: %.2f%% " % (result *100))
+
+print(test_accuracy)
+logging.info(test_accuracy)
+
+print(type(test_accuracy))
+
+#test_accuracy = top_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+
+print("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy[1]*100))
+logging.info("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy[1]*100))
 
 #Guardar best_model en un pickle
 
@@ -289,20 +344,16 @@ model_filename= ("feature_extraction_VGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,t
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
-#guardar con h5 no funciona por tener un metodo custom de accuracy
-top_model.save(model_filename)
 
 print("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("Accuracy en test : %s: %.2f%%" % (top_model.metrics_names[1], test_accuracy[1] * 100))
+
+#guardar con h5 no funciona por tener un metodo custom de accuracy
+top_model.save(model_filename)
 
 
 # end time
 end = time.time()
 print ("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info("[STATUS] end time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-
-
-
-
-
 
