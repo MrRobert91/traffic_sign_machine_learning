@@ -167,12 +167,6 @@ def cnn_skip_conect_32_v1():
     #x_principal = layers.Dropout(0.4)(x_principal)
     x_flatten_2 = layers.Flatten()(x_principal)
 
-    #3ª Etapa
-    #x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
-    #x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
-    #x_principal = layers.Dropout(0.4)(x_principal)
-    #x_flatten_3 = layers.Flatten()(x_principal)
-
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
@@ -330,7 +324,7 @@ def cnn_model_old():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 # 32 o 48
+IMG_SIZE = 48 # 32 o 48
 
 
 # Funcion para preprocesar las imagenes
@@ -427,7 +421,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 40 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
