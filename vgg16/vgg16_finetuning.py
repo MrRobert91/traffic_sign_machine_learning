@@ -19,6 +19,7 @@ from sklearn.metrics import confusion_matrix
 import pickle
 from sklearn.model_selection import StratifiedKFold
 from keras.applications.vgg16 import VGG16, preprocess_input
+from keras.preprocessing import image
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D
@@ -91,7 +92,15 @@ print ("[STATUS] --------vgg16 finetuning - systematized - start time - {}".form
 logging.info(" ---------vgg16 finetuning - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
+
+
 def preprocess_img(img):
+    img = img.resize(img_rows, img_cols)
+    img = preprocess_input(img)
+
+    return img
+
+def preprocess_img_old(img):
     # normalizacion del histograma en el canal 'v'
     hsv = color.rgb2hsv(img)
     hsv[:, :, 2] = exposure.equalize_hist(hsv[:, :, 2])
