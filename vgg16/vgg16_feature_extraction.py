@@ -154,8 +154,8 @@ root_dir = 'GTSRB/Final_Training/Images/'
 #Corleone
 #top_model_weights_path = "/home/drobert/tfg/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
 
-#local
-top_model_weights_path = "/home/david/PycharmProjects/traffic_sign_machine_learning/vgg16/output/vgg16_top_classifier.h5"
+
+top_model_weights_path = code_path+"output/vgg16_top_classifier.h5"
 
 
 imgs = []
