@@ -78,7 +78,7 @@ num_classes = 43
 batch_size = 16
 epochs = 20
 IMG_SIZE = 48
-lr = 0.01
+#lr = 0.01
 
 fichero_log = (code_path +'vgg16.log')
 
@@ -175,8 +175,8 @@ clf_list = []
 filename_clf_list = []
 
 
-def lr_schedule(epoch):
-    return lr * (0.1 ** int(epoch / 10))
+#def lr_schedule(epoch):
+ #   return lr * (0.1 ** int(epoch / 10))
 
 
 X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.2)
@@ -252,7 +252,7 @@ logging.info("Entrenando ensamblado (top+base) ...")
 # we need to recompile the model for these modifications to take effect
 # we use SGD with a low learning rate
 from keras.optimizers import SGD
-model.compile(optimizer=SGD(lr=0.00001, momentum=0.9),
+model.compile(optimizer=SGD(lr=0.0001, momentum=0.9),
               loss='categorical_crossentropy',metrics=[metrics.categorical_accuracy])
 
 # we train our model again (this time fine-tuning the top vgg16 conv block
