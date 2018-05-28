@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_v1_48"
+model_name = "cnn_v1_32"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -313,10 +313,8 @@ def preprocess_img(img):
           centre[1] - min_side // 2:centre[1] + min_side // 2,
           :]
 
-    # reescalado de imagenes a tamaño standard
+    # reescalado de imagenes a tamaño standard con valores [0,1]
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
-    #img /= img.max() / 255.0
-
 
     return img
 
