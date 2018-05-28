@@ -337,7 +337,6 @@ logging.info("test_accuracy final del modelo en test: %.2f%% " % (test_accuracy[
 
 #Guardar best_model en un pickle
 
-
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
 model_filename= ("feature_extraction_VGG16s%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
