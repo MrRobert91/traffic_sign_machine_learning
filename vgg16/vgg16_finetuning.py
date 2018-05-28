@@ -156,7 +156,7 @@ np.random.shuffle(all_img_paths)
 for img_path in all_img_paths:
     #img = preprocess_img(io.imread(img_path))
     img = image.load_img(img_path, target_size=(IMG_SIZE,IMG_SIZE))
-    img = preprocess_img(img)#nuevo, probando...
+    img = preprocess_img(img)
     label = get_class(img_path)
     imgs.append(img)
     labels.append(label)
@@ -327,7 +327,8 @@ i = 0
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
     # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
     img_path = os.path.join(os.getcwd(), file_name)
-    X_test.append(preprocess_img(io.imread(img_path)))
+    img = image.load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
+    X_test.append(preprocess_img(img))
     y_test.append(class_id)
 
 X_test = np.array(X_test)
