@@ -97,9 +97,16 @@ logging.info(" ---------vgg16 finetuning - start time - {}".format(datetime.date
 
 def preprocess_img(img):
     img = image.img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = preprocess_input(img)
+
+    '''
+    img = image.img_to_array(img)
     im_pil = Image.fromarray(img)
     im_pil = im_pil.resize((img_rows, img_cols))
     img = preprocess_input(im_pil)
+    '''
+
 
     return img
 
@@ -147,7 +154,9 @@ print(len(all_img_paths))
 np.random.shuffle(all_img_paths)
 
 for img_path in all_img_paths:
-    img = preprocess_img(io.imread(img_path))
+    #img = preprocess_img(io.imread(img_path))
+    img = image.load_img(img_path, target_size=(IMG_SIZE,IMG_SIZE))
+    preprocess_img(img)#nuevo, probando...
     label = get_class(img_path)
     imgs.append(img)
     labels.append(label)
