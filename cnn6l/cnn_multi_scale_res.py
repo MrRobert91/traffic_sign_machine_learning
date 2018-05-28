@@ -156,14 +156,14 @@ def cnn_skip_conect_32_v1():
     #1ª Etapa: la salida de esta etapa va
     x = layers.Conv2D(108, (5, 5), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.BatchNormalization(x)
+    x = layers.BatchNormalization()(x)
     #x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
     x_flatten_1 = layers.Flatten()(x)
 
     #2ª Etapa
     x_principal = layers.Conv2D(200, (3, 3), padding='same', activation='relu')(x)
     x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
-    x_principal = layers.BatchNormalization(x_principal)
+    x_principal = layers.BatchNormalization()(x_principal)
     #x_principal = layers.Dropout(0.4)(x_principal)
     x_flatten_2 = layers.Flatten()(x_principal)
 
