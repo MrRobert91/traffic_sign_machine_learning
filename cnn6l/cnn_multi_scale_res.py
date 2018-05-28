@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_skip_conect_48_v1"
+model_name = "cnn_skip_conect_32_double_pooling__v1"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -439,7 +439,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_skip_conect_32_v1()
+    cnn_classifier = cnn_skip_conect_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
