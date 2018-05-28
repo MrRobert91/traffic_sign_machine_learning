@@ -156,7 +156,7 @@ np.random.shuffle(all_img_paths)
 for img_path in all_img_paths:
     #img = preprocess_img(io.imread(img_path))
     img = image.load_img(img_path, target_size=(IMG_SIZE,IMG_SIZE))
-    preprocess_img(img)#nuevo, probando...
+    img = preprocess_img(img)#nuevo, probando...
     label = get_class(img_path)
     imgs.append(img)
     labels.append(label)
