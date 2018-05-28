@@ -97,16 +97,7 @@ logging.info(" ---------vgg16 finetuning - start time - {}".format(datetime.date
 
 def preprocess_img(img):
     img = image.img_to_array(img)
-    #img = np.expand_dims(img, axis=0)
     img = preprocess_input(img)
-
-    '''
-    img = image.img_to_array(img)
-    im_pil = Image.fromarray(img)
-    im_pil = im_pil.resize((img_rows, img_cols))
-    img = preprocess_input(im_pil)
-    '''
-
 
     return img
 
