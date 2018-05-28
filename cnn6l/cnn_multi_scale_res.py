@@ -150,11 +150,12 @@ def cnn_model_res_multi_stage2():
     return model
 
 #Basada en el paper de lecun
-def cnn_skip_conect_32_v1():
+def cnn_skip_conect_v1():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
     #1ª Etapa: la salida de esta etapa va
     x = layers.Conv2D(108, (5, 5), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.BatchNormalization()(x)
     #x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
