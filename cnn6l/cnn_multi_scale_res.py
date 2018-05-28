@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_skip_conect_32_v1"
+model_name = "cnn_skip_conect_48_v1"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
