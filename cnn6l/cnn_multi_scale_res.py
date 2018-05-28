@@ -178,7 +178,7 @@ def cnn_skip_conect_32_v1():
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
     concatenated = layers.Dense(300, activation='relu')(concatenated)
     #concatenated = layers.Dropout(0.5)(concatenated)
-    concatenated = layers.BatchNormalization(concatenated)
+    concatenated = layers.BatchNormalization()(concatenated)
 
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
