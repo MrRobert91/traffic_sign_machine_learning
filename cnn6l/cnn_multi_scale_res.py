@@ -650,4 +650,4 @@ logging.info("-----------Fin de la prueba con CNN multi scale-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
 
 from keras.utils import plot_model
-plot_model(loaded_model, show_shapes=True, to_file=code_path+model_name+'.png')
+#plot_model(loaded_model, show_shapes=True, to_file=code_path+model_name+'.png')
