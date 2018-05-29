@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_skip_conect_32_dropout_v1"
+model_name = "cnn_skip_conect_48_dropout_v1"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -325,7 +325,7 @@ def cnn_model_old():
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 # 32 o 48
+IMG_SIZE = 48 # 32 o 48
 
 
 # Funcion para preprocesar las imagenes
