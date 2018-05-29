@@ -148,7 +148,7 @@ def cnn_model_res_multi_stage2():
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
     return model
-
+#Segundo modelo para TFG
 #Basada en el paper de lecun
 def cnn_skip_conect_v1():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
@@ -156,7 +156,7 @@ def cnn_skip_conect_v1():
     #1ª Etapa: la salida de esta etapa va
     x = layers.Conv2D(108, (5, 5), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    #x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.BatchNormalization()(x)
     x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
     x_flatten_1 = layers.Flatten()(x)
@@ -171,7 +171,8 @@ def cnn_skip_conect_v1():
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
-    concatenated = layers.Dense(300, activation='relu')(concatenated)
+    concatenated = layers.Dense(2048, activation='relu')(concatenated)
+    concatenated = layers.Dense(512, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
     concatenated = layers.BatchNormalization()(concatenated)
 
