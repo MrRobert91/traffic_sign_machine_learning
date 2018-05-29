@@ -56,7 +56,7 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_skip_conect_32_double_pooling__v1"
+model_name = "cnn_skip_conect_32_dropout_v1"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -158,21 +158,21 @@ def cnn_skip_conect_v1():
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.BatchNormalization()(x)
-    #x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
+    x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
     x_flatten_1 = layers.Flatten()(x)
 
     #2ª Etapa
     x_principal = layers.Conv2D(200, (3, 3), padding='same', activation='relu')(x)
     x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
     x_principal = layers.BatchNormalization()(x_principal)
-    #x_principal = layers.Dropout(0.4)(x_principal)
+    x_principal = layers.Dropout(0.3)(x_principal)
     x_flatten_2 = layers.Flatten()(x_principal)
 
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
     concatenated = layers.Dense(300, activation='relu')(concatenated)
-    #concatenated = layers.Dropout(0.5)(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
     concatenated = layers.BatchNormalization()(concatenated)
 
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
