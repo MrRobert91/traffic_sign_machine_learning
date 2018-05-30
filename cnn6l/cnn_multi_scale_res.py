@@ -56,7 +56,8 @@ from keras.callbacks import TensorBoard
 
 logging.info("program started on - " + str(datetime.datetime.now))
 
-model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
+#model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
+model_name = "cnn_old_6l_separable_conv"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -330,26 +331,27 @@ def cnn_model_old():
 def cnn_model_old_separable():
     model = Sequential()
 
-    model.add(Conv2D(32, (3, 3), padding='same',
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
                      input_shape=(IMG_SIZE, IMG_SIZE, 3),
                      activation='relu'))
-    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(SeparableConv2D(32, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
-    model.add(Conv2D(64, (3, 3), padding='same',
+    model.add(SeparableConv2D(64, (3, 3), padding='same',
                      activation='relu'))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
-    model.add(Conv2D(128, (3, 3), padding='same',
+    model.add(SeparableConv2D(128, (3, 3), padding='same',
                      activation='relu'))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
-    model.add(Flatten())
+    #model.add(Flatten())
+    model.add.GlobalAveragePooling2D()
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
