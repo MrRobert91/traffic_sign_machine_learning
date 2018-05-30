@@ -334,21 +334,20 @@ def cnn_model_old_separable():
                      input_shape=(IMG_SIZE, IMG_SIZE, 3),
                      activation='relu'))
     model.add(SeparableConv2D(32, (3, 3), activation='relu'))
-    #model.add(Conv2D(32, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(SeparableConv2D(64, (3, 3), padding='same',
                      activation='relu'))
     model.add(SeparableConv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(SeparableConv2D(128, (3, 3), padding='same',
                      activation='relu'))
     model.add(SeparableConv2D(128, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(Flatten())
     model.add(Dense(512, activation='relu'))
