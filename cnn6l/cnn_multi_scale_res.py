@@ -473,7 +473,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_skip_conect_v1()
+    cnn_classifier = cnn_model_old_separable()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
