@@ -35,7 +35,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Conv2D
+from keras.layers.convolutional import Conv2D, SeparableConv2D
 from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import SGD
 from keras import backend as K
@@ -323,6 +323,39 @@ def cnn_model_old():
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
+
+
+
+#Modelo: red neuronal con 6 capas convolucionales
+def cnn_model_old_separable():
+    model = Sequential()
+
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    model.add(SeparableConv2D(32, (3, 3), activation='relu'))
+    #model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(SeparableConv2D(64, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(SeparableConv2D(128, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))#antes 0.2
+
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
 
 
 NUM_CLASSES = 43
