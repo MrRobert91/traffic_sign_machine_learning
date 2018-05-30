@@ -36,7 +36,8 @@ from sklearn.model_selection import StratifiedKFold
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D, SeparableConv2D
-from keras.layers.pooling import MaxPooling2D
+from keras.layers.pooling import MaxPooling2D, GlobalAveragePooling2D
+
 from keras.optimizers import SGD
 from keras import backend as K
 from keras.models import Model
@@ -336,13 +337,13 @@ def cnn_model_old_separable():
                      activation='relu'))
     model.add(SeparableConv2D(32, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))#antes 0.2
+    model.add(Dropout(0.1))#antes 0.2
 
     model.add(SeparableConv2D(64, (3, 3), padding='same',
                      activation='relu'))
     model.add(SeparableConv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))#antes 0.2
+    model.add(Dropout(0.1))#antes 0.2
 
     model.add(SeparableConv2D(128, (3, 3), padding='same',
                      activation='relu'))
@@ -351,9 +352,9 @@ def cnn_model_old_separable():
     model.add(Dropout(0.2))#antes 0.2
 
     #model.add(Flatten())
-    model.add.GlobalAveragePooling2D()
+    model.add(GlobalAveragePooling2D())
     model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.3))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
