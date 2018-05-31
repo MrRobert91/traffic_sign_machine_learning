@@ -60,7 +60,7 @@ with open('conf.json') as f:
 	config = json.load(f)
 
 # config variables
-model_name 		= config["model"]
+#model_name 		= config["model"]
 weights 		= config["weights"]
 include_top 	= config["include_top"]
 train_path 		= config["train_path"]
@@ -85,8 +85,8 @@ dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_new_load_data.log')
-
 fichero_log_tb = (code_path +'tb_new_load_data.log')
+model_name = 'cnn_6l_separableConv_Augmented'
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -95,8 +95,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-print ("[STATUS] --------cnn new load_data - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn new load_data - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------" +model_name +"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------" +model_name +"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
 def cnn_model_res_multi_v2():
@@ -227,6 +227,7 @@ def lr_schedule(epoch):
 
 tensorboard = TensorBoard(log_dir=fichero_log_tb)
 
+
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
     # normalizacion del histograma en el canal 'v'
@@ -353,7 +354,7 @@ model.compile(
     optimizer=mrsprop,
     metrics=[metrics.categorical_accuracy])
 
-filepath = code_path + "cnn_6l_data_aug" + "-epochs" + str(epochs) + ".h5"
+filepath = code_path + model_name + "-epochs" + str(epochs) + ".h5"
 
 
 history = model.fit_generator(
@@ -400,7 +401,7 @@ y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
-model_filename= ("cnn_6l_new_load_data_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+model_filename= (model_name+"_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
@@ -418,6 +419,6 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 from keras.utils import plot_model
 plot_model(loaded_model, show_shapes=True, to_file='cnn_new_load_data.png')
 
-print("Fin de la prueba con CNN load_data")
-logging.info("-----------Fin de la prueba con CNN load_data-----------")
+print("Fin de la prueba con "+model_name)
+logging.info("-----------Fin de la prueba con "+model_name+"-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
