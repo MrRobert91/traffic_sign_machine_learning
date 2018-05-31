@@ -55,6 +55,7 @@ from keras.utils.np_utils import to_categorical
 import json
 from sklearn.model_selection import train_test_split
 from keras.callbacks import TensorBoard
+from keras.applications.xception import Xception, preprocess_input
 
 # load the user configs
 with open('conf.json') as f:
@@ -187,6 +188,7 @@ def cnn_model_v2():
     return model
 
 
+
 NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
@@ -284,7 +286,8 @@ val_generator = test_datagen.flow(
     batch_size=32)
 
 
-model = cnn_model_v2()
+#model = cnn_model_v2()
+model = Xception(include_top=True, classes=43, weights=None )
 
 #Optimizers
 sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
