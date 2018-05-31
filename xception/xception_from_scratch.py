@@ -87,7 +87,7 @@ IMG_SIZE = 299
 
 
 
-model = Xception(include_top=True, classes=43 )
+model = Xception(include_top=True, classes=43, weights=None )
 
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
