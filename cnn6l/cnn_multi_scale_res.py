@@ -272,15 +272,15 @@ def cnn_v1():
 def cnn_v1_separable_conv():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
-    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.2)(x)
 
-    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.3)(x)
 
-    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.4)(x)
 
@@ -292,7 +292,7 @@ def cnn_v1_separable_conv():
     return model
 
 #Modelo: red neuronal v2
-def cnn_model_v1_seq():
+def cnn_model_v2_seq():
     model = Sequential()
 
     model.add(SeparableConv2D(32, (3, 3), padding='same',
@@ -378,7 +378,25 @@ def cnn_model_old_separable():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
+def cnn_chollet_book():
+    model = Sequential()
+    model.add(layers.SeparableConv2D(32, 3,
+                                     activation='relu',
+                                     input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.MaxPooling2D(2))
 
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.SeparableConv2D(128, 3, activation='relu'))
+    model.add(layers.MaxPooling2D(2))
+
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.SeparableConv2D(128, 3, activation='relu'))
+
+    model.add(layers.GlobalAveragePooling2D())
+    model.add(layers.Dense(32, activation='relu'))
+    model.add(layers.Dense(NUM_CLASSES, activation='softmax'))
+    return model
 
 NUM_CLASSES = 43
 IMG_SIZE = 48 # 32 o 48
