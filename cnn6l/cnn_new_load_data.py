@@ -292,13 +292,43 @@ y_train_one_hot = to_categorical(y_train, NUM_CLASSES)
 y_val_one_hot = to_categorical(y_val, NUM_CLASSES)
 
 
-
+'''
+#Datagens sin Data Augmentation
 train_datagen = ImageDataGenerator(
     preprocessing_function=preprocess_img)#
 
 test_datagen = ImageDataGenerator(
     preprocessing_function=preprocess_img)
 
+'''
+train_datagen = ImageDataGenerator(
+    preprocessing_function=preprocess_img,
+    rotation_range=25,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.2,
+    zoom_range=0.1,
+    fill_mode='nearest')
+
+test_datagen = ImageDataGenerator(
+    preprocessing_function=preprocess_img,
+    rotation_range=15,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.15,
+    zoom_range=0.25,
+    fill_mode='nearest')
+
+
+'''
+featurewise_center=False,
+featurewise_std_normalization=False,
+width_shift_range=0.1,
+height_shift_range=0.1,
+zoom_range=0.2,
+shear_range=0.1,
+rotation_range=10.
+'''
 
 train_generator = train_datagen.flow(
     X_train,
@@ -310,6 +340,19 @@ val_generator = test_datagen.flow(
     X_val,
     y_val_one_hot,
     batch_size=32)
+
+
+
+
+datagen = ImageDataGenerator(
+        #rescale=1./255,
+        rotation_range=25,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        shear_range=0.2,
+        zoom_range=0.1,
+        fill_mode='nearest')
+        #preprocessing_function=preprocess_img(img))
 
 
 model = cnn_model_old_separable()
