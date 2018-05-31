@@ -458,7 +458,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
 
 batch_size = 32
 epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
-lr = 0.01
+lr = 0.001
 
 for train_index, test_index in skf.split(X, Y):
     # conjuntos de train y test(validacion) para cada fold
