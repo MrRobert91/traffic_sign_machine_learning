@@ -342,19 +342,6 @@ val_generator = test_datagen.flow(
     batch_size=32)
 
 
-
-
-datagen = ImageDataGenerator(
-        #rescale=1./255,
-        rotation_range=25,
-        width_shift_range=0.1,
-        height_shift_range=0.1,
-        shear_range=0.2,
-        zoom_range=0.1,
-        fill_mode='nearest')
-        #preprocessing_function=preprocess_img(img))
-
-
 model = cnn_model_old_separable()
 
 #Optimizers
