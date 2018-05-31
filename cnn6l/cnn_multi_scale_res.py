@@ -269,23 +269,44 @@ def cnn_v1():
     model = Model(input_tensor, output_tensor)
     return model
 
+def cnn_v1_separable_conv():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.4)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    model = Model(input_tensor, output_tensor)
+    return model
 
 #Modelo: red neuronal v2
 def cnn_model_v1_seq():
     model = Sequential()
 
-    model.add(Conv2D(32, (3, 3), padding='same',
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
                      input_shape=(IMG_SIZE, IMG_SIZE, 3),
                      activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.1))
 
-    model.add(Conv2D(64, (3, 3), padding='same',
+    model.add(SeparableConv2D(64, (3, 3), padding='same',
                      activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(128, (3, 3), padding='same',
+    model.add(SeparableConv2D(128, (3, 3), padding='same',
                      activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.3))#antes 0.2
@@ -458,7 +479,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
 
 batch_size = 32
 epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
-lr = 0.001
+lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
     # conjuntos de train y test(validacion) para cada fold
@@ -474,7 +495,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_model_old_separable()
+    cnn_classifier = cnn_v1_separable_conv()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
