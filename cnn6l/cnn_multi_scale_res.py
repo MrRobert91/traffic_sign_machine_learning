@@ -462,7 +462,7 @@ logging.info(Y.shape)
 # In[4]:
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
-# En concreto vamos a hacer un Kfold con 10 splits estratificado,
+# En concreto vamos a hacer un Kfold con 3 splits estratificado,
 # de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje
 # de muestras de cada clase que el conjunto de entrenamiento.
 
@@ -538,7 +538,7 @@ for train_index, test_index in skf.split(X, Y):
               #validation_split=0.2,
               verbose=1,
               callbacks=[tensorboard,
-                         LearningRateScheduler(lr_schedule),
+                         #LearningRateScheduler(lr_schedule),
                          ModelCheckpoint(filepath, save_best_only=True)]
 
               )
