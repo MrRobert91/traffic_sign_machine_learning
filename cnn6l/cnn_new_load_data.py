@@ -312,13 +312,7 @@ train_datagen = ImageDataGenerator(
     fill_mode='nearest')
 
 test_datagen = ImageDataGenerator(
-    preprocessing_function=preprocess_img,
-    rotation_range=15,
-    width_shift_range=0.1,
-    height_shift_range=0.1,
-    shear_range=0.15,
-    zoom_range=0.25,
-    fill_mode='nearest')
+    preprocessing_function=preprocess_img)
 
 
 '''
