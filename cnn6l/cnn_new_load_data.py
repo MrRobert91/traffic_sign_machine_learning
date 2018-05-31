@@ -358,8 +358,9 @@ history = model.fit_generator(
     steps_per_epoch=X_train.shape[0],
     epochs=30,
     verbose=1,
-    validation_data=val_generator,
-    validation_steps=50,
+    #validation_data=val_generator,
+    validation_data = (X_val, y_val_one_hot),
+    #validation_steps=50,
     callbacks=[ ModelCheckpoint(filepath, save_best_only=True), tensorboard])
 
 
