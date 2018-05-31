@@ -33,16 +33,13 @@ from sklearn.model_selection import StratifiedKFold
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Conv2D
+from keras.layers.convolutional import Conv2D, SeparableConv2D
 from keras.layers.pooling import MaxPooling2D
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras import backend as K
 from keras import layers
 from keras.models import Model
-
 from keras.layers import Input, Dense
-K.set_image_data_format('channels_last')
-
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
 from keras import metrics
@@ -55,6 +52,8 @@ from keras.utils.np_utils import to_categorical
 import json
 from sklearn.model_selection import train_test_split
 from keras.callbacks import TensorBoard
+K.set_image_data_format('channels_last')
+
 
 # load the user configs
 with open('conf.json') as f:
@@ -86,6 +85,7 @@ dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +'cnn_new_load_data.log')
+
 fichero_log_tb = (code_path +'tb_new_load_data.log')
 
 print('Archivo Log en ', fichero_log)
@@ -186,6 +186,35 @@ def cnn_model_v2():
     return model
 
 
+def cnn_model_old_separable():
+    model = Sequential()
+
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    #model.add(layers.BatchNormalization())#Nueva
+    model.add(SeparableConv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Flatten())
+    #model.add(GlobalAveragePooling2D())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+
 NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
@@ -265,11 +294,9 @@ y_val_one_hot = to_categorical(y_val, NUM_CLASSES)
 
 
 train_datagen = ImageDataGenerator(
-    #rescale=1./255,
     preprocessing_function=preprocess_img)#
 
 test_datagen = ImageDataGenerator(
-    #rescale=1./255,
     preprocessing_function=preprocess_img)
 
 
@@ -285,25 +312,30 @@ val_generator = test_datagen.flow(
     batch_size=32)
 
 
-model = cnn_model_v2()
+model = cnn_model_old_separable()
 
-
+#Optimizers
 sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+mrsprop = RMSprop()
 
 model.compile(
     loss='categorical_crossentropy',
-    optimizer=sgd,
+    optimizer=mrsprop,
     metrics=[metrics.categorical_accuracy])
+
+filepath = code_path + "cnn_6l_data_aug" + "-epochs" + str(epochs) + ".h5"
+
 
 history = model.fit_generator(
     train_generator,
     #steps_per_epoch=100,
-    steps_per_epoch=(31367 / batch_size), #39209*0,8 = 31367 train_data length
+    #steps_per_epoch=(31367 / batch_size), #39209*0,8 = 31367 train_data length
+    steps_per_epoch=X_train.shape[0],
     epochs=30,
     verbose=1,
     validation_data=val_generator,
     validation_steps=50,
-    callbacks=[LearningRateScheduler(lr_schedule), tensorboard])
+    callbacks=[ ModelCheckpoint(filepath, save_best_only=True), tensorboard])
 
 
 
@@ -338,7 +370,7 @@ y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 test_accuracy = model.evaluate(X_test, y_test_one_target, verbose=1)
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
-model_filename= ("cnn_new_load_data_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+model_filename= ("cnn_6l_new_load_data_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 print("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
 logging.info("Accuracy en test : %s: %.2f%%" % (model.metrics_names[1], test_accuracy[1] * 100))
