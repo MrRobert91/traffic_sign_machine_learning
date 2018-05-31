@@ -340,14 +340,12 @@ def cnn_model_old_separable():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     #model.add(Dropout(0.1))#antes 0.2
 
-    model.add(SeparableConv2D(64, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(SeparableConv2D(64, (3, 3), padding='same',activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     #model.add(Dropout(0.1))#antes 0.2
 
-    model.add(SeparableConv2D(128, (3, 3), padding='same',
-                     activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     #model.add(Dropout(0.2))#antes 0.2
