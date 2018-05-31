@@ -230,7 +230,6 @@ logging.info(skf)
 
 
 tensorboard = TensorBoard(log_dir=fichero_log_tb,
-                          #histogram_freq=1,
                           write_graph=False,
                           write_images=False)
 
@@ -265,6 +264,7 @@ for train_index, test_index in skf.split(X, Y):
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     rmsprop = RMSprop()
+
     cnn_classifier.compile(loss='categorical_crossentropy',
                   optimizer=rmsprop,
                   #optimizer=sgd,
@@ -289,7 +289,6 @@ for train_index, test_index in skf.split(X, Y):
                          ModelCheckpoint(filepath, save_best_only=True)]
 
               )
-
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
