@@ -38,7 +38,7 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D, SeparableConv2D
 from keras.layers.pooling import MaxPooling2D, GlobalAveragePooling2D
 
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras import backend as K
 from keras.models import Model
 K.set_image_data_format('channels_last')
@@ -516,8 +516,10 @@ for train_index, test_index in skf.split(X, Y):
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    rmsprop = RMSprop()
     cnn_classifier.compile(loss='categorical_crossentropy',
-                  optimizer=sgd,
+                  optimizer=rmsprop,
+                  #optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
