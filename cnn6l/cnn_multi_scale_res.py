@@ -513,7 +513,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
 
-    cnn_classifier = cnn_v1_separable_conv()
+    cnn_classifier = cnn_chollet_book()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
