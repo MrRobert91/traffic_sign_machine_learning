@@ -260,7 +260,6 @@ for train_index, test_index in skf.split(X, Y):
     locnet = locnet(weights)
     cnn_classifier = stn(locnet)
 
-
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     rmsprop = RMSprop()
