@@ -359,22 +359,22 @@ def cnn_model_old_separable():
     #model.add(layers.BatchNormalization())#Nueva
     model.add(SeparableConv2D(32, (3, 3),padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    #model.add(Dropout(0.1))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
     model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    #model.add(Dropout(0.1))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    #model.add(Dropout(0.2))#antes 0.2
+    model.add(Dropout(0.2))#antes 0.2
 
     model.add(Flatten())
     #model.add(GlobalAveragePooling2D())
     model.add(Dense(512, activation='relu'))
-    #model.add(Dropout(0.3))
+    model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
@@ -496,7 +496,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 50 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -512,7 +512,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_chollet_book()
+    cnn_classifier = cnn_model_old_separable()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
