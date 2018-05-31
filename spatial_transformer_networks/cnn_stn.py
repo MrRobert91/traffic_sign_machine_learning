@@ -11,7 +11,7 @@ from keras.utils import np_utils, generic_utils
 from keras.optimizers import Adam, SGD
 
 import keras.backend as K
-from .spatial_transformer  import SpatialTransformer
+from spatial_transformer  import SpatialTransformer
 
 import numpy as np
 from skimage import color, exposure, transform
