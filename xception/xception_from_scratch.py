@@ -41,7 +41,7 @@ from sklearn.model_selection import StratifiedKFold
 from keras import backend as K
 K.set_image_data_format('channels_last')
 from keras import metrics
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.models import load_model
 
@@ -87,7 +87,7 @@ IMG_SIZE = 299
 
 
 
-model = Xception(include_top=True,classes=1000 )
+model = Xception(include_top=True, classes=43 )
 
 # Funcion para preprocesar las imagenes
 def preprocess_img(img):
@@ -180,7 +180,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 30 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -202,8 +202,10 @@ for train_index, test_index in skf.split(X, Y):
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    rmsprop = RMSprop()
     classifier.compile(loss='categorical_crossentropy',
-                  optimizer=sgd,
+                  #optimizer=sgd,
+                  optimizer=rmsprop,
                   #metrics=['accuracy'])
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
@@ -217,9 +219,10 @@ for train_index, test_index in skf.split(X, Y):
     hist = classifier.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
-              validation_split=0.2,
+              #validation_split=0.2,
+              validation_data=(x_test,y_test),
               verbose=1,
-              callbacks=[LearningRateScheduler(lr_schedule)]
+              callbacks=[ModelCheckpoint(filepath, save_best_only=True)]
 
               )
 
