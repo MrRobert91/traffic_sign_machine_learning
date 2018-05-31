@@ -716,7 +716,7 @@ print(y_pred_no_one_hot.shape)
 #logging.info("matriz de confusión del modelo medio: ")
 #logging.info(cm)
 
-print(loaded_model.summary())
+#print(loaded_model.summary())
 logging.info(loaded_model.summary())
 
 
