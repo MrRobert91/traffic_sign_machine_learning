@@ -171,7 +171,6 @@ def preprocess_img(img):
 def get_class(img_path):
     return int(img_path.split('/')[-2])
 
-
 def load_dataset(dir, path):
     os.chdir(path)  # direccion local Jupyter Notebooks/pycharm
     root_dir = dir
