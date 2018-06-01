@@ -274,18 +274,22 @@ def cnn_v1_separable_conv():
 
     x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
     x = layers.Dropout(0.2)(x)
 
     x = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
     x = layers.Dropout(0.3)(x)
 
     x = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
     x = layers.Dropout(0.4)(x)
 
     x = layers.Flatten()(x)
     x = layers.Dense(1024, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
     x = layers.Dropout(0.5)(x)
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
     model = Model(input_tensor, output_tensor)
@@ -512,7 +516,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_model_old_separable()
+    cnn_classifier = cnn_v1_separable_conv()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
