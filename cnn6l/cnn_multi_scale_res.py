@@ -78,7 +78,7 @@ print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
-                    filemode = 'a',)# w for new log each time
+                    filemode = 'w',)# w for new log each time/a for over write
 
 
 print ("[STATUS] --------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
@@ -500,7 +500,7 @@ def get_categorical_accuracy_keras(y_true, y_pred):
     return K.mean(K.equal(K.argmax(y_true, axis=1), K.argmax(y_pred, axis=1)))
 
 batch_size = 32
-epochs = 50 #ponemos 5 para que sea mas rapido, normalmente 30
+epochs = 20 #ponemos 5 para que sea mas rapido, normalmente 30
 lr = 0.01
 
 for train_index, test_index in skf.split(X, Y):
@@ -721,7 +721,7 @@ print(y_pred_no_one_hot.shape)
 #logging.info(cm)
 
 #print(loaded_model.summary())
-logging.info(loaded_model.summary())
+#logging.info(loaded_model.summary())
 
 
 print("Fin de la prueba con CNN multi scale ")
