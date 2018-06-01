@@ -58,7 +58,7 @@ from keras.callbacks import TensorBoard
 logging.info("program started on - " + str(datetime.datetime.now))
 
 #model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
-model_name = "cnn_old_6l_separable_conv"
+model_name = "cnn_old_6l_separable_conv_batchnorm"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
