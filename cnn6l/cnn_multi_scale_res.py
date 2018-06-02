@@ -58,7 +58,7 @@ from keras.callbacks import TensorBoard
 logging.info("program started on - " + str(datetime.datetime.now))
 
 #model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
-model_name = "cnn_old_6l_separable_conv_batchnorm"
+model_name = "mini_vgg"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -372,6 +372,7 @@ def cnn_model_old_separable():
 
     model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))#Añadida
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
@@ -381,6 +382,37 @@ def cnn_model_old_separable():
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
+
+
+#Modelo: red neuronal con 6 capas convolucionales
+def mini_vgg():
+    model = Sequential()
+
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    #model.add(layers.BatchNormalization())#Nueva
+    model.add(SeparableConv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Flatten())
+    #model.add(GlobalAveragePooling2D())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
 
 def cnn_chollet_book():
     model = Sequential()
@@ -516,7 +548,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_v1_separable_conv()
+    cnn_classifier = mini_vgg()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
