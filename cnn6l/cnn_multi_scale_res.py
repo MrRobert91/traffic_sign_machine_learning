@@ -378,7 +378,7 @@ def cnn_model_old_separable():
 
     model.add(Flatten())
     #model.add(GlobalAveragePooling2D())
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(1024, activation='relu'))#Antes 512
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
