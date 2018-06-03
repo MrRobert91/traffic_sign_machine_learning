@@ -96,7 +96,7 @@ y_test = np.array(y_test)
 
 #Vamos a dividir el conjunto de test en 5
 
-kf = KFold(n_splits=5) # Define the split - into 2 folds
+kf = KFold(n_splits=5,random_state=13) # Define the split - into 2 folds
 kf.get_n_splits(X_test) # returns the number of splitting iterations in the cross-validator
 
 print(kf)
@@ -120,7 +120,9 @@ for train_index, test_index in kf.split(X_test):
 
     # Para resto de modelos
     test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
-    accuracy_list.append(test_accuracy[1] * 100)
+    accuracy_list.append(test_accuracy * 100)
+
+    print(test_accuracy)
 
     print(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
     logging.info(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
