@@ -293,30 +293,6 @@ print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std
 logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list), np.std(val_accuracy_list)))
 
 
-print("precision media: "+str(precision_media))
-logging.info("precision media: "+str(precision_media))
-
-model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
-
-print("indice del modelo medio: "+str(model_indx))
-logging.info("indice del modelo medio: "+str(model_indx))
-
-# cargamos el modelo medio de disco
-os.chdir(code_path)
-best_model =clf_list[model_indx]
-
-modelname = filename_clf_list[model_indx]
-
-
-
-#Guardamos el modelo medio
-pickle.dump(best_model, open((code_path + str(modelname)), 'wb'))
-
-#guardar con h5 no funciona por tener un metodo custom de accuracy
-best_model.save(modelname)
-
-
-
 
 #-------------------------------------------------
 # Cargamos el archivo csv con los datos de test
@@ -347,22 +323,35 @@ X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
 
+print("precision media: "+str(precision_media))
+logging.info("precision media: "+str(precision_media))
 
+model_indx = modelo_medio_indx(precision_media, val_accuracy_list)
 
+print("indice del modelo medio: "+str(model_indx))
+logging.info("indice del modelo medio: "+str(model_indx))
 
+# cargamos el modelo medio de disco
+os.chdir(code_path)
+best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
-
-#Guardar best_model en un pickle
+#modelname = filename_clf_list[model_indx]
 
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
-best_model_filename= (modelo+"_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
+best_model_filename= ("%s_epochs%s_test_acc_%.2f%%_%s.h5" % (modelo ,epochs,test_accuracy[1] * 100, today_date))
 
-#pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
+#Guardamos el modelo medio
+#pickle.dump(best_model, open((code_path + str(modelname)), 'wb'))
+
+#guardar con h5 no funciona por tener un metodo custom de accuracy
 best_model.save(best_model_filename)
 
+test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
+
+#Guardar best_model en un pickle
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
 
