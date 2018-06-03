@@ -221,7 +221,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    nn_classifier = nn_model()
+    nn_classifier = nn_model_4H()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
