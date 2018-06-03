@@ -14,11 +14,31 @@ from sklearn.model_selection import StratifiedKFold
 import datetime
 import logging
 from keras.models import load_model
+from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 
 #Corleone
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
+
+modelo="mini_vgg"
+
+#fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+fichero_log = (code_path +modelo+'.log')
+
+
+
+print('Archivo Log en ', fichero_log)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s : %(levelname)s : %(message)s',
+                    filename = fichero_log,
+                    filemode = 'w',)# w for new log each time/a for over write
+
+
+print ("[STATUS] --------"+modelo+"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------"+modelo+"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+
+
 
 NUM_CLASSES = 43
 IMG_SIZE = 48
@@ -43,7 +63,7 @@ def preprocess_img(img):
 
 os.chdir(code_path)
 
-modelname = "rf_100trees_16depth_3fold_0.944val_acc"
+modelname = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1_epochs20_test_acc_97.37%_30-05-2018.h5"
 
 #Para random forest
 #loaded_model = pickle.load(open(modelname, 'rb'))
@@ -74,17 +94,43 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 X_test = np.array(X_test)
 y_test = np.array(y_test)
 
-# --Para Random Forest-- Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-#X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+#Vamos a dividir el conjunto de test en 5
 
-# --Para resto de modelos-- Los targets tienen que estar en formato one target
-y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
+kf = KFold(n_splits=5) # Define the split - into 2 folds
+kf.get_n_splits(X_test) # returns the number of splitting iterations in the cross-validator
 
-#Para RF
-#test_accuracy = loaded_model.score(X_test, y_test)
+print(kf)
 
-#Para resto de modelos
-test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
+fold =1
+accuracy_list = []
 
-print("Resultado final del modelo en test: %.2f%% " % (test_accuracy*100))
-logging.info("Resultado final del modelo en test: %.2f%% " % (test_accuracy*100))
+for train_index, test_index in kf.split(X_test):
+    _, X_test_fold = X_test[train_index], X_test[test_index]
+    _, y_test_fold = y_test[train_index], y_test[test_index]
+
+
+    # --Para Random Forest-- Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
+    #X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+
+    # --Para resto de modelos-- Los targets tienen que estar en formato one target
+    y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
+
+    # Para RF
+    # test_accuracy = loaded_model.score(X_test, y_test)
+
+    # Para resto de modelos
+    test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
+    accuracy_list.append(test_accuracy[1] * 100)
+
+    print(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+    logging.info(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+
+    fold += 1
+
+
+precision_media = (np.mean(accuracy_list))
+desviacion_standar = (np.std(accuracy_list))
+
+print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
+logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
+
