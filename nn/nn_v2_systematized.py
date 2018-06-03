@@ -165,7 +165,8 @@ Y = np.asarray(labels)
 
 # Tenemos que cambiar los formatos de entrada para la capa densamente conexa.
 # No hay convoluciones aquí
-X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+#X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+X = X.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 
 print(X.shape)
 print(Y.shape)
