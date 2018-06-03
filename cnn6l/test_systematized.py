@@ -21,7 +21,7 @@ from sklearn.model_selection import train_test_split
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
-modelo="cnn_v1_48"
+modelo="cnn_skip_conect_v1_32"
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +modelo+'.log')
