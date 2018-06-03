@@ -46,7 +46,7 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
-modelo = "nn_3H"
+modelo = "nn_4H_32"
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -60,7 +60,7 @@ dataset_path='/home/drobert/tfg/'
 fichero_log = (code_path +modelo+'.log')
 
 NUM_CLASSES = 43
-IMG_SIZE = 48
+IMG_SIZE = 32#48
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -77,7 +77,7 @@ dim_data = (IMG_SIZE*IMG_SIZE*3)
 
 
 #Modelo sugerido por Alfredo H3
-def nn_model():
+def nn_model_3H():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
     model.add(Dense(2048, activation='relu'))
@@ -87,7 +87,7 @@ def nn_model():
     return model
 
 #Modelo sugerido por Alfredo H4
-def nn_model_v2():
+def nn_model_4H():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
     model.add(Dense(2048, activation='relu'))
