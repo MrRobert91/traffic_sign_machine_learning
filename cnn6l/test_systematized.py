@@ -21,7 +21,7 @@ from sklearn.model_selection import train_test_split
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
-modelo="mini_vgg"
+modelo="cnn_v1_48"
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +modelo+'.log')
@@ -63,7 +63,7 @@ def preprocess_img(img):
 
 os.chdir(code_path)
 
-modelname = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1_epochs20_test_acc_97.37%_30-05-2018.h5"
+modelname = "cnn_v1_48_epochs20_test_acc_96.89%_28-05-2018.h5"
 
 #Para random forest
 #loaded_model = pickle.load(open(modelname, 'rb'))
@@ -131,6 +131,6 @@ for train_index, test_index in kf.split(X_test):
 precision_media = (np.mean(accuracy_list))
 desviacion_standar = (np.std(accuracy_list))
 
-print("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
-logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
+print("mean_accuarcy de" +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
+logging.info("mean_accuarcy de " +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
 
