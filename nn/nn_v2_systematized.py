@@ -46,7 +46,7 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
-
+modelo = "nn_3H"
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -57,7 +57,7 @@ code_path="/home/drobert/tfg/traffic_sign_machine_learning/nn/"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/nn/nn.log')
-fichero_log = (code_path +'nn.log')
+fichero_log = (code_path +modelo+'.log')
 
 NUM_CLASSES = 43
 IMG_SIZE = 48
@@ -69,14 +69,14 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)# w for new log each time
 
 
-logging.info("-----------Inicio de la prueba con NN v2 -----------")
+logging.info("-----------Inicio de la prueba con NN "+ modelo+" -----------")
 logging.info("program started on - " + str(datetime.datetime.now))
-logging.info('Clasificación de señales de tráfico con nn v2')
+logging.info('Clasificación de señales de tráfico con '+ modelo)
 
 dim_data = (IMG_SIZE*IMG_SIZE*3)
 
 
-#Modelo sugerido por Alfredo2
+#Modelo sugerido por Alfredo H3
 def nn_model():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
@@ -86,7 +86,7 @@ def nn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
-#Modelo sugerido por Alfredo2
+#Modelo sugerido por Alfredo H4
 def nn_model_v2():
     model = Sequential()
     model.add(Dense(1024, activation='relu', input_shape=(dim_data,)))
@@ -236,7 +236,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    #filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
 
@@ -246,9 +246,9 @@ for train_index, test_index in skf.split(X, Y):
                              epochs=epochs,
                              validation_split=0.2,
                              verbose=1,
-                             callbacks=[LearningRateScheduler(lr_schedule)]
+                             callbacks=[LearningRateScheduler(lr_schedule),
+                                        ModelCheckpoint(filepath, save_best_only=True)]
                              )
-
 
     #Guardar training / validation loss/accuracy en cada epoch
     training_history_list.append(hist.history)
@@ -312,7 +312,7 @@ modelname = filename_clf_list[model_indx]
 pickle.dump(best_model, open((code_path + str(modelname)), 'wb'))
 
 #guardar con h5 no funciona por tener un metodo custom de accuracy
-#best_model.save(modelname)
+best_model.save(modelname)
 
 
 
@@ -360,7 +360,7 @@ today_date = datetime.date.today().strftime("%d-%m-%Y")
 best_model_filename= ("nn_epochs%s_test_acc_%.2f%%_%s.h5" % (epochs,test_accuracy[1] * 100, today_date))
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
-
+best_model.save(best_model_filename)
 
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
