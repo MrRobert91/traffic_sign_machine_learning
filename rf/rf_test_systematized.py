@@ -137,8 +137,8 @@ for train_index, test_index in kf.split(X_test):
 
     accuracy_list.append(test_accuracy * 100)
 
-    print(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
-    logging.info(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+    print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+    logging.info(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
 
     fold += 1
 
