@@ -46,7 +46,7 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
-modelo = "nn_3H_48"
+modelo = "nn_4H_48"
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -222,7 +222,7 @@ for train_index, test_index in skf.split(X, Y):
 
 
 
-    nn_classifier = nn_model_3H()
+    nn_classifier = nn_model_4H()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
