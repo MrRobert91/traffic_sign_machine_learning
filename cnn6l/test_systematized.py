@@ -72,6 +72,29 @@ modelname = "cnn_multi_scale_epochs30_test_acc_94.83%_24-05-2018.h5"
 loaded_model = load_model(modelname)
 
 
+# diccionario las keys son clases del dataset aleman y los valores del belga
+ger2bel_dic = { '00009': '00031','00011': '00017','00012': '00061','00013': '00019',
+                '00014': '00021','00015': '00028','00016': '00025','00017': '00022',
+                '00018': '00013','00019': '00003','00020': '00004','00021': '00005',
+                '00022': '00000','00023': '00002','00024': '00016','00025': '00010',
+                '00028': '00007','00029': '00008','00035': '00034','00038': '00035',
+                '00040': '00037'}
+
+# diccionario las keys son clases del dataset belga y los valores del aleman
+bel2ger_dic = { '00031': '00009' ,'00017': '00011' ,'00061': '00012' ,'00019': '00013' ,
+                '00021': '00014' ,'00028': '00015' ,'00025': '00016' ,'00022': '00017' ,
+                '00013': '00018' ,'00003': '00019' ,'00004': '00020' ,'00005': '00021' ,
+                '00000': '00022' ,'00002': '00023' ,'00016': '00024' ,'00010': '00025' ,
+                '00007': '00028' ,'00008': '00029' ,'00034': '00035' ,'00035': '00038' ,
+                '00037': '00040', }
+
+
+def belgium2german(img_path):
+    belgium_class = str(img_path.split('/')[-2])
+    german_class = bel2ger_dic[belgium_class]
+
+    return german_class
+
 os.chdir(dataset_path+'GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
@@ -122,8 +145,8 @@ for train_index, test_index in kf.split(X_test):
     test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
     accuracy_list.append(test_accuracy[1] * 100)
 
-    print(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
-    logging.info(str(fold)+"Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
+    print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
+    logging.info(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
 
     fold += 1
 
