@@ -35,15 +35,17 @@ import logging
 
 
 #local
-code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
-dataset_path="/home/david/Escritorio/TFG/Pruebas/"
+#code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/rf/"
+#dataset_path="/home/david/Escritorio/TFG/Pruebas/"
 
 #Corleone
-#code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
-#dataset_path='/home/drobert/tfg/'
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/rf/"
+dataset_path='/home/drobert/tfg/'
 
 # Fichero de log
 fichero_log = (code_path +'rf.log')
+
+modelo="rf_500t_22d"
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
@@ -51,7 +53,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filename = fichero_log,
                     filemode = 'a',)
 
-logging.info("program started on - " + str(datetime.datetime.now))
+logging.info("program "+modelo+" started on - " + str(datetime.datetime.now))
 
 
 
@@ -125,15 +127,10 @@ print(Y.shape)
 
 
 # Tenemos que cambiar los formatos de entrada
-X = X.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+X = X.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 print(X.shape)
 
 # Vamos a hacer cross validation con nuestro conjunt de test. En concreto vamos a hacer un Kfold con 10 splits estratificado, de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje de muestras de cada clase que el conjunto de entrenamiento.
-
-# In[ ]:
-
-
-
 
 
 #test_scores_list = []
@@ -142,8 +139,8 @@ confusion_matrix_list = []
 clf_list = []
 filename_clf_list = []
 
-n_trees = 100
-depth = 19
+n_trees = 500
+depth = 22
 fold = 1
 splits = 3
 
@@ -285,7 +282,7 @@ X_test = np.array(X_test)
 y_test = np.array(y_test)
 
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
+X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 #------------------------------------------------
 
 
@@ -301,8 +298,16 @@ test_accuracy = bestmodel.score(X_test, y_test)
 print("Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
 logging.info("Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
 
+today_date = datetime.date.today().strftime("%d-%m-%Y")
+best_model_filename = 'rf_' + str(n_trees) + 'trees_' + str(depth) + 'depth_'  + 'fold_' + "{0:.3f}".format(test_accuracy) + 'test_acc_' +today_date
+
+#Guardamos el mejor modelo en test
+pickle.dump(bestmodel, open((code_path + str(best_model_filename)), 'wb'))
+
+
+
 #Cargamos el modelo
-loaded_model = pickle.load(open(code_path + str(modelname), 'rb'))
+loaded_model = pickle.load(open(code_path + str(best_model_filename), 'rb'))
 
 result_loaded_model = loaded_model.score(X_test, y_test)
 
