@@ -132,6 +132,6 @@ for train_index, test_index in kf.split(X_test):
 precision_media = (np.mean(accuracy_list))
 desviacion_standar = (np.std(accuracy_list))
 
-print("mean_accuarcy de" +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
+print("mean_accuarcy de " +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
 logging.info("mean_accuarcy de " +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
 
