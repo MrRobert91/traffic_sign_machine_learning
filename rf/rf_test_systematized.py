@@ -127,10 +127,10 @@ for train_index, test_index in kf.split(X_test):
     X_test_fold = X_test_fold.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 
     # --Para resto de modelos-- Los targets tienen que estar en formato one target
-    y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
+    #y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
 
     # Para RF
-    test_accuracy = loaded_model.score(X_test, y_test)
+    test_accuracy = loaded_model.score(X_test_fold, y_test_fold)
 
     # Para resto de modelos
     #test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
