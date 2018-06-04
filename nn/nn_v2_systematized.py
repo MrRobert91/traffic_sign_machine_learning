@@ -46,7 +46,7 @@ from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
 
-modelo = "nn_3H_32"
+modelo = "nn_3H_48"
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/nn/"
 #dataset_path="/home/david/Escritorio/TFG/Pruebas"
@@ -60,7 +60,7 @@ dataset_path='/home/drobert/tfg/'
 fichero_log = (code_path +modelo+'.log')
 
 NUM_CLASSES = 43
-IMG_SIZE = 32#48
+IMG_SIZE = 48
 
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
