@@ -237,7 +237,7 @@ for train_index, test_index in skf.split(X, Y):
     print(y_train.shape)
 
     #ruta para local
-    filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
+    filepath = code_path+modelo+"-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
 
@@ -318,7 +318,7 @@ y_test = np.array(y_test)
 
 
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
-X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZEcd * 3)).astype(np.float32)
+X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 #Los targets tienen que estar en formato one target
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
