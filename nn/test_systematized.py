@@ -63,7 +63,7 @@ def preprocess_img(img):
 
 os.chdir(code_path)
 
-modelname = "cnn_multi_scale_epochs30_test_acc_94.83%_24-05-2018.h5"
+modelname = "nn_4H_32_epochs20_test_acc_88.55%_04-06-2018.h5"
 
 #Para random forest
 #loaded_model = pickle.load(open(modelname, 'rb'))
