@@ -123,7 +123,7 @@ for img_path in all_img_paths:
     label_g = belgium2german(img_path)
     if label_g is not None:
         imgs.append(img)
-    labels.append(label_g)
+        labels.append(label_g)
 
 X_test = np.array(imgs, dtype='float32')
 y_test = np.asarray(labels)
