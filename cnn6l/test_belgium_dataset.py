@@ -146,12 +146,6 @@ for train_index, test_index in kf.split(X_test):
     _, X_test_fold = X_test[train_index], X_test[test_index]
     _, y_test_fold = y_test[train_index], y_test[test_index]
 
-    print("y_test_fold: ")
-    print(y_test_fold)
-    print(y_test_fold.shape)
-    print(type(y_test_fold))
-    print(type(y_test_fold[1]))
-
 
     # --Para Random Forest-- Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
     #X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
