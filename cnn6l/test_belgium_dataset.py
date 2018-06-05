@@ -150,6 +150,7 @@ for train_index, test_index in kf.split(X_test):
     print(y_test_fold)
     print(y_test_fold.shape)
     print(type(y_test_fold))
+    print(type(y_test_fold[1]))
 
 
     # --Para Random Forest-- Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
