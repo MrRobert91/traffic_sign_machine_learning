@@ -70,6 +70,8 @@ start = time.time()
 
 # load the trained logistic regression classifier
 print("[INFO] loading the classifier...")
+print(classifier_path)
+
 classifier = pickle.load(open(classifier_path, 'rb'))
 
 # pretrained models needed to perform feature extraction on test data too!
