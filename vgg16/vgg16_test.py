@@ -9,12 +9,12 @@ from __future__ import print_function
 
 # keras imports
 from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.applications.vgg19 import VGG19, preprocess_input
-from keras.applications.xception import Xception, preprocess_input
-from keras.applications.resnet50 import ResNet50, preprocess_input
-from keras.applications.inception_resnet_v2 import InceptionResNetV2, preprocess_input
-from keras.applications.mobilenet import MobileNet, preprocess_input
-from keras.applications.inception_v3 import InceptionV3, preprocess_input
+#from keras.applications.vgg19 import VGG19, preprocess_input
+#from keras.applications.xception import Xception, preprocess_input
+#from keras.applications.resnet50 import ResNet50, preprocess_input
+#from keras.applications.inception_resnet_v2 import InceptionResNetV2, preprocess_input
+#from keras.applications.mobilenet import MobileNet, preprocess_input
+#from keras.applications.inception_v3 import InceptionV3, preprocess_input
 from keras.preprocessing import image
 from keras.models import Model
 from keras.models import model_from_json
