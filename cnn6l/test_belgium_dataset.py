@@ -91,11 +91,11 @@ bel2ger_dic = { '00031': '00009' ,'00017': '00011' ,'00061': '00012' ,'00019': '
 
 def belgium2german(img_path):
     belgium_class = str(img_path.split('/')[-2])
-    german_class = bel2ger_dic[belgium_class]
-    print("belgium class: "+belgium_class)
-    print("german class: " + german_class)
-
-    return german_class
+    if belgium_class in bel2ger_dic:
+        german_class = bel2ger_dic[belgium_class]
+        return german_class
+    else:
+        return None
 
 def get_class(img_path):
     return int(img_path.split('/')[-2])
@@ -121,7 +121,8 @@ np.random.shuffle(all_img_paths)
 for img_path in all_img_paths:
     img = preprocess_img(io.imread(img_path))
     label_g = belgium2german(img_path)
-    imgs.append(img)
+    if label_g is not None:
+        imgs.append(img)
     labels.append(label_g)
 
 X_test = np.array(imgs, dtype='float32')
