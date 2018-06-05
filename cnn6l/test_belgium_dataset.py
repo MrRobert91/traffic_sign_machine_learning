@@ -16,6 +16,7 @@ import logging
 from keras.models import load_model
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
+from keras.utils.np_utils import to_categorical
 
 #Corleone
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
@@ -145,12 +146,20 @@ for train_index, test_index in kf.split(X_test):
     _, X_test_fold = X_test[train_index], X_test[test_index]
     _, y_test_fold = y_test[train_index], y_test[test_index]
 
+    print("y_test_fold: ")
+    print(y_test_fold)
+    print(y_test_fold.shape)
+    print(type(y_test_fold))
+
 
     # --Para Random Forest-- Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
     #X_test = X_test.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
     # --Para resto de modelos-- Los targets tienen que estar en formato one target
-    y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
+    #y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
+
+
+    y_test_fold_one_target = to_categorical(y_test_fold, NUM_CLASSES)
 
     # Para RF
     # test_accuracy = loaded_model.score(X_test, y_test)
