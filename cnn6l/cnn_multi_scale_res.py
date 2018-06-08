@@ -81,8 +81,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'w',)# w for new log each time/a for over write
 
 
-print ("[STATUS] --------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" ---------cnn funcional multi scale- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] --------"+model_name+"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info(" ---------"+model_name+"- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 def res_multi_stage2_double_sep_conv():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
