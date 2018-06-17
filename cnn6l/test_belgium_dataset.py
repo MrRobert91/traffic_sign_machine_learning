@@ -22,7 +22,7 @@ from keras.utils.np_utils import to_categorical
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
-modelo="cnn_skip_conect_v1_32"
+modelo="mini_vgg_48"
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +modelo+'.log')
