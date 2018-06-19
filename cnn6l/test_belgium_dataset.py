@@ -42,7 +42,7 @@ logging.info(" ---------"+modelo+"- start time - {}".format(datetime.datetime.no
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 #48
+IMG_SIZE = 48 #48
 
 
 # Funcion para preprocesar las imagenes
