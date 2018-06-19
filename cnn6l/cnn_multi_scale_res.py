@@ -436,7 +436,7 @@ def cnn_chollet_book():
     return model
 
 NUM_CLASSES = 43
-IMG_SIZE = 48 # 32 o 48
+IMG_SIZE = 32 # 32 o 48
 
 
 # Funcion para preprocesar las imagenes
