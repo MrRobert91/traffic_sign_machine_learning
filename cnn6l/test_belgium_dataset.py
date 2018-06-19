@@ -175,7 +175,11 @@ for train_index, test_index in kf.split(X_test):
     # Para resto de modelos
     #test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
 
-    accuracy_list.append(test_accuracy[1] * 100)
+    #para RF
+    accuracy_list.append(test_accuracy * 100)
+
+    #Para resto de modelos
+    #accuracy_list.append(test_accuracy[1] * 100)
 
     print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
     logging.info(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
