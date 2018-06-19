@@ -745,8 +745,6 @@ print("shape de y_test , y_pred_no_one_hot :")
 print(y_test.shape)
 print(y_pred_no_one_hot.shape)
 
-
-
 #cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 
 #logging.info("matriz de confusión del modelo medio: ")
