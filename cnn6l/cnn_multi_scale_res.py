@@ -58,7 +58,7 @@ from keras.callbacks import TensorBoard
 logging.info("program started on - " + str(datetime.datetime.now))
 
 #model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
-model_name = "mini_vgg"
+model_name = "skip_coNet"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -152,7 +152,7 @@ def cnn_model_res_multi_stage2():
     return model
 #Segundo modelo para TFG
 #Basada en el paper de lecun
-def cnn_skip_conect_v1():
+def skip_conect():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
     #1ª Etapa: la salida de esta etapa va
@@ -548,7 +548,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = mini_vgg()
+    cnn_classifier = skip_conect()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
