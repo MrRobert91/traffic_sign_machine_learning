@@ -181,8 +181,14 @@ for train_index, test_index in kf.split(X_test):
     #Para resto de modelos
     #accuracy_list.append(test_accuracy[1] * 100)
 
-    print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
-    logging.info(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
+
+    # para RF
+    print(str(fold) + " Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+    logging.info(str(fold) + " Resultado final del modelo en test: %.2f%% " % (test_accuracy * 100))
+
+    # Para resto de modelos
+    #print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
+    #logging.info(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
 
     fold += 1
 
@@ -192,4 +198,3 @@ desviacion_standar = (np.std(accuracy_list))
 
 print("mean_accuarcy de" +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
 logging.info("mean_accuarcy de " +modelo+": %.2f%% (+/- %.2f%%)" % (np.mean(accuracy_list), np.std(accuracy_list)))
-
