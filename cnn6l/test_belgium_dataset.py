@@ -138,6 +138,9 @@ for img_path in all_img_paths:
 X_test = np.array(imgs, dtype='float32')
 y_test = np.asarray(labels)
 
+# Para NN: Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
+X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
+
 print(X_test.shape)
 print(y_test.shape)
 
