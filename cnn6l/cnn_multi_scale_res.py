@@ -173,8 +173,9 @@ def skip_conect():
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
-    concatenated = layers.Dense(2048, activation='relu')(concatenated)
-    concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(300, activation='relu')(concatenated)
+    #concatenated = layers.Dense(2048, activation='relu')(concatenated)
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
     concatenated = layers.BatchNormalization()(concatenated)
 
