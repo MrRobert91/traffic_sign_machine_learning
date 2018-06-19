@@ -72,14 +72,15 @@ os.chdir(code_path)
 #cnn_multi_scale_epochs30_test_acc_94.83%_24-05-2018.h5
 
 #nn_4H_32_epochs20_test_acc_88.55%_04-06-2018.h5
+#rf_500trees_22depth_3fold_0.967val_acc
 
-modelname = "nn_4H_32_epochs20_test_acc_88.55%_04-06-2018.h5"
+modelname = "rf_500trees_22depth_3fold_0.967val_acc"
 
 #Para random forest
-#loaded_model = pickle.load(open(modelname, 'rb'))
+loaded_model = pickle.load(open(modelname, 'rb'))
 
 #Para otros modelos(cnn6l, nn, resnet50, xception, vgg16..)
-loaded_model = load_model(modelname)
+#loaded_model = load_model(modelname)
 
 
 # diccionario las keys son clases del dataset aleman y los valores del belga
@@ -169,10 +170,11 @@ for train_index, test_index in kf.split(X_test):
     y_test_fold_one_target = to_categorical(y_test_fold, NUM_CLASSES)
 
     # Para RF
-    # test_accuracy = loaded_model.score(X_test, y_test)
+    test_accuracy = loaded_model.score(X_test, y_test)
 
     # Para resto de modelos
-    test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
+    #test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
+
     accuracy_list.append(test_accuracy[1] * 100)
 
     print(str(fold)+" Resultado final del modelo en test: %.2f%% " % (test_accuracy[1] * 100))
