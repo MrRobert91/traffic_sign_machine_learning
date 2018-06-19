@@ -214,6 +214,7 @@ def cnn_model_res_multi():
     model = Model(input_tensor, output_tensor)
     return model
 
+#3º modelo en tfg
 def cnn_model_res_multi_v2():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
@@ -237,6 +238,47 @@ def cnn_model_res_multi_v2():
 
     # Etapa de concatenacion
     concatenated = layers.concatenate([x_flatten_1, x_flatten_2, x_flatten_3],axis=-1)#probar tambien con add
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+#3º modelo en tfg
+#Mejor version con shortcut en la segunda etapa
+#y separable convolutions, y dropout
+def skip_conet_cnn_v1_1res_2_estage_separable():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu')(x)
+
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+    #x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x_principal)
+
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_2, x_flatten_3],axis=-1)#probar tambien con add
     #concatenated = layers.Dense(512, activation='relu')(concatenated)
     concatenated = layers.Dense(1024, activation='relu')(concatenated)
     concatenated = layers.Dropout(0.5)(concatenated)
@@ -386,6 +428,7 @@ def cnn_model_old_separable():
 
 
 #Modelo: red neuronal con 6 capas convolucionales
+#4º modelo en tfg
 def mini_vgg():
     model = Sequential()
 
