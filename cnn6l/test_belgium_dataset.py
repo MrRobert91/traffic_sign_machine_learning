@@ -42,7 +42,7 @@ logging.info(" ---------"+modelo+"- start time - {}".format(datetime.datetime.no
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 32 #48
+IMG_SIZE = 48 #48
 
 
 # Funcion para preprocesar las imagenes
@@ -69,7 +69,7 @@ os.chdir(code_path)
 #cnn_v1_48_epochs20_test_acc_96.89%_28-05-2018.h5
 #cnn_multi_scale_epochs50_test_acc_95.39%_25-05-2018.h5
 
-modelname = "cnn_skip_conect_32_dropout_v1_epochs20_test_acc_95.91%_29-05-2018.h5"
+modelname = "cnn_v1_48_epochs20_test_acc_96.89%_28-05-2018.h5"
 
 #Para random forest
 #loaded_model = pickle.load(open(modelname, 'rb'))
