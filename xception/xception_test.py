@@ -33,6 +33,7 @@ import time
 import logging
 import pandas as pd
 from skimage import io
+from keras.models import load_model
 
 # load the user configs
 with open('conf.json') as f:
