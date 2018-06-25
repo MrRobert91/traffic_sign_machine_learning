@@ -33,6 +33,7 @@ import time
 import logging
 import pandas as pd
 from skimage import io
+from keras.models import load_model
 
 # load the user configs
 with open('conf.json') as f:
@@ -62,8 +63,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filename = fichero_log,
                     filemode = 'a',)
 # start time
-print ("[STATUS] resnet50 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-logging.info(" resnet50 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+print ("[STATUS] ----------- resnet50 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+logging.info("------------ resnet50 test - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
 # load the trained logistic regression classifier
