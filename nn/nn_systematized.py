@@ -240,7 +240,7 @@ for train_index, test_index in skf.split(X, Y):
     #filepath = code_path+"nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
     #ruta para corleone
     #filepath = "/home/drobert/tfg/traffic_sign_machine_learning/nn/nn-fold"+str(fold)+"-epochs"+str(epochs)+".h5"
-
+    filepath = code_path + modelo + "_fold" + str(fold) + "-epochs" + str(epochs) + ".h5"
 
     hist = nn_classifier.fit(x_train, y_train,
                              batch_size=batch_size,
