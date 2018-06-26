@@ -95,6 +95,7 @@ logging.basicConfig(level=logging.DEBUG,
 print ("[STATUS] --------cnn_v2 multi scale  systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn_v2 multi scale systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
+
 def cnn_model_res_multi_v2():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
