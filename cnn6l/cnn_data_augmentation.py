@@ -441,12 +441,7 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 #loaded_model = load_model('best_model_filename', custom_objects={'get_categorical_accuracy_keras': get_categorical_accuracy_keras})
 #loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 
-# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
-# la matriz de confusión. y la mostramos de varia formas. Solo mostramos
-# la matriz de confusion del modelo medio.
 
-#Para generar la matriz de confusión necesitamos los targets en formato lista
-#No en one hot encoding.
 
 
 y_pred = loaded_model.predict(X_test)
