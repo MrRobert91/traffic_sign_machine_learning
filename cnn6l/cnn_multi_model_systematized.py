@@ -69,7 +69,7 @@ code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
 #fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
-fichero_log = (code_path +'cnn_multi_scale.log')
+fichero_log = (code_path +'cnn.log')
 fichero_log_tb = (code_path +'tensor_board_logs/'+model_name)
 
 
