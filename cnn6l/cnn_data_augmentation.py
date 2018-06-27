@@ -470,6 +470,6 @@ cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
 #logging.info(cm)
 
 
-print("Fin de la prueba con CNN v2 con data augmentation")
-logging.info("-----------Fin de la prueba con CNN v2 con data augmentation-----------")
+print("Fin de la prueba con CNN con data augmentation")
+logging.info("-----------Fin de la prueba con CNN con data augmentation-----------")
 logging.info("program ended on - " + str(datetime.datetime.now))
