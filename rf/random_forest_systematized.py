@@ -84,11 +84,12 @@ def preprocess_img(img):
 
 # A ver si no peta sin el bucle que cuenta por donde va
 
-# In[2]:
 
 
 def get_class(img_path):
     return int(img_path.split('/')[-2])
+
+
 
 
 os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
