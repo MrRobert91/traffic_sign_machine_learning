@@ -8,13 +8,6 @@
 # 5- quedarse con el módelo más próximo al modelo promedio.
 # 6- guardar los resultados y los hiperparametros. (diccionario, csv, ...)
 
-# #Random forest para clasificar señales de tráfico
-#
-# Vamos a utilizar una red neuronal convolucional para clasificar
-# imagenes de señales de tráfico del
-# dataset [GTSRB](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset)
-
-# In[1]:
 
 
 import numpy as np
@@ -41,7 +34,6 @@ from keras import layers
 from keras.models import Model
 
 from keras.layers import Input, Dense
-K.set_image_data_format('channels_last')
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
@@ -53,13 +45,13 @@ from skimage import io
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.utils.np_utils import to_categorical
 import json
+K.set_image_data_format('channels_last')
 
-
-# load the user configs
+# cargar las variables de configuracion
 with open('conf.json') as f:
 	config = json.load(f)
 
-# config variables
+# variables de configuracion
 model_name 		= config["model"]
 weights 		= config["weights"]
 include_top 	= config["include_top"]
@@ -81,7 +73,7 @@ log_path		= config["log_path"]
 code_path="/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 dataset_path='/home/drobert/tfg/'
 
-#fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
+
 fichero_log = (code_path +'cnn_v2.log')
 
 
@@ -89,7 +81,7 @@ print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     filename = fichero_log,
-                    filemode = 'a',)# w for new log each time
+                    filemode = 'a',)# w para un nuevo log cada vez
 
 
 print ("[STATUS] --------cnn_v2 multi scale  systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
@@ -207,12 +199,6 @@ def preprocess_img(img):
     # reescalado de imagenes a tamaño standard
     img = transform.resize(img, (IMG_SIZE, IMG_SIZE), mode='constant')
 
-    #Imagen en escala de grises, en escala [0,1]
-    #img = color.rgb2gray(img)
-
-    # Scale features to be in [0, 1]
-    #img = (img / 255.).astype(np.float32)
-
     return img
 
 def get_class(img_path):
@@ -254,7 +240,7 @@ logging.info(Y.shape)
 
 #Data Augmentation:
 
-# this is the augmentation configuration we will use for training
+# Configuaracion de las imagenes generadas
 datagen = ImageDataGenerator(
         #rescale=1./255,
         rotation_range=25,
@@ -267,7 +253,7 @@ datagen = ImageDataGenerator(
 
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
-# En concreto vamos a hacer un Kfold con 10 splits estratificado,
+# En concreto vamos a hacer un Kfold con 3 splits estratificado,
 # de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje
 # de muestras de cada clase que el conjunto de entrenamiento.
 
@@ -296,10 +282,6 @@ for train_index, test_index in skf.split(X, Y):
     x_train, x_test = X[train_index], X[test_index]
     y_train_no_one_hot, y_test_no_one_hot = Y[train_index], Y[test_index]
 
-    # Make one hot targets
-    #y_train = np.eye(NUM_CLASSES, dtype='uint8')[y_train_no_one_hot]
-    #y_test = np.eye(NUM_CLASSES, dtype='uint8')[y_test_no_one_hot]
-
     #one hot encodig con to_categorical
     y_train = to_categorical(y_train_no_one_hot, NUM_CLASSES)
     y_test = to_categorical(y_test_no_one_hot, NUM_CLASSES)
@@ -318,7 +300,7 @@ for train_index, test_index in skf.split(X, Y):
     print("Hasta el fit generator en el fold "+ str(fold))
     print("len x_train: "+str(len(x_train)))
 
-    # fits the model on batches with real-time data augmentation:
+    # entrena el modelo en batches con data augmentation en tiempo real:
     hist = cnn_classifier.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                         steps_per_epoch=(len(x_train) / batch_size), epochs=epochs,
                         verbose=1, validation_data=(x_test, y_test),
@@ -374,9 +356,7 @@ os.chdir(dataset_path+'/GTSRB')
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
 test = pd.read_csv('GT-final_test.csv', sep=';')
-#test.head(10)
 
-# In[61]:
 
 # Cargamos el dataset de test
 os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
@@ -400,8 +380,6 @@ y_test = np.array(y_test)
 y_test_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test]
 
 
-
-
 # Función para encontrar el modelo que está mas proximo a la media
 def modelo_medio_indx(final, numeros):
     def el_menor(numeros):
@@ -420,7 +398,6 @@ def modelo_medio_indx(final, numeros):
     return numeros.index(numeros[el_menor(diferencia)])
 
 
-
 print("precision media: "+str(precision_media))
 logging.info("precision media: "+str(precision_media))
 
@@ -435,14 +412,7 @@ best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
-#NO RULA LO DE ABAJO
-# this is the augmentation configuration we will use for testing:
-# only rescaling
-#test_datagen = ImageDataGenerator(rescale=1./255)
-#test_accuracy = best_model.evaluate_generator(test_datagen.flow(x_train, y_train))
-
 #Guardar best_model en un pickle
-
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
