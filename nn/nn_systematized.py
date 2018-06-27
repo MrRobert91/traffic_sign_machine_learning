@@ -62,6 +62,8 @@ fichero_log = (code_path +'nn.log')
 NUM_CLASSES = 43
 IMG_SIZE = 48
 
+modelo ="nn"
+
 print('Archivo Log en ', fichero_log)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(levelname)s : %(message)s',
