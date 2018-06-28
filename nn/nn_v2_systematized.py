@@ -173,7 +173,6 @@ print(Y.shape)
 
 logging.info(X.shape)
 logging.info(Y.shape)
-# In[4]:
 
 # Vamos a hacer cross validation con nuestro conjunt de test.
 # En concreto vamos a hacer un Kfold con 10 splits estratificado,
