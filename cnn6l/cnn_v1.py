@@ -16,7 +16,14 @@
 
 # In[1]:
 
+from keras.models import Sequential
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Conv2D, SeparableConv2D
+from keras.layers.pooling import MaxPooling2D, GlobalAveragePooling2D
 
+from keras import layers
+
+from keras.layers import Input, Dense
 import numpy as np
 from skimage import color, exposure, transform
 
@@ -36,7 +43,7 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import SGD
 from keras import backend as K
-K.set_image_data_format('channels_last')
+from keras.models import Model
 
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 import os, logging
@@ -44,6 +51,7 @@ from keras import metrics
 from keras.models import load_model
 import datetime
 from keras.utils.np_utils import to_categorical
+K.set_image_data_format('channels_last')
 
 logging.info("program started on - " + str(datetime.datetime.now))
 #local
@@ -68,9 +76,289 @@ logging.basicConfig(level=logging.DEBUG,
 print ("[STATUS] --------cnn6l v1 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 logging.info(" ---------cnn6l v1- start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
+def res_multi_stage2_double_sep_conv():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+
+    #2ª Etapa
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    #concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+def cnn_model_res_multi_stage2():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+    #x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_3, x_flatten_2],axis=-1)
+    #concatenated = layers.add([x_flatten_3, x_flatten_2])# probar tambien con add
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+#Segundo modelo para TFG
+#Basada en el paper de lecun
+def skip_conect():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.Conv2D(108, (5, 5), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    #x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    #x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.3)(x) #ponemos batchNorm en vez  de dropout
+    x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(200, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    #x_principal = layers.BatchNormalization()(x_principal)
+    x_principal = layers.Dropout(0.3)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_1, x_flatten_2],axis=-1)
+    concatenated = layers.Dense(300, activation='relu')(concatenated)
+    #concatenated = layers.Dense(2048, activation='relu')(concatenated)
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+    #concatenated = layers.BatchNormalization()(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+
+def cnn_model_res_multi():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.5)(x)
+    x_flatten = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.5)(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.5)(x_principal)
+    x_principal = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_principal, x_flatten],axis=-1)#probar tambien con add
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+#3º modelo en tfg
+def cnn_model_res_multi_v2():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+    x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_1, x_flatten_2, x_flatten_3],axis=-1)#probar tambien con add
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+#3º modelo en tfg
+#Mejor version con shortcut en la segunda etapa
+#y separable convolutions, y dropout
+def skip_conet_cnn_v1_1res_2_estage_separable():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    #1ª Etapa: la salida de esta etapa va
+
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu')(x)
+
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+    #x_flatten_1 = layers.Flatten()(x)
+
+    #2ª Etapa
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x_principal = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x_principal)
+
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_2 = layers.Flatten()(x_principal)
+
+    #3ª Etapa
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+    x_principal = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
+
+    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
+    x_principal = layers.Dropout(0.4)(x_principal)
+    x_flatten_3 = layers.Flatten()(x_principal)
+
+    # Etapa de concatenacion
+    concatenated = layers.concatenate([x_flatten_2, x_flatten_3],axis=-1)#probar tambien con add
+    #concatenated = layers.Dense(512, activation='relu')(concatenated)
+    concatenated = layers.Dense(1024, activation='relu')(concatenated)
+    concatenated = layers.Dropout(0.5)(concatenated)
+
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+# cnn_v1 Primera version en tfg
+# 96,04% en test con input de 32x32
+# 96,89% en test con input de 48x48
+def cnn_v1():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.4)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+def cnn_v1_separable_conv():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.SeparableConv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.SeparableConv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.3)(x)
+
+    x = layers.SeparableConv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.4)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+#Modelo: red neuronal v2
+def cnn_model_v2_seq():
+    model = Sequential()
+
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.1))
+
+    model.add(SeparableConv2D(64, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))
+
+    model.add(SeparableConv2D(128, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.3))#antes 0.2
+
+
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
 
 #Modelo: red neuronal con 6 capas convolucionales
-def cnn_model():
+def cnn_model_old():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
@@ -96,6 +384,90 @@ def cnn_model():
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+
+
+#Modelo: red neuronal con 6 capas convolucionales
+def cnn_model_old_separable():
+    model = Sequential()
+
+    model.add(SeparableConv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    #model.add(layers.BatchNormalization())#Nueva
+    model.add(SeparableConv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))#Añadida
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Flatten())
+    #model.add(GlobalAveragePooling2D())
+    model.add(Dense(1024, activation='relu'))#Antes 512
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+
+#Modelo: red neuronal con 6 capas convolucionales
+#4º modelo en tfg
+def mini_vgg():
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    #model.add(layers.BatchNormalization())#Nueva
+    model.add(Conv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Flatten())
+    #model.add(GlobalAveragePooling2D())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+
+def cnn_chollet_book():
+    model = Sequential()
+    model.add(layers.SeparableConv2D(32, 3,
+                                     activation='relu',
+                                     input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.MaxPooling2D(2))
+
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.SeparableConv2D(128, 3, activation='relu'))
+    model.add(layers.MaxPooling2D(2))
+
+    model.add(layers.SeparableConv2D(64, 3, activation='relu'))
+    model.add(layers.SeparableConv2D(128, 3, activation='relu'))
+
+    model.add(layers.GlobalAveragePooling2D())
+    model.add(layers.Dense(32, activation='relu'))
+    model.add(layers.Dense(NUM_CLASSES, activation='softmax'))
     return model
 
 
@@ -213,7 +585,7 @@ for train_index, test_index in skf.split(X, Y):
     #dummy_y = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #dummy_y = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_model()
+    cnn_classifier = cnn_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
