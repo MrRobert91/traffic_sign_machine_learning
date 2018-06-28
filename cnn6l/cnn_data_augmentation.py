@@ -200,6 +200,36 @@ def cnn_model():
     model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
+#Modelo: red neuronal con 6 capas convolucionales
+#4º modelo en tfg
+def mini_vgg():
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), padding='same',
+                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
+                     activation='relu'))
+    #model.add(layers.BatchNormalization())#Nueva
+    model.add(Conv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))#antes 0.2
+
+    model.add(Flatten())
+    #model.add(GlobalAveragePooling2D())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
 
 NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
