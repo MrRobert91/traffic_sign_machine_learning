@@ -118,6 +118,32 @@ def cnn_model_res_multi_v2():
     model = Model(input_tensor, output_tensor)
     return model
 
+# cnn_v1 Primera version en tfg
+# 96,04% en test con input de 32x32
+# 96,89% en test con input de 48x48
+def cnn_v1():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.3)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.4)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+    model = Model(input_tensor, output_tensor)
+    return model
+
+
 #Modelo: red neuronal con 6 capas convolucionales
 def cnn_model_v2():
     model = Sequential()
@@ -179,7 +205,7 @@ NUM_CLASSES = 43
 IMG_SIZE = 48 # Como se sugiere en el paper de LeCun
 
 batch_size = 32 #16
-epochs = 30 #30 o 50
+epochs = 20 #30 o 50
 lr = 0.01
 
 # Funcion para preprocesar las imagenes
@@ -286,7 +312,7 @@ for train_index, test_index in skf.split(X, Y):
     y_train = to_categorical(y_train_no_one_hot, NUM_CLASSES)
     y_test = to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_model_res_multi_v2()
+    cnn_classifier = cnn_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
