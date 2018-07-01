@@ -150,6 +150,7 @@ def cnn_model_res_multi_stage2():
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
     model = Model(input_tensor, output_tensor)
     return model
+
 #Segundo modelo para TFG
 #Basada en el paper de lecun
 def skip_conect():
@@ -432,21 +433,21 @@ def cnn_model_old_separable():
 def mini_vgg():
     model = Sequential()
 
-    model.add(SeparableConv2D(32, (3, 3), padding='same',
+    model.add(Conv2D(32, (3, 3), padding='same',
                      input_shape=(IMG_SIZE, IMG_SIZE, 3),
                      activation='relu'))
     #model.add(layers.BatchNormalization())#Nueva
-    model.add(SeparableConv2D(32, (3, 3),padding='same', activation='relu'))
+    model.add(Conv2D(32, (3, 3),padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
-    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
-    model.add(SeparableConv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
-    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(SeparableConv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.2))#antes 0.2
 
@@ -592,7 +593,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = skip_conet_cnn_v1_1res_2_estage_separable()
+    cnn_classifier = cnn_v1()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
