@@ -296,15 +296,15 @@ def cnn_v1():
 
     x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.2)(x)
+    #x = layers.Dropout(0.2)(x)
 
     x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.3)(x)
+    #x = layers.Dropout(0.3)(x)
 
     x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.4)(x)
+    #x = layers.Dropout(0.4)(x)
 
     x = layers.Flatten()(x)
     x = layers.Dense(1024, activation='relu')(x)
@@ -599,8 +599,8 @@ for train_index, test_index in skf.split(X, Y):
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     rmsprop = RMSprop()
     cnn_classifier.compile(loss='categorical_crossentropy',
-                  optimizer=rmsprop,
-                  #optimizer=sgd,
+                  #optimizer=rmsprop,
+                  optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
