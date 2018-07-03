@@ -58,7 +58,7 @@ from keras.callbacks import TensorBoard
 logging.info("program started on - " + str(datetime.datetime.now))
 
 #model_name = "cnn_skip_32_maxpoolx2_double_classif_dropout_v1"
-model_name = "cnn_v1_48"
+model_name = "mini_vgg_32"
 
 #local
 #code_path= "/home/david/PycharmProjects/traffic_sign_machine_learning/cnn6l/"
@@ -480,7 +480,7 @@ def cnn_chollet_book():
     return model
 
 NUM_CLASSES = 43
-IMG_SIZE = 48 # 32 o 48
+IMG_SIZE = 32 # 32 o 48
 
 
 # Funcion para preprocesar las imagenes
@@ -593,7 +593,7 @@ for train_index, test_index in skf.split(X, Y):
     #y_train = np_utils.to_categorical(y_train_no_one_hot, NUM_CLASSES)
     #y_test = np_utils.to_categorical(y_test_no_one_hot, NUM_CLASSES)
 
-    cnn_classifier = cnn_v1()
+    cnn_classifier = mini_vgg()
 
     # vamos a entrenar nuestro modelo con SGD + momentum
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
