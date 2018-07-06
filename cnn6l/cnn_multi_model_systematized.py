@@ -430,7 +430,7 @@ def cnn_model_old_separable():
 
 #Modelo: red neuronal con 6 capas convolucionales
 #4º modelo en tfg
-def mini_vgg():
+def mini_vgg_seq():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
@@ -456,6 +456,35 @@ def mini_vgg():
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
+    return model
+
+#Modelo: red neuronal con 6 capas convolucionales
+#4º modelo en tfg con API Funcional
+def mini_vgg():
+    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
+
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(input_tensor)
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+
+    model = Model(input_tensor, output_tensor)
+
     return model
 
 
