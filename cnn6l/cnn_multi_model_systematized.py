@@ -628,8 +628,8 @@ for train_index, test_index in skf.split(X, Y):
     sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     rmsprop = RMSprop()
     cnn_classifier.compile(loss='categorical_crossentropy',
-                  optimizer=rmsprop,
-                  #optimizer=sgd,
+                  #optimizer=rmsprop,
+                  optimizer=sgd,
                   metrics=[metrics.categorical_accuracy])
                   #metrics=[get_categorical_accuracy_keras])#unico que funciona
 
