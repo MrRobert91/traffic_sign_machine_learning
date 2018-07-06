@@ -475,6 +475,7 @@ def mini_vgg():
 
     x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.2)(x)
 
