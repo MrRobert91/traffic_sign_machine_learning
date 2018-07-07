@@ -166,12 +166,7 @@ labels   = np.array(labels_string)
 h5f_data.close()
 h5f_label.close()
 
-# verificamos las dimensiones de las features y labels
-print("[INFO] features shape: {}".format(features.shape))
-print("[INFO] labels shape: {}".format(labels.shape))
 
-logging.info(" features shape: {}".format(features.shape))
-logging.info("[INFO] labels shape: {}".format(labels.shape))
 
 print("[INFO] training started...")
 logging.info("[INFO] training started...")
@@ -181,17 +176,7 @@ logging.info("[INFO] training started...")
                                                                   test_size=test_size,
                                                                   random_state=seed)
 
-print("[INFO] splitted train and test data...")
-print("[INFO] train data  : {}".format(trainData.shape))
-print("[INFO] test data   : {}".format(testData.shape))
-print("[INFO] train labels: {}".format(trainLabels.shape))
-print("[INFO] test labels : {}".format(testLabels.shape))
 
-logging.info(" splitted train and test data...")
-logging.info(" train data  : {}".format(trainData.shape))
-logging.info(" test data   : {}".format(testData.shape))
-logging.info(" train labels: {}".format(trainLabels.shape))
-logging.info(" test labels : {}".format(testLabels.shape))
 
 # utilizamos  logistic regression como modelo
 print("[INFO] creating model...")
@@ -201,45 +186,9 @@ model = LogisticRegression(random_state=seed)
 model.fit(trainData, trainLabels)
 
 
-'''
-# use rank-1 and rank-5 predictions
-print ("[INFO] evaluating model...")
-logging.info(" evaluating model...")
-f = open(results, "w")
-rank_1 = 0
-rank_5 = 0
-
-# sacamos top five accuracy
-for (label, features) in zip(testLabels, testData):
-
-	predictions = model.predict_proba(np.atleast_2d(features))[0]
-	predictions = np.argsort(predictions)[::-1][:5]
-
-	# rank-1 prediction increment
-	if label == predictions[0]:
-		rank_1 += 1
-
-	# rank-5 prediction increment
-	if label in predictions:
-		rank_5 += 1
-
-# convert accuracies to percentages
-rank_1 = (rank_1 / float(len(testLabels))) * 100
-rank_5 = (rank_5 / float(len(testLabels))) * 100
-
-# write the accuracies to file
-f.write("Rank-1: {:.2f}%\n".format(rank_1))
-f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
-
-logging.info("Rank-1: {:.2f}%\n".format(rank_1))
-logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
-'''
-
-
-
 preds = model.predict(testData)
 
-# write the classification report to file
+# escribir classification_report
 f.write("{}\n".format(classification_report(testLabels, preds)))
 f.close()
 
