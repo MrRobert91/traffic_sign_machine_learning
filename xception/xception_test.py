@@ -1,8 +1,4 @@
-# test script to preform prediction on test images inside
-# GTSRB/Final_Test/images/
-#   -- 00000.ppm
-#   -- 00001.ppm
-#   ...
+
 
 # organize imports
 from __future__ import print_function
