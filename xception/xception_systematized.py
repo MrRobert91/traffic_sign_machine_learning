@@ -200,6 +200,8 @@ logging.info("[INFO] creating model...")
 model = LogisticRegression(random_state=seed)
 model.fit(trainData, trainLabels)
 
+
+'''
 # use rank-1 and rank-5 predictions
 print ("[INFO] evaluating model...")
 logging.info(" evaluating model...")
@@ -231,6 +233,8 @@ f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
 
 logging.info("Rank-1: {:.2f}%\n".format(rank_1))
 logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
+'''
+
 
 
 preds = model.predict(testData)
@@ -239,21 +243,16 @@ preds = model.predict(testData)
 f.write("{}\n".format(classification_report(testLabels, preds)))
 f.close()
 
-# dump classifier to file
+#Guardamos el modelo
 print ("[INFO] saving model...")
 logging.info(" saving model...")
 pickle.dump(model, open(classifier_path, 'wb'))
 
-# display the confusion matrix
-#print ("[INFO] confusion matrix")
+
 
 # get the list of training lables
-labels = sorted(list(os.listdir(train_path)))
+#labels = sorted(list(os.listdir(train_path)))
 
-# plot the confusion matrix
-cm = confusion_matrix(testLabels, preds)
-#sns.heatmap(cm, annot=True, cmap="Set2")
-#plt.show()
 
 # end time
 end = time.time()
