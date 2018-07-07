@@ -64,6 +64,7 @@ def preprocess_img(img):
 
 os.chdir(code_path)
 
+#Nombres de modelos guardados
 #mini_vgg_48_epochs20_test_acc_97.37%_30-05-2018.h5
 #cnn_skip_conect_32_dropout_v1_epochs20_test_acc_95.91%_29-05-2018.h5
 
