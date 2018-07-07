@@ -23,7 +23,6 @@ dataset_path='/home/drobert/tfg/'
 
 modelo="nn_3H_32"
 
-#fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +modelo+'.log')
 
 
@@ -65,10 +64,7 @@ os.chdir(code_path)
 
 modelname = "nn_4H_32_epochs20_test_acc_88.55%_04-06-2018.h5"
 
-#Para random forest
-#loaded_model = pickle.load(open(modelname, 'rb'))
 
-#Para otros modelos(cnn6l, nn, resnet50, xception, vgg16..)
 loaded_model = load_model(modelname)
 
 
@@ -96,9 +92,8 @@ y_test = np.array(y_test)
 
 #Vamos a dividir el conjunto de test en 5
 
-kf = KFold(n_splits=5,random_state=13) # Define the split - into 2 folds
-kf.get_n_splits(X_test) # returns the number of splitting iterations in the cross-validator
-
+kf = KFold(n_splits=5,random_state=13)
+kf.get_n_splits(X_test)
 print(kf)
 
 fold =1
@@ -113,13 +108,11 @@ for train_index, test_index in kf.split(X_test):
     # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
     X_test_fold = X_test_fold.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 
-    # --Para resto de modelos-- Los targets tienen que estar en formato one target
+    # Los targets tienen que estar en formato one target
     y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
 
-    # Para RF
-    # test_accuracy = loaded_model.score(X_test, y_test)
 
-    # Para resto de modelos
+    # Para nn
     test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
     accuracy_list.append(test_accuracy[1] * 100)
 
