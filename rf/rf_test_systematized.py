@@ -38,7 +38,6 @@ dataset_path='/home/drobert/tfg/'
 
 modelo="rf_500t_22d"
 
-#fichero_log = ('/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/cnn6l.log')
 fichero_log = (code_path +modelo+'.log')
 
 
@@ -56,7 +55,7 @@ logging.info(" ---------"+modelo+"- start time - {}".format(datetime.datetime.no
 
 
 NUM_CLASSES = 43
-IMG_SIZE = 48 #48
+IMG_SIZE = 48
 
 
 # Funcion para preprocesar las imagenes
@@ -83,9 +82,6 @@ modelname = "rf_500trees_22depth_1fold_0.967val_acc"
 #Para random forest
 loaded_model = pickle.load(open(modelname, 'rb'))
 
-#Para otros modelos(cnn6l, nn, resnet50, xception, vgg16..)
-#loaded_model = load_model(modelname)
-
 
 os.chdir(dataset_path+'GTSRB')#En corleone
 
@@ -95,7 +91,6 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 print('Cargando imagenes de test ...')
 logging.info('Cargando imagenes de test ...')
 # Cargamos el dataset de test
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
@@ -111,8 +106,8 @@ y_test = np.array(y_test)
 
 #Vamos a dividir el conjunto de test en 5
 
-kf = KFold(n_splits=5,random_state=13) # Define the split - into 2 folds
-kf.get_n_splits(X_test) # returns the number of splitting iterations in the cross-validator
+kf = KFold(n_splits=5,random_state=13)
+kf.get_n_splits(X_test)
 
 print(kf)
 
@@ -126,14 +121,10 @@ for train_index, test_index in kf.split(X_test):
     # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
     X_test_fold = X_test_fold.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 
-    # --Para resto de modelos-- Los targets tienen que estar en formato one target
-    #y_test_fold_one_target = np.eye(NUM_CLASSES, dtype='uint8')[y_test_fold]
 
     # Para RF
     test_accuracy = loaded_model.score(X_test_fold, y_test_fold)
 
-    # Para resto de modelos
-    #test_accuracy = loaded_model.evaluate(X_test_fold, y_test_fold_one_target, verbose=1)
 
     accuracy_list.append(test_accuracy * 100)
 
