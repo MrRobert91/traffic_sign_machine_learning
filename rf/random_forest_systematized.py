@@ -3,7 +3,7 @@
 # Version sistematizada:
 # 1- preprocesado
 # 2- divsión del dataset en entrenamiento y validación
-# 3- validacion cruzada estratificada(10 fold)
+# 3- validacion cruzada estratificada(3 fold)
 # 4- media y desviación de las matrices para cada fold
 # 5- quedarse con el módelo más próximo al modelo promedio.
 # 6- guardar los resultados y los hiperparametros. (diccionario, csv, ...)
@@ -12,7 +12,7 @@
 #
 # Vamos a utilizar un random forest para clasificar imagenes de señales de tráfico del dataset [GTSRB](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset)
 
-# In[1]:
+
 
 
 import numpy as np
@@ -30,8 +30,6 @@ import pickle
 from sklearn.model_selection import StratifiedKFold
 import datetime
 import logging
-
-
 
 
 #local
@@ -54,8 +52,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode = 'a',)
 
 logging.info("program "+modelo+" started on - " + str(datetime.datetime.now))
-
-
 
 
 NUM_CLASSES = 43
@@ -82,17 +78,11 @@ def preprocess_img(img):
     return img
 
 
-# A ver si no peta sin el bucle que cuenta por donde va
-
-
-
 def get_class(img_path):
     return int(img_path.split('/')[-2])
 
 
-
-
-os.chdir(dataset_path) #direccion local Jupyter Notebooks/pycharm
+os.chdir(dataset_path)
 root_dir = 'GTSRB/Final_Training/Images/'
 
 imgs = []
@@ -124,14 +114,15 @@ Y = np.asarray(labels)
 print(X.shape)
 print(Y.shape)
 
-# In[4]:
-
 
 # Tenemos que cambiar los formatos de entrada
 X = X.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
 print(X.shape)
 
-# Vamos a hacer cross validation con nuestro conjunt de test. En concreto vamos a hacer un Kfold con 10 splits estratificado, de tal manera que cada conjunto tenga aproximadamente el mismo porcentaje de muestras de cada clase que el conjunto de entrenamiento.
+# Vamos a hacer cross validation con nuestro conjunt de test.
+# En concreto vamos a hacer un Kfold con 10 splits estratificado,
+# de tal manera que cada conjunto tenga aproximadamente el mismo
+# porcentaje de muestras de cada clase que el conjunto de entrenamiento.
 
 
 #test_scores_list = []
@@ -145,7 +136,8 @@ depth = 22
 fold = 1
 splits = 3
 
-skf = StratifiedKFold(n_splits=splits)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
+# splits = numero de 'trozos' en los que dividimos el dataset de entrenamiento
+skf = StratifiedKFold(n_splits=splits)
 print(skf)
 
 for train_index, test_index in skf.split(X, Y):
@@ -153,7 +145,7 @@ for train_index, test_index in skf.split(X, Y):
     x_train, x_test = X[train_index], X[test_index]
     y_train, y_test = Y[train_index], Y[test_index]
 
-    # El clasificador es un random forest, probamos con 35 arboles para que no tarde mucho
+    # El clasificador es un random forest
     rf_classifier = RandomForestClassifier(n_estimators=n_trees, max_depth=depth, oob_score=True)
     rf_classifier.fit(x_train, y_train)
 
@@ -164,25 +156,17 @@ for train_index, test_index in skf.split(X, Y):
 
     test_accuracy_list.append(test_accuracy)  # lista de las precisiones obtenidas por los random forest
 
-    #Son relevantes estas cm? no es mejor guardar solo la de test?
-    #cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
-    #confusion_matrix_list.append(cm)
 
     clf_list.append(rf_classifier)  # lista de cada uno de los los clasificadores
 
     # Persistimos los modelos con pickle
-    # save the model to disk
 
-    #filename = 'rf_' + str(n_trees) + 'trees_' + str(fold) + 'fold_' + str(test_accuracy)+'val_acc'
     filename = 'rf_' + str(n_trees) + 'trees_' + str(depth) + 'depth_' + str(fold) + 'fold_' + "{0:.3f}".format(test_accuracy) + 'val_acc'
     filename_clf_list.append(filename)
 
     #pickle.dump(rf_classifier, open((code_path + str(filename)), 'wb'))
 
     fold = fold + 1
-
-#  test_scores_list con 35 arboles 94% aprox:
-#  [0.93603672532517213, 0.9406273909716909, 0.94008722932129463]
 
 
 precision_media = (np.mean(test_accuracy_list))
@@ -192,9 +176,6 @@ desviacion_standar = (np.std(test_accuracy_list))
 print("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar))
 logging.info(("mean_accuarcy: " + str(precision_media) + " std: " + str(desviacion_standar)))
 
-# El accuracy medio con 500 arboles y 10 fold es de 0.975184290242 con un desviacion standar de 0.00221154307211
-#
-# El accuracy medio con 35 arboles y 3 fold es de 0.938917115206 con un desviacion standar de 0.00204864639076
 
 
 # Función para encontrar el modelo que está más próximo a la media
@@ -242,17 +223,12 @@ bestmodel = clf_list[model_indx]
 pickle.dump(bestmodel, open((code_path + str(modelname)), 'wb'))
 
 
-
-'''
-
-
-'''
 ##Cargamos los datos de test
 
 ruta_actual = os.getcwd()
 print(ruta_actual)
 print(os.listdir(ruta_actual))
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB')
+
 os.chdir(dataset_path+'GTSRB')#En corleone
 
 # Cargamos el archivo csv con los datos de test y vemos que contienen los 10 primeros
@@ -261,20 +237,13 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 
 
 
-#Probamos a liberar memoria
-import gc
-gc.collect()
-
-
 # Cargamos el dataset de test
-#os.chdir('/home/david/Escritorio/TFG/Pruebas/GTSRB/Final_Test/Images/')
 os.chdir(dataset_path+'GTSRB/Final_Test/Images/')#en corleone
 
 X_test = []
 y_test = []
 i = 0
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
     img_path = os.path.join(os.getcwd(), file_name)
     X_test.append(preprocess_img(io.imread(img_path)))
     y_test.append(class_id)
@@ -284,15 +253,10 @@ y_test = np.array(y_test)
 
 # Cambiamos los formatos de entrada de las imagenes para que sea una matriz bidimensional
 X_test = X_test.reshape((-1, IMG_SIZE * IMG_SIZE * 3)).astype(np.float32)
-#------------------------------------------------
-
-
 
 
 #Evaluamos el modelo en test
 test_accuracy = bestmodel.score(X_test, y_test)
-#test_accuracy = accuracy_score(X_test, y_test)
-
 
 
 
@@ -315,21 +279,14 @@ result_loaded_model = loaded_model.score(X_test, y_test)
 print("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model * 100))
 logging.info("Resultado final del modelo en test cargado: %.2f%% " % (result_loaded_model *100))
 
-# Una técnica muy útil para visualizar el rendimiento de nuestro algoritmo es
-# la matriz de confusión.
-# Solo mostramos la matriz de confusion del modelo medio.
+
 X_test_shape = X_test.shape
 y_test_shape = y_test.shape
 
 print('X_test_shape: '+str(X_test_shape))
 print('y_test_shape: '+str(y_test_shape))
 
-#y_pred = bestmodel.predict(X_test)
-#cm = pd.DataFrame(confusion_matrix(y_test, pred_y))
 
-#cm = confusion_matrix_list[model_indx]
-
-#print(cm)
 
 print("-----------Fin de la prueba con RF -----------")
 logging.info("-----------Fin de la prueba con RF -----------")
