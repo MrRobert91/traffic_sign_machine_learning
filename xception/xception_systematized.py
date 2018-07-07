@@ -3,16 +3,10 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # keras imports
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.applications.vgg19 import VGG19, preprocess_input
+
 from keras.applications.xception import Xception, preprocess_input
-from keras.applications.resnet50 import ResNet50, preprocess_input
-from keras.applications.inception_resnet_v2 import InceptionResNetV2, preprocess_input
-from keras.applications.mobilenet import MobileNet, preprocess_input
-from keras.applications.inception_v3 import InceptionV3, preprocess_input
 from keras.preprocessing import image
 from keras.models import Model
-from keras.models import model_from_json
 from keras.layers import Input
 
 # other imports
@@ -79,13 +73,13 @@ logging.info((" successfully loaded base model and model..."))
 # path to training dataset
 train_labels = os.listdir(train_path)
 
-# encode the labels
+# codificar las labels
 print ("[INFO] encoding labels...")
 logging.info("encoding labels...")
 le = LabelEncoder()
 le.fit([tl for tl in train_labels])
 
-# variables to hold features and labels
+# variables para guardar las features y labels
 features = []
 labels = []
 
@@ -93,7 +87,7 @@ labels = []
 # Vamos a medir cuanto tarda en recorrer todas las imagenes
 init_loop = datetime.datetime.now().replace(microsecond=0)
 
-# loop over all the labels in the folder
+# recorremos toda la carpeta
 count = 1
 for i, label in enumerate(train_labels):
 	cur_path = train_path + "/" + label
@@ -102,12 +96,12 @@ for i, label in enumerate(train_labels):
 	    img = image.load_img(image_path, target_size=image_size)
 	    x = image.img_to_array(img)
 	    x = np.expand_dims(x, axis=0)
-	    x = preprocess_input(x) #will scale pixels between -1 and 1,sample-wise.
+	    x = preprocess_input(x) # escala los pixeles entre -1 and 1,sample-wise.
 	    feature = model.predict(x)
 	    flat = feature.flatten()
 	    features.append(flat)
 	    labels.append(label)
-	    #print ("[INFO] processed - " + str(count))
+
 	    count += 1
 	print("[INFO] completed label - " + label)
 	logging.info((" completed label - " + label))
@@ -116,11 +110,11 @@ end_loop = datetime.datetime.now().replace(microsecond=0)
 print("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 logging.info("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 
-# encode the labels using LabelEncoder
+# codificamos las labels usando LabelEncoder
 le = LabelEncoder()
 le_labels = le.fit_transform(labels)
 
-# get the shape of training labels
+# obtenemos las dimensiones de las labels de entrenamiento
 print ("[STATUS] training labels: {}".format(le_labels))
 print ("[STATUS] training labels shape: {}".format(le_labels.shape))
 
@@ -138,12 +132,12 @@ h5f_label.create_dataset('dataset_1', data=np.array(le_labels))
 h5f_data.close()
 h5f_label.close()
 
-# save model and weights
+# guardamos el modelo y los pesos
 model_json = model.to_json()
 with open(model_path + str(test_size) + ".json", "w") as json_file:
 	json_file.write(model_json)
 
-# save weights
+# guardamos los pesos
 model.save_weights(model_path + str(test_size) + ".h5")
 print("[STATUS] saved model and weights to disk..")
 logging.info("saved model and weights to disk..")
@@ -159,7 +153,7 @@ logging.info("--------------- Feature extraction completed. --------------------
 print("--------------- Start training. --------------------")
 logging.info("--------------- Start training. --------------------")
 
-# import features and labels
+# importamos las features y labels
 h5f_data  = h5py.File(features_path, 'r')
 h5f_label = h5py.File(labels_path, 'r')
 
@@ -172,7 +166,7 @@ labels   = np.array(labels_string)
 h5f_data.close()
 h5f_label.close()
 
-# verify the shape of features and labels
+# verificamos las dimensiones de las features y labels
 print("[INFO] features shape: {}".format(features.shape))
 print("[INFO] labels shape: {}".format(labels.shape))
 
@@ -181,7 +175,7 @@ logging.info("[INFO] labels shape: {}".format(labels.shape))
 
 print("[INFO] training started...")
 logging.info("[INFO] training started...")
-# split the training and testing data
+# dividimos  en train y test
 (trainData, testData, trainLabels, testLabels) = train_test_split(np.array(features),
                                                                   np.array(labels),
                                                                   test_size=test_size,
@@ -199,7 +193,7 @@ logging.info(" test data   : {}".format(testData.shape))
 logging.info(" train labels: {}".format(trainLabels.shape))
 logging.info(" test labels : {}".format(testLabels.shape))
 
-# use logistic regression as the model
+# utilizamos  logistic regression como modelo
 print("[INFO] creating model...")
 logging.info("[INFO] creating model...")
 
@@ -213,10 +207,9 @@ f = open(results, "w")
 rank_1 = 0
 rank_5 = 0
 
-# loop over test data
+# sacamos top five accuracy
 for (label, features) in zip(testLabels, testData):
-	# predict the probability of each class label and
-	# take the top-5 class labels
+
 	predictions = model.predict_proba(np.atleast_2d(features))[0]
 	predictions = np.argsort(predictions)[::-1][:5]
 
@@ -239,7 +232,7 @@ f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
 logging.info("Rank-1: {:.2f}%\n".format(rank_1))
 logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
 
-# evaluate the model of test data
+
 preds = model.predict(testData)
 
 # write the classification report to file
