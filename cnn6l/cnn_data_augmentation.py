@@ -88,146 +88,33 @@ print ("[STATUS] --------cnn_v2 multi scale  systematized - start time - {}".for
 logging.info(" ---------cnn_v2 multi scale systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 
 
-def cnn_model_res_multi_v2():
+#Modelo: red neuronal con 6 capas convolucionales
+#4º modelo en tfg con API Funcional
+def mini_vgg():
     input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
 
-    #1ª Etapa
-    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
-    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.5)(x)
-    x_flatten_1 = layers.Flatten()(x)
-
-    #2ª Etapa
-    x_principal = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
-    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
-    x_principal = layers.Dropout(0.5)(x_principal)
-    x_flatten_2 = layers.Flatten()(x_principal)
-
-    #3ª Etapa
-    x_principal = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x_principal)
-    x_principal = layers.MaxPooling2D(pool_size=(2, 2))(x_principal)
-    x_principal = layers.Dropout(0.5)(x_principal)
-    x_flatten_3 = layers.Flatten()(x_principal)
-
-    # Etapa de concatenacion
-    concatenated = layers.concatenate([x_flatten_3, x_flatten_1, x_flatten_2],axis=-1)#probar tambien con add
-    concatenated = layers.Dense(512, activation='relu')(concatenated)
-    concatenated = layers.Dropout(0.5)(concatenated)
-
-    output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(concatenated)
-    model = Model(input_tensor, output_tensor)
-    return model
-
-# cnn_v1 Primera version en tfg
-# 96,04% en test con input de 32x32
-# 96,89% en test con input de 48x48
-def cnn_v1():
-    input_tensor = Input(shape=(IMG_SIZE, IMG_SIZE, 3), name='4d_input')
-
-    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu') (input_tensor)
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(input_tensor)
+    x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.2)(x)
 
     x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = layers.Dropout(0.2)(x)
+
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.3)(x)
 
-    x = layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
-    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-    x = layers.Dropout(0.4)(x)
-
     x = layers.Flatten()(x)
-    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.Dense(512, activation='relu')(x)
     x = layers.Dropout(0.5)(x)
     output_tensor = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+
     model = Model(input_tensor, output_tensor)
-    return model
 
-
-#Modelo: red neuronal con 6 capas convolucionales
-def cnn_model_v2():
-    model = Sequential()
-
-    model.add(Conv2D(32, (3, 3), padding='same',
-                     #input_shape=(IMG_SIZE, IMG_SIZE, 3), #imagenes a color
-                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
-                     activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.1))
-
-    model.add(Conv2D(64, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(128, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.3))#antes 0.2
-
-
-    model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(NUM_CLASSES, activation='softmax'))
-    return model
-
-def cnn_model():
-    model = Sequential()
-
-    model.add(Conv2D(32, (3, 3), padding='same',
-                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
-                     activation='relu'))
-    model.add(Conv2D(32, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
-
-    model.add(Conv2D(64, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
-
-    model.add(Conv2D(128, (3, 3), padding='same',
-                     activation='relu'))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))#antes 0.2
-
-    model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(NUM_CLASSES, activation='softmax'))
-    return model
-
-#Modelo: red neuronal con 6 capas convolucionales
-#4º modelo en tfg
-def mini_vgg():
-    model = Sequential()
-
-    model.add(Conv2D(32, (3, 3), padding='same',
-                     input_shape=(IMG_SIZE, IMG_SIZE, 3),
-                     activation='relu'))
-    #model.add(layers.BatchNormalization())#Nueva
-    model.add(Conv2D(32, (3, 3),padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))#antes 0.2
-
-    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
-    model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))#antes 0.2
-
-    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))#antes 0.2
-
-    model.add(Flatten())
-    #model.add(GlobalAveragePooling2D())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(NUM_CLASSES, activation='softmax'))
     return model
 
 
@@ -296,7 +183,7 @@ logging.info(Y.shape)
 
 #Data Augmentation:
 
-# Configuaracion de las imagenes generadas
+# Configuaracion de las imagenes generadas con data augmentation
 datagen = ImageDataGenerator(
         #rescale=1./255,
         rotation_range=25,
@@ -325,7 +212,7 @@ fold = 1
 skf = StratifiedKFold(n_splits=3)  # numero de 'trozos' en los que dividimos el dataset de entrenamiento
 print(skf)
 logging.info(skf)
-#cnn_classifier = cnn_model()
+
 
 
 def lr_schedule(epoch):
@@ -351,8 +238,9 @@ for train_index, test_index in skf.split(X, Y):
                            # metrics=['accuracy'])
                            metrics=[metrics.categorical_accuracy])
 
-    #Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
-    #datagen.fit(x_train)
+    #Solo hace falta hacer datagen.fit si se utiliza  featurewise_center
+    # o featurewise_std_normalization o zca_whitening.
+    datagen.fit(x_train)
     print("Hasta el fit generator en el fold "+ str(fold))
     print("len x_train: "+str(len(x_train)))
 
@@ -383,9 +271,6 @@ for train_index, test_index in skf.split(X, Y):
     val_accuracy_list.append(val_accuracy[1] * 100)
 
 
-    #y_pred = cnn_classifier.predict_classes(x_test)
-    #test_accuracy = np.sum(y_pred == y_test) / np.size(y_pred)
-
     print("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
     logging.info("loss y val accuracy del fold "+str(fold)+" :"+str(val_accuracy))
 
@@ -405,8 +290,6 @@ logging.info("mean_accuarcy: %.2f%% (+/- %.2f%%)" % (np.mean(val_accuracy_list),
 
 
 ruta_actual = os.getcwd()
-#print(ruta_actual)
-#print(os.listdir(ruta_actual))
 os.chdir(dataset_path+'/GTSRB')
 
 
@@ -415,15 +298,13 @@ test = pd.read_csv('GT-final_test.csv', sep=';')
 
 
 # Cargamos el dataset de test
-os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')#en local
-#os.chdir('/home/drobert/tfg/GTSRB/Final_Test/Images/')#en corleone
+os.chdir(dataset_path+'/GTSRB/Final_Test/Images/')
 
 X_test = []
 y_test = []
 i = 0
 
 for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    # img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
     img_path = os.path.join(os.getcwd(), file_name)
     X_test.append(preprocess_img(io.imread(img_path)))
     y_test.append(class_id)
@@ -468,7 +349,7 @@ best_model =clf_list[model_indx]
 
 test_accuracy = best_model.evaluate(X_test, y_test_one_target, verbose=1)
 
-#Guardar best_model en un pickle
+#Guardar best_model
 
 today_date = datetime.date.today().strftime("%d-%m-%Y")
 
@@ -476,7 +357,7 @@ best_model_filename= ("cnn6l_v2_Multi_scale_2_epochs%s_test_acc_%.2f%%_%s.h5" % 
 
 #pickle.dump(best_model, open((code_path + str(best_model_filename)), 'wb'))
 
-#guardar con h5 no funciona por tener un metodo custom de accuracy
+#guardar con h5 no funciona en local por tener un metodo custom de accuracy
 best_model.save(best_model_filename)
 
 print("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], test_accuracy[1] * 100))
@@ -487,7 +368,7 @@ logging.info("Accuracy en test : %s: %.2f%%" % (best_model.metrics_names[1], tes
 #Comprobamos que el modelo cargado tiene la misma precision
 
 #loaded_model = pickle.load(open(best_model_filename, 'rb'))
-loaded_model = load_model(best_model_filename)# No funciona con custom metrics
+loaded_model = load_model(best_model_filename)# No funciona con custom metrics en local
 
 loaded_model_test_accuracy = loaded_model.evaluate(X_test, y_test_one_target, verbose=1)
 print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names[1], loaded_model_test_accuracy[1] * 100))
@@ -501,9 +382,6 @@ print("Loaded_model accuracy en test : %s: %.2f%%" % (loaded_model.metrics_names
 
 
 y_pred = loaded_model.predict(X_test)
-#pasamos a one hot encoding para que tenga la misma estructura que y_pred
-#No funciona así, tendran que ser los 2 vectores unidimensionales
-#y_test_one_hot = to_categorical(y_test, NUM_CLASSES)
 
 #pasamos y_pred que esta en one hot encoding a un vector plano
 y_pred_no_one_hot= np.argmax(y_pred, axis=1, out=None)
@@ -514,11 +392,6 @@ print(y_test.shape)
 print(y_pred_no_one_hot.shape)
 
 
-
-cm = pd.DataFrame(confusion_matrix(y_test, y_pred_no_one_hot))
-
-#logging.info("matriz de confusión del modelo medio: ")
-#logging.info(cm)
 
 
 print("Fin de la prueba con CNN con data augmentation")
