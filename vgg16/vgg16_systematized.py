@@ -5,11 +5,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # keras imports
 from keras.applications.vgg16 import VGG16, preprocess_input
 #from keras.applications.vgg19 import VGG19, preprocess_input
-#from keras.applications.xception import Xception, preprocess_input
-#from keras.applications.resnet50 import ResNet50, preprocess_input
-#from keras.applications.inception_resnet_v2 import InceptionResNetV2, preprocess_input
-#from keras.applications.mobilenet import MobileNet, preprocess_input
-#from keras.applications.inception_v3 import InceptionV3, preprocess_input
+
 from keras.preprocessing import image
 from keras.models import Model
 from keras.models import model_from_json
@@ -65,9 +61,6 @@ print ("[STATUS]-------vgg16 systematized - start time - {}".format(datetime.dat
 logging.info(" --------vgg16 systematized - start time - {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
 start = time.time()
 
-# create the pretrained models
-# check for pretrained weight usage or not
-# check for top layers to be included or not
 
 base_model = VGG16(weights=weights)
 model = Model(input=base_model.input, output=base_model.get_layer('fc1').output)
@@ -76,16 +69,16 @@ image_size = (224, 224)
 print ("[INFO] successfully loaded base model and model...")
 logging.info((" successfully loaded base model and model..."))
 
-# path to training dataset
+# path del training dataset
 train_labels = os.listdir(train_path)
 
-# encode the labels
+# codificamos los labels
 print ("[INFO] encoding labels...")
 logging.info("encoding labels...")
 le = LabelEncoder()
 le.fit([tl for tl in train_labels])
 
-# variables to hold features and labels
+# variables para guardar features y labels
 features = []
 labels = []
 
@@ -93,7 +86,7 @@ labels = []
 # Vamos a medir cuanto tarda en recorrer todas las imagenes
 init_loop = datetime.datetime.now().replace(microsecond=0)
 
-# loop over all the labels in the folder
+# recorremos toda la carpeta
 count = 1
 for i, label in enumerate(train_labels):
 	cur_path = train_path + "/" + label
@@ -102,12 +95,12 @@ for i, label in enumerate(train_labels):
 	    img = image.load_img(image_path, target_size=image_size)
 	    x = image.img_to_array(img)
 	    x = np.expand_dims(x, axis=0)
-	    x = preprocess_input(x) #will scale pixels between -1 and 1,sample-wise.
+	    x = preprocess_input(x) #pixeles entre -1 y 1,sample-wise.
 	    feature = model.predict(x)
 	    flat = feature.flatten()
 	    features.append(flat)
 	    labels.append(label)
-	    #print ("[INFO] processed - " + str(count))
+
 	    count += 1
 	print("[INFO] completed label - " + label)
 	logging.info((" completed label - " + label))
@@ -116,7 +109,7 @@ end_loop = datetime.datetime.now().replace(microsecond=0)
 print("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 logging.info("Tarda %s en recorrer todas las imagenes" % (init_loop - end_loop))
 
-# encode the labels using LabelEncoder
+# codificamos etiquetas usando LabelEncoder
 le = LabelEncoder()
 le_labels = le.fit_transform(labels)
 
@@ -128,7 +121,7 @@ logging.info((" training labels: {}".format(le_labels)))
 logging.info(" training labels shape: {}".format(le_labels.shape))
 
 
-# save features and labels
+# guardamos features y labels
 h5f_data = h5py.File(features_path, 'w')
 h5f_data.create_dataset('dataset_1', data=np.array(features))
 
@@ -138,7 +131,7 @@ h5f_label.create_dataset('dataset_1', data=np.array(le_labels))
 h5f_data.close()
 h5f_label.close()
 
-# save model and weights
+# guardamos modelo y pesos
 model_json = model.to_json()
 with open(model_path + str(test_size) + ".json", "w") as json_file:
 	json_file.write(model_json)
@@ -172,32 +165,17 @@ labels   = np.array(labels_string)
 h5f_data.close()
 h5f_label.close()
 
-# verify the shape of features and labels
-print("[INFO] features shape: {}".format(features.shape))
-print("[INFO] labels shape: {}".format(labels.shape))
 
-logging.info(" features shape: {}".format(features.shape))
-logging.info("[INFO] labels shape: {}".format(labels.shape))
 
 print("[INFO] training started...")
 logging.info("[INFO] training started...")
-# split the training and testing data
+# dividir en training y testing data
 (trainData, testData, trainLabels, testLabels) = train_test_split(np.array(features),
                                                                   np.array(labels),
                                                                   test_size=test_size,
                                                                   random_state=seed)
 
-print("[INFO] splitted train and test data...")
-print("[INFO] train data  : {}".format(trainData.shape))
-print("[INFO] test data   : {}".format(testData.shape))
-print("[INFO] train labels: {}".format(trainLabels.shape))
-print("[INFO] test labels : {}".format(testLabels.shape))
 
-logging.info(" splitted train and test data...")
-logging.info(" train data  : {}".format(trainData.shape))
-logging.info(" test data   : {}".format(testData.shape))
-logging.info(" train labels: {}".format(trainLabels.shape))
-logging.info(" test labels : {}".format(testLabels.shape))
 
 # use logistic regression as the model
 print("[INFO] creating model...")
@@ -206,47 +184,16 @@ logging.info("[INFO] creating model...")
 model = LogisticRegression(random_state=seed)
 model.fit(trainData, trainLabels)
 
-# use rank-1 and rank-5 predictions
-print ("[INFO] evaluating model...")
-logging.info(" evaluating model...")
-f = open(results, "w")
-rank_1 = 0
-rank_5 = 0
 
-# loop over test data
-for (label, features) in zip(testLabels, testData):
-	# predict the probability of each class label and
-	# take the top-5 class labels
-	predictions = model.predict_proba(np.atleast_2d(features))[0]
-	predictions = np.argsort(predictions)[::-1][:5]
 
-	# rank-1 prediction increment
-	if label == predictions[0]:
-		rank_1 += 1
-
-	# rank-5 prediction increment
-	if label in predictions:
-		rank_5 += 1
-
-# convert accuracies to percentages
-rank_1 = (rank_1 / float(len(testLabels))) * 100
-rank_5 = (rank_5 / float(len(testLabels))) * 100
-
-# write the accuracies to file
-f.write("Rank-1: {:.2f}%\n".format(rank_1))
-f.write("Rank-5: {:.2f}%\n\n".format(rank_5))
-
-logging.info("Rank-1: {:.2f}%\n".format(rank_1))
-logging.info("Rank-5: {:.2f}%\n\n".format(rank_5))
-
-# evaluate the model of test data
+# evaluamos el modelo en test
 preds = model.predict(testData)
 
-# write the classification report to file
+# escribimos el classification report en un fichero
 f.write("{}\n".format(classification_report(testLabels, preds)))
 f.close()
 
-# dump classifier to file
+# guardamos el modelo en un pickle
 print ("[INFO] saving model...")
 logging.info(" saving model...")
 pickle.dump(model, open(classifier_path, 'wb'))
