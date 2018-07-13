@@ -154,7 +154,7 @@ for c in range(0, 5):
     sign = id_class2sign_name(top5_index[c])
     prob = top5_proba[c]
     #print(str(idx) + ' ' + sign + '  --->  ' + str(prob * 100) + '%')
-    print( str(idx) +' ' + sign + ": %.2f%%" % (str(prob * 100)))
+    print( str(idx) +' ' + sign + ": %.2f%%" % (prob * 100))
 
 
 
