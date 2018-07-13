@@ -90,8 +90,10 @@ def predict(model, img, top_n=3):
     return proba #, preds
 
 
-# img = Image.open('/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/senales_img/img1.jpg')
-img = Image.open('/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/senales_img/img6.png')
+# img = Image.open('/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/senales_img/img6.jpg')
+img = Image.open('/home/drobert/tfg/traffic_sign_machine_learning/demo/demo_espana/senales_img/img6.png')
+
+
 
 img = preprocess_img(img)
 # imshow(np.asarray(img))
@@ -143,7 +145,7 @@ def id_class2sign_name(id_class):
 # In[140]:
 
 
-imshow(np.asarray(img))
+#imshow(np.asarray(img))
 
 # In[141]:
 
