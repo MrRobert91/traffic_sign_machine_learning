@@ -94,7 +94,6 @@ def predict(model, img, top_n=3):
 img = Image.open('/home/drobert/tfg/traffic_sign_machine_learning/demo/demo_espana/senales_img/img6.png')
 
 
-
 img = preprocess_img(img)
 # imshow(np.asarray(img))
 
@@ -128,9 +127,6 @@ for idx in top5_index:
 print(top5_proba)
 
 
-# In[139]:
-
-
 def id_class2sign_name(id_class):
     SignNames = pd.read_csv('signnames.csv')
     id_class2sign_name = {}
@@ -142,12 +138,7 @@ def id_class2sign_name(id_class):
     return sing_name
 
 
-# In[140]:
-
-
 #imshow(np.asarray(img))
-
-# In[141]:
 
 
 sign_name_list = []
@@ -158,7 +149,6 @@ for c in range(0, 5):
     print(str(idx) + ' ' + sign + '  --->  ' + str(prob * 100) + '%')
 
 
-# In[ ]:
 
 
 
