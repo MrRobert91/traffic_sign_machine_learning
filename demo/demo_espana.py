@@ -80,6 +80,11 @@ def predict(model, img, top_n=3):
     # Para RF
     #x = x.reshape((-1, 48 * 48 * 3)).astype(np.float32)
 
+    #Para modelos cnn necesitamos una entrada con 4 dimensiones
+    #siendo la primera el número de imágenes
+    x = np.expand_dims(x, axis=0)
+
+
     # Nos devuelve predicciones del modelo
     #preds = model.predict(x)
 
