@@ -84,7 +84,6 @@ def predict(model, img, top_n=3):
     #siendo la primera el número de imágenes
     x = np.expand_dims(x, axis=0)
 
-
     # Nos devuelve predicciones del modelo
     #preds = model.predict(x)
 
