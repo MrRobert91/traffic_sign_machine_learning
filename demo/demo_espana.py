@@ -30,12 +30,13 @@ import pickle
 
 
 #code_path = "/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/"
-code_path="/home/drobert/tfg/traffic_sign_machine_learning/demo/demo_espana/"
+code_path="/home/drobert/tfg/traffic_sign_machine_learning/demo/"
+model_path = "/home/drobert/tfg/traffic_sign_machine_learning/cnn6l/"
 
-os.chdir(code_path)
+os.chdir(model_path)
 
-# modelname = "mini_vgg_48_epochs20_test_acc_97.66%_09-07-2018.h5"
-modelname = "rf_100trees_22depth_2fold_0.956val_acc"
+modelname = "mini_vgg_48_epochs20_test_acc_97.66%_09-07-2018.h5"
+#modelname = "rf_100trees_22depth_2fold_0.956val_acc"
 
 # Para random forest
 #model = pickle.load(open(modelname, 'rb'))
@@ -43,6 +44,8 @@ modelname = "rf_100trees_22depth_2fold_0.956val_acc"
 # Para otros modelos(cnn6l, nn, resnet50, xception, vgg16..)
 model = load_model(modelname)
 
+
+os.chdir(code_path)
 # Para RF
 # test_accuracy = loaded_model.predict()
 
@@ -91,7 +94,7 @@ def predict(model, img, top_n=3):
 
 
 # img = Image.open('/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/senales_img/img6.jpg')
-img = Image.open('/home/drobert/tfg/traffic_sign_machine_learning/demo/demo_espana/senales_img/img6.png')
+img = Image.open('/home/drobert/tfg/traffic_sign_machine_learning/demo/senales_img/img6.png')
 
 
 img = preprocess_img(img)
