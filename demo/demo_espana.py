@@ -98,7 +98,7 @@ def predict(model, img, top_n=3):
 
 
 # img = Image.open('/home/david/Escritorio/TFG/MemoriaTFG/Presentacion/demo_espana/senales_img/img6.jpg')
-img = Image.open(code_path+'senales_img/desliza_belgium.png')
+img = Image.open(code_path+'obras_img/desliza_belgium.png')
 
 
 img = preprocess_img(img)
